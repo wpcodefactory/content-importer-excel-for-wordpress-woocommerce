@@ -1,4 +1,4 @@
-<?php 
+<?php
 /** This file contains the class that handles queries for the import process. **/
 
 class ContentExcelImporterQuery {
@@ -9,10 +9,10 @@ class ContentExcelImporterQuery {
 		/** This method provides the post types availabe to display in postr type form. */
 
 			?>
-		
+
 			<select  name="contentExcelImporter_post_type" id="contentExcelImporter_post_type"   value = "" >
 			<option value=''><?php esc_html_e( 'Select', 'content-excel-importer' ); ?></option>
-			
+
 			<?php
 			if ( isset( $_POST['contentExcelImporter_post_type'] ) ) {
 
@@ -32,10 +32,10 @@ class ContentExcelImporterQuery {
 				}
 			}
 			?>
-			</select>  
+			</select>
 			<?php
 
-		
+
 	}
 
 	public function selectPostTypeForm() {
@@ -50,14 +50,14 @@ class ContentExcelImporterQuery {
 			print "<form id='selectPostType' action= '" . esc_url( admin_url( 'admin.php?page=content-excel-importer-pro' ) ) . "' method='POST'>";
 		}
 		?>
-		
+
 		<label><?php esc_html_e( 'SELECT POST TYPE', 'content-excel-importer' ); ?></label>
 
 		<?php $this->selectPostType(); ?>
-		
+
 		<input type='hidden' name='getPostType' value='1'  />
 		<?php wp_nonce_field( 'getPostType', 'getPostType' ); ?>
-		
+
 		</form>
 		<?php
 	}

@@ -3,7 +3,7 @@
  * Plugin Name: Import Content in WordPress & WooCommerce with Excel
  * Plugin URI: https://extend-wp.com/content-excel-importer-for-wordpress/
  * Description: Import Posts, Pages, Simple Products for WooCommerce & WordPress with Excel. Migrate Easily. No more CSV Hassle
- * Version: 4.4
+ * Version: 5.0.0-dev
  * Author: extendWP
  * Author URI: https://extend-wp.com
  *
@@ -93,9 +93,9 @@ function contentExceIimporter_main() {
 
 	?>
 
-		
-		<div class = 'left_wrap' >	
-		
+
+		<div class = 'left_wrap' >
+
 			<div class = 'premium_msg'>
 				<p>
 					<strong>
@@ -110,7 +110,7 @@ function contentExceIimporter_main() {
 			?>
 			</div>
 		</div>
-		
+
 		<div class='right_wrap rightToLeft'>
 			<h2  class='center'><?php esc_html_e( 'NEED MORE FEATURES?', 'content-excel-importer' ); ?> </h2>
 				<ul>
@@ -122,18 +122,18 @@ function contentExceIimporter_main() {
 					<li> - <?php esc_html_e( 'Import Featured Image along with Post', 'content-excel-importer' ); ?></li>
 					<li> - <?php esc_html_e( 'Import Variable Woocommerce Products', 'content-excel-importer' ); ?></li>
 					<li> - <?php esc_html_e( 'Import Product Featured Image from URL', 'content-excel-importer' ); ?></li>
-					<li> - <?php esc_html_e( 'Import Product Gallery Images from URL!', 'content-excel-importer' ); ?></li>				
+					<li> - <?php esc_html_e( 'Import Product Gallery Images from URL!', 'content-excel-importer' ); ?></li>
 					<li> - <?php esc_html_e( 'Import YOAST SEO Meta Title & Description', 'content-excel-importer' ); ?></li>
 					<li> - <?php esc_html_e( 'Define Downloadable, name, URL for file, expiry date & limit!', 'content-excel-importer' ); ?></li>
 					<li> - <?php esc_html_e( 'Import Category Term Description with HTML Support', 'content-excel-importer' ); ?></li>
-				</ul>	
-			<p class='center'>			
+				</ul>
+			<p class='center'>
 				<a target='_blank'  href="<?php echo esc_url( 'https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel' ); ?>">
 					<img class='premium_img' src='<?php echo esc_url( plugins_url( 'images/content-excel-importer-pro.png', __FILE__ ) ); ?>' alt='<?php esc_html_e( 'Content Excel Importer PRO', 'content-excel-importer' ); ?>' title='<?php esc_html_e( 'Content Excel Importer PRO', 'content-excel-importer' ); ?>' />
 				</a>
 			<p  class='center'>'
 				<a class='premium_button' target='_blank'  href='<?php echo esc_url( 'https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel' ); ?> '>
-					<?php esc_html_e( 'Get it here', 'content-excel-importer' ); ?>	
+					<?php esc_html_e( 'Get it here', 'content-excel-importer' ); ?>
 				</a>
 			</p>
 		</div>
@@ -146,7 +146,7 @@ function contentExceIimporter_init() {
 
 	contentExceIimporter_form_header();
 	?>
-	<div class = "content-excel-importer" >	
+	<div class = "content-excel-importer" >
 <div class='msg'></div>
 
 	<h2 class = "nav-tab-wrapper" >
@@ -154,15 +154,15 @@ function contentExceIimporter_init() {
 		<a class = 'nav-tab premium' href='#'><?php esc_html_e( 'Delete Content', 'content-excel-importer' ); ?></a>
 		<a class = 'nav-tab premium' href='#'><?php esc_html_e( 'Import Categories', 'content-excel-importer' ); ?></a>
 		<a class = 'nav-tab premium' href='#'><?php esc_html_e( 'Delete Categories', 'content-excel-importer' ); ?></a>
-	</h2>	
-	
+	</h2>
+
 	<?php
 		contentExceIimporter_main();
 	?>
-		
+
 	</div>
-	
-	
+
+
 	<?php
 	contentExceIimporter_form_footer();
 }
@@ -172,10 +172,10 @@ function contentExceIimporter_form_header() {
 
 	?>
 	<h1 style='display:flex;align-items:center;' ><a target='_blank' href='<?php echo esc_url( 'https://extend-wp.com/wordpress-premium-plugins' ); ?> '>
-			
+
 	<img   style='width:170px;padding-right:30px' src='<?php echo esc_url( plugins_url( 'images/extendwp.png', __FILE__ ) ); ?>' alt='<?php esc_html_e( 'Get more plugins by extendWP', 'content-excel-importer' ); ?> title='<?php esc_html_e( 'Get more plugins by extendWP', 'content-excel-importer' ); ?> />
 		</a> <span style='color:#2271b1;'><?php esc_html_e( 'Import Content in WordPress & WooCommerce with Excel', 'content-excel-importer' ); ?></span></h1>
-			
+
 	<?php
 }
 
@@ -185,7 +185,7 @@ function contentExceIimporter_form_footer() {
 	?>
 	<hr>
 		<div></div>
-		<?php contentExceIimporter_rating(); ?>				
+		<?php contentExceIimporter_rating(); ?>
 
 	<?php
 }
@@ -200,7 +200,7 @@ function contentExceIimporter_rating() {
 					<i class='fa fa-star' style='color:gold' ></i><i class='fa fa-star' style = 'color:gold' ></i><i class = 'fa fa-star' style = 'color:gold' ></i><i class='fa fa-star' style='color:gold' ></i><i class = 'fa fa-star' style = 'color:gold' ></i>
 				</a>
 
-		</div> 	
+		</div>
 	<?php
 }
 

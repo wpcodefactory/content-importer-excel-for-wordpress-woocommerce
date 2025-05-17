@@ -27,39 +27,39 @@ public function importProductsDisplay() {
 	/** this method provides the html for the import display form */
 	?>
 		<h2><?php esc_html_e( 'IMPORT / UPDATE CONTENT', 'content-excel-importer' ); ?></h2>
-	
-		<div class='product_content'>	
-		
-			<p><?php esc_html_e( 'Download the sample excel file, save it and add your products. You can add your Custom Columns. Upload it using the form below.', 'content-excel-importer' ); ?> <a href='<?php echo esc_url( plugins_url( '/example_excel/import_update_products.xlsx', __FILE__ ) ); ?>'><?php esc_html_e( 'SAMPLE EXCEL FILE', 'content-excel-importer' ); ?></a></p>		
-			<p>	 
+
+		<div class='product_content'>
+
+			<p><?php esc_html_e( 'Download the sample excel file, save it and add your products. You can add your Custom Columns. Upload it using the form below.', 'content-excel-importer' ); ?> <a href='<?php echo esc_url( plugins_url( '/example_excel/import_update_products.xlsx', __FILE__ ) ); ?>'><?php esc_html_e( 'SAMPLE EXCEL FILE', 'content-excel-importer' ); ?></a></p>
+			<p>
 		</div>
-		<div class = 'randomContent' >		
+		<div class = 'randomContent' >
 			<p><?php esc_html_e( 'Download the sample excel file, save it and add your content. You can add your Custom Columns. Upload it using the form below.', 'content-excel-importer' ); ?> <a href='<?php echo esc_url( plugins_url( '/example_excel/content.xlsx', __FILE__ ) ); ?>'><?php esc_html_e( 'CONTENT SAMPLE FILE', 'content-excel-importer' ); ?></a></p>
 		</div>
-		
-		<div>            
-			
-		<?php $this->selectPostTypeForm(); ?>						
+
+		<div>
+
+		<?php $this->selectPostTypeForm(); ?>
 
 
-								
+
 			<form method="post" id='product_import' class='excel_import' enctype="multipart/form-data" action= "<?php echo esc_url( admin_url( 'admin.php?page=content-excel-importer-pro&tab=main' ) ); ?>">
 					<table class="form-table">
 						<tr valign="top">
-					
+
 						<td><?php wp_nonce_field( 'excel_upload' ); ?>
 						<input type="hidden"   name="importProducts" value="1" />
 							<div class="uploader" style="background:url(<?php print esc_url( plugins_url( 'images/default.png', __FILE__ ) ); ?> ) no-repeat left center;" >
 								<img src="" class='userSelected'/>
 								<input type="file"  required name="file" id='file'  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-							</div>						
+							</div>
 						</td>
 						</tr>
 					</table>
 				<?php submit_button( 'Upload', 'primary', 'upload' ); ?>
-					</form>	
+					</form>
 					<div class='result' ><?php $this->importProducts(); ?></div>
-						
+
 			</div>
 		<?php
 }
@@ -120,9 +120,9 @@ public function importProducts() {
 						print "<div style='float:right;width:50%;text-align:right;padding-right:20px'>";
 						print "<h2 style='color:#0073aa;'>" . esc_html__( 'FIELDS', 'content-excel-importer' ) . '</h2>';
 					?>
-											
+
 						<?php $this->getFields( $post_type ); ?>
-								
+
 						<?php
 						print "<input type='hidden' name='finalupload' value='" . esc_attr( $total ) . "' />
 						   <input type='hidden' name='import' value='import' />

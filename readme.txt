@@ -5,12 +5,12 @@ Tags: excel import, content import, bulk import, import translations, migrate
 Requires at least: 3.0.1
 Requires PHP: 8.1
 Tested up to: 6.7
-Stable tag: trunk
+Stable tag: 4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Import Posts, Pages, Simple Products for WooCommerce & Wordpress with Excel. Migrate Easily. No more CSV Hassle
- 
+
 == Description ==
 
 **You want to do a website migration without adding content 1 by 1? Bulk Edit Content from  one screen? Use can now import content in WordPress from an Excel File with an easy Drag & Drop functionality.**
@@ -72,7 +72,7 @@ With the latest update you have an option to Import with same title even if this
 * DEFINE IF DOWNLOADABLE, DOWNLOADABLE NAME,URL,EXPIRY DATA & LIMIT
 * IMPORT CATEGORY TERMS description HTML
 * IMPORT YOAST SEO Meta Product fields,  like META TITLE, META DESCRIPTION
-* IMPORTS CUSTOM TAXONOMIES 
+* IMPORTS CUSTOM TAXONOMIES
 * DELETE PRODUCTS THROUGH EXCEL FILE BY id, slug or title
 * IMPORT CATEGORY TERMS AND SUB TERMS THROUGH EXCEL FILE
 * DELETE CATEGORY TERMS THROUGH EXCEL FILE
