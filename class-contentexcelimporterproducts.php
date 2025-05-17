@@ -20,7 +20,6 @@ class ContentExcelImporterProducts extends ContentExcelImporterQuery {
 public function __construct() {
 
 		add_action( 'wp_ajax_import_content', array( $this, 'import_content' ) );
-		add_action( 'wp_ajax_import_content', array( $this, 'import_content' ) );
 }
 
 public function importProductsDisplay() {
@@ -40,8 +39,6 @@ public function importProductsDisplay() {
 		<div>
 
 		<?php $this->selectPostTypeForm(); ?>
-
-
 
 			<form method="post" id='product_import' class='excel_import' enctype="multipart/form-data" action= "<?php echo esc_url( admin_url( 'admin.php?page=content-excel-importer-pro&tab=main' ) ); ?>">
 					<table class="form-table">
@@ -63,9 +60,6 @@ public function importProductsDisplay() {
 			</div>
 		<?php
 }
-
-
-
 
 public function importProducts() {
 

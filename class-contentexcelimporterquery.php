@@ -35,7 +35,6 @@ class ContentExcelImporterQuery {
 			</select>
 			<?php
 
-
 	}
 
 	public function selectPostTypeForm() {

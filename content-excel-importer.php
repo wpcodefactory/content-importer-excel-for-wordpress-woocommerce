@@ -66,7 +66,6 @@ function load_contentExceIimporter_js() {
 }
 add_action( 'admin_enqueue_scripts', 'load_contentExceIimporter_js' );
 
-
 // ADD MENU LINK AND PAGE FOR WOOCOMMERCE IMPORTER.
 add_action( 'admin_menu', 'contentExceIimporter_menu' );
 
@@ -75,7 +74,6 @@ function contentExceIimporter_menu() {
 
 	add_menu_page( 'Content Excel Importer Settings', esc_html__( 'Content Excel Importer', 'content-excel-importer' ), 'manage_options', 'content-excel-importer', 'contentExceIimporter_init', 'dashicons-upload', '50' );
 }
-
 
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'add_contentExceIimporter_links' );
 
@@ -92,7 +90,6 @@ function contentExceIimporter_main() {
 	/** This function is main wrapper for plugin display page. */
 
 	?>
-
 
 		<div class = 'left_wrap' >
 
@@ -140,7 +137,6 @@ function contentExceIimporter_main() {
 	<?php
 }
 
-
 function contentExceIimporter_init() {
 	/** This function contains plugin content. */
 
@@ -161,7 +157,6 @@ function contentExceIimporter_init() {
 	?>
 
 	</div>
-
 
 	<?php
 	contentExceIimporter_form_footer();
@@ -214,7 +209,6 @@ add_action(
 		}
 	}
 );
-
 
 // Deactivation survey.
 

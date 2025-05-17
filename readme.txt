@@ -22,7 +22,6 @@ Import Posts, Pages, Simple Products for WooCommerce & Wordpress with Excel. Mig
 [Import any Post Type including WooCommerce Products with Excel](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
 With the latest update you have an option to Import with same title even if this exists.
 
-
 = Supports =
 
 * Title
@@ -44,7 +43,6 @@ With the latest update you have an option to Import with same title even if this
 * Category (multiple comma separated)
 * Tags (multiple comma separated)
 
-
 = Extra for Products =
 
 * Product Category (multiple comma separated)
@@ -55,7 +53,6 @@ With the latest update you have an option to Import with same title even if this
 * Sale Price
 * Stock
 * Virtual
-
 
 **PRO VERSION**
 
@@ -82,8 +79,6 @@ With the latest update you have an option to Import with same title even if this
 [Get it Here](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
 
 [youtube https://www.youtube.com/watch?v=znQXiG7c7Sg&rel=0]
-
-
 
 == Installation ==
 

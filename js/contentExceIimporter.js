@@ -1,6 +1,5 @@
 (function( $ ) {
 
-
 	$('.content-excel-importer .nav-tab-wrapper a').click(function(e){
 		e.preventDefault();
 		if($(this).hasClass("premium") ){
@@ -14,9 +13,6 @@
 
 	});
 
-
-
-
 	$('.content-excel-importer #upload').attr('disabled','disabled');
     $(".content-excel-importer #file").change(function () {
         var fileExtension = ['xls', 'xlsx'];
@@ -29,9 +25,7 @@
 		}
     });
 
-
 	$(".content-excel-importer #selectPostType").on("change", function (e) {
-
 
 		$(".content-excel-importer #product_import").hide();
 		$('.content-excel-importer .product_content').hide();
@@ -68,8 +62,6 @@
 			});
 	});
 
-
-
 			//drag and drop
 			function dragDrop(){
 				$('.content-excel-importer .draggable').draggable({cancel:false});
@@ -100,7 +92,6 @@
 							key = key.toUpperCase();
 							key = key.replace(" ", "_");
 							var valDrag = $( this ).val() ;
-
 
 							$( ".content-excel-importer .droppable" ).each(function(){
 
@@ -135,7 +126,6 @@
 				});
 			}
 
-
 	$(".content-excel-importer #product_import").on("submit", function (e) {
 		e.preventDefault();
 				var data = new FormData();
@@ -166,7 +156,6 @@
 
 						dragDrop();
 						automatch_columns();
-
 
 						$('.content-excel-importer #product_process p.proVersion').hover(function(){
 							$(this).css("background","red");
@@ -233,8 +222,6 @@
 			});
 	});
 
-
-
 			function progressBar(start,total) {
 				width = (start/total) * 100;
 			  var elem = document.getElementById("myBar");
@@ -246,7 +233,6 @@
 				  elem.style.width = width + '%';
 				}
 			}
-
 
 		$("#contentExceIimporter_signup").on('submit',function(e){
 			e.preventDefault();
