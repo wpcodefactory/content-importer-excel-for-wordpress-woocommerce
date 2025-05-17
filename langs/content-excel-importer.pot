@@ -1,0 +1,391 @@
+# Copyright (C) 2025 WPFactory
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Import Content in WordPress & WooCommerce with Excel 5.0.0-dev\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/content-excel-importer\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-05-17T15:47:25+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: content-excel-importer\n"
+
+#. Plugin Name of the plugin
+#: content-excel-importer.php
+#: content-excel-importer.php:181
+msgid "Import Content in WordPress & WooCommerce with Excel"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: content-excel-importer.php
+msgid "https://extend-wp.com/content-excel-importer-for-wordpress/"
+msgstr ""
+
+#. Description of the plugin
+#: content-excel-importer.php
+msgid "Import Posts, Pages, Simple Products for WooCommerce & WordPress with Excel. Migrate Easily. No more CSV Hassle."
+msgstr ""
+
+#. Author of the plugin
+#: content-excel-importer.php
+msgid "WPFactory"
+msgstr ""
+
+#. Author URI of the plugin
+#: content-excel-importer.php
+msgid "https://wpfactory.com"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:33
+msgid "IMPORT / UPDATE CONTENT"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:37
+msgid "Download the sample excel file, save it and add your products. You can add your Custom Columns. Upload it using the form below."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:37
+msgid "SAMPLE EXCEL FILE"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:41
+msgid "Download the sample excel file, save it and add your content. You can add your Custom Columns. Upload it using the form below."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:41
+msgid "CONTENT SAMPLE FILE"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:105
+msgid "DATA MAPPING: Drag and drop excel columns on the right to product properties on the left."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:107
+msgid "Auto Match Columns"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:110
+msgid "Always add new content even if title is the same"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:113
+msgid "EXCEL COLUMNS"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:120
+msgid "FIELDS"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:139
+msgid "Invalid File:Please Upload Excel File"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:226
+msgid "created"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:269
+msgid "already exists. Updated"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:280
+msgid "For sale price of"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:280
+#: class-contentexcelimporterproducts.php:287
+#: class-contentexcelimporterproducts.php:298
+#: class-contentexcelimporterproducts.php:305
+#: class-contentexcelimporterproducts.php:316
+#: class-contentexcelimporterproducts.php:323
+msgid "you need numbers entered."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:287
+msgid "For regular price of"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:298
+msgid "For weight of"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:305
+msgid "For stock of"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:316
+msgid "For length of"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:323
+msgid "For width of"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:466
+msgid " - Job Done! "
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:466
+msgid "GO VIEW YOUR "
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:472
+msgid "Please dont close this page. Your "
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:472
+msgid "are imported..."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:480
+msgid "No title selected for your content."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:487
+msgid "Total Execution Time:"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:487
+msgid "Mins"
+msgstr ""
+
+#: class-contentexcelimporterquery.php:22
+msgid "Select"
+msgstr ""
+
+#: class-contentexcelimporterquery.php:61
+msgid "SELECT POST TYPE"
+msgstr ""
+
+#: class-contentexcelimporterquery.php:78
+msgid "POST TYPE "
+msgstr ""
+
+#: class-contentexcelimporterquery.php:92
+msgid "IMAGE"
+msgstr ""
+
+#: class-contentexcelimporterquery.php:92
+#: class-contentexcelimporterquery.php:103
+#: class-contentexcelimporterquery.php:170
+msgid "PRO Version Only"
+msgstr ""
+
+#: class-contentexcelimporterquery.php:120
+#: class-contentexcelimporterquery.php:137
+#: class-contentexcelimporterquery.php:150
+#: class-contentexcelimporterquery.php:165
+msgid "Drop here column"
+msgstr ""
+
+#: class-contentexcelimporterquery.php:153
+msgid "CATEGORY AND TAGS"
+msgstr ""
+
+#: class-contentexcelimporterquery.php:170
+msgid "Custom Taxonomy"
+msgstr ""
+
+#: content-excel-importer.php:101
+msgid "Only available on PRO Version"
+msgstr ""
+
+#: content-excel-importer.php:101
+msgid "Get it Here"
+msgstr ""
+
+#: content-excel-importer.php:114
+msgid "NEED MORE FEATURES?"
+msgstr ""
+
+#: content-excel-importer.php:116
+msgid "Import Any Custom Post Type"
+msgstr ""
+
+#: content-excel-importer.php:117
+msgid "Import post type WPML translation"
+msgstr ""
+
+#: content-excel-importer.php:118
+msgid "Import ACF and other Custom fields ( including Images and Galleries )"
+msgstr ""
+
+#: content-excel-importer.php:119
+msgid "Import Any Category / Custom Taxonomy with Excel"
+msgstr ""
+
+#: content-excel-importer.php:120
+msgid "Delete Category / Custom Taxonomy with Excel"
+msgstr ""
+
+#: content-excel-importer.php:121
+msgid "Import Featured Image along with Post"
+msgstr ""
+
+#: content-excel-importer.php:122
+msgid "Import Variable Woocommerce Products"
+msgstr ""
+
+#: content-excel-importer.php:123
+msgid "Import Product Featured Image from URL"
+msgstr ""
+
+#: content-excel-importer.php:124
+msgid "Import Product Gallery Images from URL!"
+msgstr ""
+
+#: content-excel-importer.php:125
+msgid "Import YOAST SEO Meta Title & Description"
+msgstr ""
+
+#: content-excel-importer.php:126
+msgid "Define Downloadable, name, URL for file, expiry date & limit!"
+msgstr ""
+
+#: content-excel-importer.php:127
+msgid "Import Category Term Description with HTML Support"
+msgstr ""
+
+#: content-excel-importer.php:131
+msgid "Content Excel Importer PRO"
+msgstr ""
+
+#: content-excel-importer.php:135
+msgid "Get it here"
+msgstr ""
+
+#: content-excel-importer.php:155
+msgid "Import Content"
+msgstr ""
+
+#: content-excel-importer.php:156
+msgid "Delete Content"
+msgstr ""
+
+#: content-excel-importer.php:157
+msgid "Import Categories"
+msgstr ""
+
+#: content-excel-importer.php:158
+msgid "Delete Categories"
+msgstr ""
+
+#: content-excel-importer.php:180
+msgid "Get more plugins by extendWP"
+msgstr ""
+
+#: content-excel-importer.php:209
+msgid "You like this plugin? "
+msgstr ""
+
+#: content-excel-importer.php:209
+msgid "Then please give us "
+msgstr ""
+
+#: content-excel-importer.php:263
+msgid "close"
+msgstr ""
+
+#: content-excel-importer.php:264
+msgid "Add your Email below & get "
+msgstr ""
+
+#: content-excel-importer.php:264
+msgid " discounts"
+msgstr ""
+
+#: content-excel-importer.php:264
+msgid " in our pro plugins at"
+msgstr ""
+
+#: content-excel-importer.php:269
+msgid "Sign up"
+msgstr ""
+
+#: includes/class-wpfactory-cexl.php:145
+msgid "Settings"
+msgstr ""
+
+#: includes/class-wpfactory-cexl.php:150
+msgid "Go Pro"
+msgstr ""
+
+#: includes/class-wpfactory-cexl.php:190
+msgid "Content Excel Importer Settings"
+msgstr ""
+
+#: includes/class-wpfactory-cexl.php:191
+msgid "Content Excel Importer"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:38
+msgid "We are sorry to see you go..."
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:39
+msgid "If you would be kind enough, please tell us why you're deactivating?"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:40
+msgid "Please tell us which plugin?"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:41
+msgid "Please tell us the reason so we can improve the plugin"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:42
+msgid "Do not send my e-mail address with this feedback"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:44
+msgid "Please give us any feedback that could help us improve"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:46
+msgid "Cancel"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:47
+msgid "Skip &amp; Deactivate"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:48
+msgid "Submit &amp; Deactivate"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:49
+msgid "Please wait"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:50
+msgid "Thank you!"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:59
+msgid "The plugin suddenly stopped working"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:60
+msgid "The plugin broke my site"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:61
+msgid "I don't need this plugin any more"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:62
+msgid "I found a better plugin"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:63
+msgid "It's a temporary deactivation, I'm troubleshooting"
+msgstr ""
+
+#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:64
+msgid "Other"
+msgstr ""

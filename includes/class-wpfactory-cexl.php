@@ -81,7 +81,7 @@ final class WPFactory_CEXL {
 		load_plugin_textdomain(
 			'content-excel-importer',
 			false,
-			dirname( plugin_basename( WPFACTORY_CEXL_FILE ) ) . '/languages/'
+			dirname( plugin_basename( WPFACTORY_CEXL_FILE ) ) . '/langs/'
 		);
 
 	}

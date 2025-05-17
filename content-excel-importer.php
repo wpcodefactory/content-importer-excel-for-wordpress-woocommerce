@@ -13,7 +13,7 @@
  * Created On: 04-06-2018
  * Updated On: 17-05-2025
  * Text Domain: content-excel-importer
- * Domain Path: /languages
+ * Domain Path: /langs
  */
 
 defined( 'ABSPATH' ) || exit;
