@@ -1,10 +1,9 @@
 === Import Content in WordPress & WooCommerce with Excel ===
-Contributors: taz_bambu
-Donate link: https://extend-wp.com/content-excel-importer-for-wordpress/
+Contributors: wpcodefactory, algoritmika, anbinder, karzin, omardabbas
 Tags: excel import, content import, bulk import, import translations, migrate
 Requires at least: 3.0.1
 Requires PHP: 8.1
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: 4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -102,7 +101,7 @@ Yes, insert a new row for each translation, mention the language code and in the
 Yes, update is also supported and will be mentioned while uploading.
 
 = Can I add product categories? =
-Yes, when you add a cateogory term in excel, this will be created along with the product.
+Yes, when you add a category term in excel, this will be created along with the product.
 You can add them comma separated in an excel column.
 
 = How do i define if a product is in stock? =
@@ -126,50 +125,54 @@ This feature is available in the [PRO Version](https://extend-wp.com/product/con
 
 == Changelog ==
 
+= 5.0.0 - 17/05/2025 =
+* WC tested up to: 9.8.
+* Tested up to: 6.8.
+
 = 4.4 =
-update phpspreadsheet to 3.4.0 , compatibility with wp 6.7 , woo 9.4..
+* Dev - Update PhpSpreadsheet to 3.4.0, compatibility with WP 6.7, WooCommerce 9.4.
 
 = 4.2 =
-fix css , check compatibilities
+* Fix css, check compatibilities.
 
 = 4.1 =
-fix notice issue
+* Fix notice issue.
 
 = 4.0 =
-hpos compatibility , add deact form
+* HPOS compatibility, add deact form.
 
 = 3.9 =
-Fix locallization - check wp version
+* Fix localization - check wp version.
 
 = 3.8 =
-Fix compatibility with php version 8.0.6
+* Fix compatibility with PHP version 8.0.6.
 
 = 3.7 =
-Fix bug on indexing woo products
+* Fix bug on indexing woo products.
 
 = 3.6 =
-Fix indexing WHEN ADDING WooCommerce Products
-Fix bug deleting temp excel file after import
+* Fix indexing WHEN ADDING WooCommerce Products.
+* Fix bug deleting temp excel file after import.
 
 = 3.5 =
-Add automatch columns feature
+* Add automatch columns feature.
 
 = 3.4 =
-Replace PHPExcel Library with PHPSpreadsheet
+* Replace PHPExcel Library with PHPSpreadsheet.
 
 = 3.3 =
-do not include "incategorized" category if posts are imported
+* Do not include "uncategorized" category if posts are imported.
 
 = 3.2 =
-Import with same title even if this exists
+* Import with same title even if this exists.
 
 = 3.1 =
-fixed compatibility with wp 5.5
+* Fixed compatibility with WP 5.5.
 
 = 2.0 =
-Update wp & woocommerce version.
-Add virtual functionality for products.
-Fix problem with Ajax function
+* Update WP & WooCommerce version.
+* Add virtual functionality for products.
+* Fix problem with Ajax function.
 
 = 1.0 =
 
@@ -189,7 +192,7 @@ fixed compatibility with wp 5.5
 Import with same title even if this exists
 
 = 3.3 =
-do not include "incategorized" category if posts are imported
+do not include "uncategorized" category if posts are imported
 
 = 3.4 =
 Replace PHPExcel Library with PHPSpreadsheet

@@ -1,7 +1,7 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-} // Exit if accessed directly
+
+defined( 'ABSPATH' ) || exit;
+
 /** this file contains the class that handles import of content **/
 
 if ( ! class_exists( 'PhpOffice\PhpSpreadsheet\IOFactory' ) ) {

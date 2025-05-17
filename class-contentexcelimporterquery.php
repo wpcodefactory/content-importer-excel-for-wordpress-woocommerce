@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 /** This file contains the class that handles queries for the import process. **/
 
 class ContentExcelImporterQuery {
