@@ -197,17 +197,6 @@ function contentExceIimporter_rating() {
 	<?php
 }
 
-// HPOS compatibility declaration.
-
-add_action(
-	'before_woocommerce_init',
-	function () {
-		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
-		}
-	}
-);
-
 // Deactivation survey.
 
 require plugin_dir_path( __FILE__ ) . '/lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php';
@@ -270,6 +259,5 @@ add_action( 'wp_ajax_contentExceIimporter_push_not', 'contentExceIimporter_push_
 
 function contentExceIimporter_push_not() {
 	/** This function deletes transient if user closes popup window. */
-
 	delete_transient( 'contentExceIimporter_notification' );
 }
