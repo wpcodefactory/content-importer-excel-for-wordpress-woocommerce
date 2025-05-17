@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.0-dev-20250517-1457' );
+defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.0-dev-20250517-1626' );
 
 defined( 'WPFACTORY_CEXL_FILE' ) || define( 'WPFACTORY_CEXL_FILE', __FILE__ );
 
@@ -232,12 +232,17 @@ add_filter(
 	}
 );
 
-// Email notification form.
-
+/**
+ * Email notification form.
+ */
 register_activation_hook( __FILE__, 'contentExceIimporter_notification_hook' );
 
+/**
+ * contentExceIimporter_notification_hook.
+ *
+ * This function sets a transient for displaying the notification message.
+ */
 function contentExceIimporter_notification_hook() {
-	/** This function sets a transient for displaying the notification message. */
 	set_transient( 'contentExceIimporter_notification', true );
 }
 
@@ -246,10 +251,11 @@ add_action( 'admin_notices', 'contentExceIimporter_notification' );
 /**
  * contentExceIimporter_notification.
  *
+ * This function shows notification message.
+ *
  * @version 5.0.0
  */
 function contentExceIimporter_notification() {
-	/** This function shows notification message. */
 
 	$screen = get_current_screen();
 	if ( 'wpfactory_page_content-excel-importer' !== $screen->base ) {
@@ -274,9 +280,13 @@ function contentExceIimporter_notification() {
 	}
 }
 add_action( 'wp_ajax_nopriv_contentExceIimporter_push_not', 'contentExceIimporter_push_not' );
-add_action( 'wp_ajax_contentExceIimporter_push_not', 'contentExceIimporter_push_not' );
+add_action( 'wp_ajax_contentExceIimporter_push_not',        'contentExceIimporter_push_not' );
 
+/**
+ * contentExceIimporter_push_not.
+ *
+ * This function deletes transient if user closes popup window.
+ */
 function contentExceIimporter_push_not() {
-	/** This function deletes transient if user closes popup window. */
 	delete_transient( 'contentExceIimporter_notification' );
 }
