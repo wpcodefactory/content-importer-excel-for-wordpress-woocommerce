@@ -44,12 +44,17 @@ add_action( 'plugins_loaded', 'wpfactory_cexl' );
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterquery.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterproducts.php';
 
+/**
+ * load_contentExceIimporter_js.
+ *
+ * @version 5.0.0
+ */
 function load_contentExceIimporter_js() {
 	/** This function enqueues css and js files needed. */
 
 	$screen = get_current_screen();
 
-	if ( 'toplevel_page_content-excel-importer' !== $screen->base ) {
+	if ( 'wpfactory_page_content-excel-importer' !== $screen->base ) {
 		return;
 	}
 
@@ -241,11 +246,16 @@ function contentExceIimporter_notification_hook() {
 
 add_action( 'admin_notices', 'contentExceIimporter_notification' );
 
+/**
+ * contentExceIimporter_notification.
+ *
+ * @version 5.0.0
+ */
 function contentExceIimporter_notification() {
 	/** This function shows notification message. */
 
 	$screen = get_current_screen();
-	if ( 'toplevel_page_content-excel-importer' !== $screen->base ) {
+	if ( 'wpfactory_page_content-excel-importer' !== $screen->base ) {
 		return;
 	}
 
