@@ -44,13 +44,6 @@ add_action( 'plugins_loaded', 'wpfactory_cexl' );
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterquery.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterproducts.php';
 
-function contentExceIimporter_translate() {
-	/** This function is responsible for translations. */
-
-	load_plugin_textdomain( 'content-excel-importer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-}
-add_action( 'plugins_loaded', 'contentExceIimporter_translate' );
-
 function load_contentExceIimporter_js() {
 	/** This function enqueues css and js files needed. */
 

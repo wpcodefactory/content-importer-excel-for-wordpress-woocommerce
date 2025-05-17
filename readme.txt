@@ -126,6 +126,7 @@ This feature is available in the [PRO Version](https://extend-wp.com/product/con
 == Changelog ==
 
 = 5.0.0 - 17/05/2025 =
+* Fix - Translation loading fixed.
 * Dev - Plugin settings moved to the "WPFactory" menu.
 * Dev - "Recommendations" added.
 * Dev - Code refactoring and cleanup.

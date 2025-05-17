@@ -56,10 +56,28 @@ final class WPFactory_CEXL {
 	 */
 	function __construct() {
 
+		// Set up localisation
+		add_action( 'init', array( $this, 'localize' ) );
+
 		// Admin
 		if ( is_admin() ) {
 			$this->admin();
 		}
+
+	}
+
+	/**
+	 * localize.
+	 *
+	 * @version 5.0.0
+	 * @since   5.0.0
+	 */
+	function localize() {
+		load_plugin_textdomain(
+			'content-excel-importer',
+			false,
+			dirname( plugin_basename( WPFACTORY_CEXL_FILE ) ) . '/languages/'
+		);
 
 	}
 
