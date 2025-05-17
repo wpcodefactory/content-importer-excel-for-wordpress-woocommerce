@@ -92,12 +92,42 @@ final class WPFactory_CEXL {
 		// Load libs
 		require_once plugin_dir_path( WPFACTORY_CEXL_FILE ) . 'vendor/autoload.php';
 
+		// Action links
+		add_filter(
+			'plugin_action_links_' . plugin_basename( WPFACTORY_CEXL_FILE ),
+			array( $this, 'action_links' )
+		);
+
 		// "Recommendations" page
 		add_action( 'init', array( $this, 'add_cross_selling_library' ) );
 
 		// Settings
 		add_action( 'admin_menu', array( $this, 'add_settings' ), 11 );
 
+	}
+
+	/**
+	 * action_links.
+	 *
+	 * @version 5.0.0
+	 * @since   5.0.0
+	 *
+	 * @param   mixed $links
+	 * @return  array
+	 */
+	function action_links( $links ) {
+		$custom_links = array();
+
+		$custom_links[] = '<a href="' . admin_url( 'admin.php?page=content-excel-importer' ) . '">' .
+			__( 'Settings', 'content-excel-importer' ) .
+		'</a>';
+
+		$pro_url = 'https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/';
+		$custom_links[] = '<a target="_blank" style="font-weight: bold; color: green;" href="' . $pro_url . '">' .
+			__( 'Go Pro', 'content-excel-importer' ) .
+		'</a>';
+
+		return array_merge( $custom_links, $links );
 	}
 
 	/**

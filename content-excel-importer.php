@@ -84,17 +84,6 @@ function load_contentExceIimporter_js() {
 }
 add_action( 'admin_enqueue_scripts', 'load_contentExceIimporter_js' );
 
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'add_contentExceIimporter_links' );
-
-function add_contentExceIimporter_links( $links ) {
-	/** This function adds links to plugins page for this plugin. */
-
-	$links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=content-excel-importer' ) ) . '">' . esc_html__( 'Settings', 'content-excel-importer' ) . '</a>';
-	$links[] = '<a href="https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/" target="_blank">' . esc_html__( 'PRO Version', 'content-excel-importer' ) . '</a>';
-	$links[] = '<a href="https://extend-wp.com" target="_blank">' . esc_html__( 'More plugins', 'content-excel-importer' ) . '</a>';
-	return $links;
-}
-
 function contentExceIimporter_main() {
 	/** This function is main wrapper for plugin display page. */
 
