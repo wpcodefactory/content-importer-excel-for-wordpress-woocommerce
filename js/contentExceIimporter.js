@@ -1,3 +1,9 @@
+/**
+ * Import Content in WordPress & WooCommerce with Excel - JS
+ *
+ * @author  WPFactory
+ */
+
 (function( $ ) {
 
 	$('.content-excel-importer .nav-tab-wrapper a').click(function(e){

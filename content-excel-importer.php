@@ -47,10 +47,11 @@ require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterproducts.php';
 /**
  * load_contentExceIimporter_js.
  *
+ * This function enqueues css and js files needed.
+ *
  * @version 5.0.0
  */
 function load_contentExceIimporter_js() {
-	/** This function enqueues css and js files needed. */
 
 	$screen = get_current_screen();
 
@@ -58,12 +59,12 @@ function load_contentExceIimporter_js() {
 		return;
 	}
 
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'jquery-ui-core' );
-		wp_enqueue_script( 'jquery-ui-accordion' );
-		wp_enqueue_script( 'jquery-ui-tabs' );
-		wp_enqueue_script( 'jquery-ui-draggable' );
-		wp_enqueue_script( 'jquery-ui-droppable' );
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'jquery-ui-core' );
+	wp_enqueue_script( 'jquery-ui-accordion' );
+	wp_enqueue_script( 'jquery-ui-tabs' );
+	wp_enqueue_script( 'jquery-ui-draggable' );
+	wp_enqueue_script( 'jquery-ui-droppable' );
 
 	// ENQUEUED CSS FILE INSTEAD OF INLINE CSS.
 	wp_enqueue_style( 'contentExceIimporter_css', plugins_url( '/css/contentExceIimporter.css', __FILE__ ) );
@@ -84,9 +85,12 @@ function load_contentExceIimporter_js() {
 }
 add_action( 'admin_enqueue_scripts', 'load_contentExceIimporter_js' );
 
+/**
+ * contentExceIimporter_main.
+ *
+ * This function is main wrapper for plugin display page.
+ */
 function contentExceIimporter_main() {
-	/** This function is main wrapper for plugin display page. */
-
 	?>
 
 		<div class = 'left_wrap' >
@@ -135,10 +139,14 @@ function contentExceIimporter_main() {
 	<?php
 }
 
+/**
+ * contentExceIimporter_init.
+ *
+ * This function contains plugin content.
+ */
 function contentExceIimporter_init() {
-	/** This function contains plugin content. */
-
 	contentExceIimporter_form_header();
+
 	?>
 	<div class = "content-excel-importer" >
 <div class='msg'></div>
@@ -160,9 +168,12 @@ function contentExceIimporter_init() {
 	contentExceIimporter_form_footer();
 }
 
+/**
+ * contentExceIimporter_form_header.
+ *
+ * This function is plugin header.
+ */
 function contentExceIimporter_form_header() {
-	/** This function is plugin header. */
-
 	?>
 	<h1 style='display:flex;align-items:center;' ><a target='_blank' href='<?php echo esc_url( 'https://extend-wp.com/wordpress-premium-plugins' ); ?> '>
 
@@ -172,9 +183,12 @@ function contentExceIimporter_form_header() {
 	<?php
 }
 
+/**
+ * contentExceIimporter_form_footer.
+ *
+ * This function is plugin footer.
+ */
 function contentExceIimporter_form_footer() {
-	/** This function is plugin footer. */
-
 	?>
 	<hr>
 		<div></div>
@@ -183,8 +197,12 @@ function contentExceIimporter_form_footer() {
 	<?php
 }
 
+/**
+ * contentExceIimporter_rating.
+ *
+ * This function is plugin rating from wordpress.org.
+ */
 function contentExceIimporter_rating() {
-	/** This function is plugin rating from wordpress.org. */
 	?>
 		<div class="notices notice-success rating is-dismissible">
 
@@ -197,8 +215,9 @@ function contentExceIimporter_rating() {
 	<?php
 }
 
-// Deactivation survey.
-
+/**
+ * Deactivation survey.
+ */
 require plugin_dir_path( __FILE__ ) . '/lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php';
 add_filter(
 	'codecabin_deactivate_feedback_form_plugins',

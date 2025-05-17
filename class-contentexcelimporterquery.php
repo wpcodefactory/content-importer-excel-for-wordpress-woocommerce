@@ -1,4 +1,9 @@
 <?php
+/**
+ * Import Content in WordPress & WooCommerce with Excel - ContentExcelImporterQuery Class
+ *
+ * @author  WPFactory
+ */
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Import Content in WordPress & WooCommerce with Excel - ContentExcelImporterProducts Class
+ *
+ * @author  WPFactory
+ */
 
 defined( 'ABSPATH' ) || exit;
 
@@ -484,4 +489,5 @@ public function importProducts() {
 		}
 	}
 }
+
 $products = new ContentExcelImporterProducts();
