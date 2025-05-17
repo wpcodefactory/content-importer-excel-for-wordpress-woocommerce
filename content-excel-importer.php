@@ -18,6 +18,29 @@
 
 defined( 'ABSPATH' ) || exit;
 
+defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.0-dev-20250517-1457' );
+
+defined( 'WPFACTORY_CEXL_FILE' ) || define( 'WPFACTORY_CEXL_FILE', __FILE__ );
+
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wpfactory-cexl.php';
+
+if ( ! function_exists( 'wpfactory_cexl' ) ) {
+	/**
+	 * Returns the main instance of WPFactory_CEXL to prevent the need to use globals.
+	 *
+	 * @version 5.0.0
+	 * @since   5.0.0
+	 */
+	function wpfactory_cexl() {
+		return WPFactory_CEXL::instance();
+	}
+}
+
+add_action( 'plugins_loaded', 'wpfactory_cexl' );
+
+/**
+ * require.
+ */
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterquery.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterproducts.php';
 
@@ -267,5 +290,3 @@ function contentExceIimporter_push_not() {
 
 	delete_transient( 'contentExceIimporter_notification' );
 }
-
-?>
