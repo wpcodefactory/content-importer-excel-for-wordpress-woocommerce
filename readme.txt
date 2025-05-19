@@ -12,10 +12,10 @@ Import Posts, Pages, Simple Products for WooCommerce & Wordpress with Excel. Mig
 
 == Description ==
 
-**You want to do a website migration without adding content 1 by 1? Bulk Edit Content from  one screen? Use can now import content in WordPress from an Excel File with an easy Drag & Drop functionality.**
+**You want to do a website migration without adding content 1 by 1? Bulk Edit Content from one screen? Use can now import content in WordPress from an Excel File with an easy Drag & Drop functionality.**
 
 * **Import Posts, Pages, Simple Products for WooCommerce**, any Wordpress Content with Excel. No more CSV Hassle! Website Migration Made Easy
-* **Data mapping** by **drag & drop** excel columns to post type fields , or **automatch columns** based on Excel Labels( if same with fields names).
+* **Data mapping** by **drag & drop** excel columns to post type fields, or **automatch columns** based on Excel Labels( if same with fields names).
 * **Speed!** The form is submitted through **AJAX**, so there is no page reloading.
 * **Multilingual!** It is compatible with QTRANSLATE (using the relevant tags for the translations) and POLYLANG for Multilingual Import
 [Import any Post Type including WooCommerce Products with Excel](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
@@ -67,7 +67,7 @@ With the latest update you have an option to Import with same title even if this
 * IMPORTS PRODUCT GALLERY IMAGES FROM URL
 * DEFINE IF DOWNLOADABLE, DOWNLOADABLE NAME,URL,EXPIRY DATA & LIMIT
 * IMPORT CATEGORY TERMS description HTML
-* IMPORT YOAST SEO Meta Product fields,  like META TITLE, META DESCRIPTION
+* IMPORT YOAST SEO Meta Product fields, like META TITLE, META DESCRIPTION
 * IMPORTS CUSTOM TAXONOMIES
 * DELETE PRODUCTS THROUGH EXCEL FILE BY id, slug or title
 * IMPORT CATEGORY TERMS AND SUB TERMS THROUGH EXCEL FILE
@@ -82,8 +82,8 @@ With the latest update you have an option to Import with same title even if this
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins` directory and unzip, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Use the Content Excel Importer menu link,  or Settings link on plugins page to use the plugin.
+2. Activate the plugin through the "Plugins" screen in WordPress
+3. Use the "WPFactory > Content Excel Importer" menu link, or "Settings" link on plugins page to use the plugin.
 4. Upload your excel file (there is a link for a sample excel file) and proceed to data mapping and creating your products, posts or pages.
 
 == Frequently Asked Questions ==
@@ -125,7 +125,7 @@ This feature is available in the [PRO Version](https://extend-wp.com/product/con
 
 == Changelog ==
 
-= 5.0.0 - 17/05/2025 =
+= 5.0.0 - 19/05/2025 =
 * Fix - Translation loading fixed.
 * Dev - Plugin settings moved to the "WPFactory" menu.
 * Dev - "Recommendations" added.
@@ -179,52 +179,9 @@ This feature is available in the [PRO Version](https://extend-wp.com/product/con
 * Fix problem with Ajax function.
 
 = 1.0 =
+* Initial release.
 
 == Upgrade Notice ==
 
-= 1.0 =
-
-= 2.0 =
-Update wp & woocommerce version.
-Add virtual functionality for products.
-Fix problem with Ajax function
-
-= 3.1 =
-fixed compatibility with wp 5.5
-
-= 3.2 =
-Import with same title even if this exists
-
-= 3.3 =
-do not include "uncategorized" category if posts are imported
-
-= 3.4 =
-Replace PHPExcel Library with PHPSpreadsheet
-
-= 3.5 =
-Add automatch columns feature
-
-= 3.6 =
-Fix indexing WHEN ADDING WooCommerce Products
-Fix bug deleting temp excel file after import
-
-= 3.7 =
-Fix bug on indexing woo products
-
-= 3.8 =
-Fix compatibility with php version 8.0.6
-
-= 3.9 =
-Fix locallization - check wp version
-
-= 4.0 =
-hpos compatibility , add deact form
-
-= 4.1 =
-fix notice issue
-
-= 4.2 =
-fix css , check compatibilities
-
 = 4.4 =
-update phpspreadsheet to 3.4.0 , compatibility with wp 6.7 , woo 9.4..
+Update PhpSpreadsheet to 3.4.0, compatibility with WP 6.7, WooCommerce 9.4.

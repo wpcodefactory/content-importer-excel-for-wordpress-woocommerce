@@ -185,7 +185,7 @@
 									total = parseInt( $(".content-excel-importer input[name='finalupload']").val() ) ;
 									console.log("dtart at: "+start + "  - total : " + total);
 									if(start > total  ){
-										$('.content-excel-importer .success , .content-excel-importer .error, .content-excel-importer .warning').delay(2000).hide();
+										$('.content-excel-importer .success, .content-excel-importer .error, .content-excel-importer .warning').delay(2000).hide();
 										$(".content-excel-importer #product_import").delay(5000).slideDown();
 									}else{
 
