@@ -3,7 +3,7 @@
  * Plugin Name: Import Content in WordPress & WooCommerce with Excel
  * Plugin URI: https://extend-wp.com/content-excel-importer-for-wordpress/
  * Description: Import Posts, Pages, Simple Products for WooCommerce & WordPress with Excel. Migrate Easily. No more CSV Hassle.
- * Version: 5.0.0-dev
+ * Version: 5.0.0
  * Author: WPFactory
  * Author URI: https://wpfactory.com
  * WC requires at least: 2.2
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.0-dev-20250519-0934' );
+defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.0' );
 
 defined( 'WPFACTORY_CEXL_FILE' ) || define( 'WPFACTORY_CEXL_FILE', __FILE__ );
 
