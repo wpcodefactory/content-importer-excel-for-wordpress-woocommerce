@@ -4,7 +4,7 @@ Tags: excel import, content import, bulk import, import translations, migrate
 Requires at least: 3.0.1
 Requires PHP: 8.1
 Tested up to: 6.8
-Stable tag: 5.0.0
+Stable tag: 5.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,9 @@ This feature is available in the [PRO Version](https://extend-wp.com/product/con
 3. Import Content in WordPress with Excel - mapped data
 
 == Changelog ==
+
+= 5.0.1 - 06/06/2025 =
+* Dev - Updated plugin icon and banner.
 
 = 5.0.0 - 19/05/2025 =
 * Fix - Translation loading fixed.
