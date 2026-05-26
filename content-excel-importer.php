@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.3' );
+defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.4' );
 
 defined( 'WPFACTORY_CEXL_FILE' ) || define( 'WPFACTORY_CEXL_FILE', __FILE__ );
 
