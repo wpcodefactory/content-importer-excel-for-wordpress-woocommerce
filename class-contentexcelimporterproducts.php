@@ -60,6 +60,63 @@ public function __construct() {
 		return self::import_dir() . '/import-' . $token . '.xlsx';
 	}
 
+	/**
+	 * Existing item for a sheet row. Default: same title inside the chosen post type (no type chosen: posts). The import
+	 * screen can ask for SKU or ID matching instead (cexl_match = sku or id, key column letter in cexl_match_column).
+	 *
+	 * @param string $title Title from the row.
+	 * @param string $type  Post type of the import.
+	 * @param array  $row   The row, keyed by column letter.
+	 * @return int Post ID or 0 (then a new item is created).
+	 */
+	/**
+	 * Update mode sent by the import screen: cexl_update = mapped changes only the columns of the sheet that have a value
+	 * in the row. Anything else keeps the 5.0.4 behaviour (every field is written again).
+	 *
+	 * @return bool
+	 */
+	public static function only_mapped_columns() {
+		return isset( $_POST['cexl_update'] ) && 'mapped' === $_POST['cexl_update']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked in import_content().
+	}
+
+	/**
+	 * For an update in "only the columns in this sheet" mode: keeps only the post fields whose column is mapped and has
+	 * a value in this row. Fields left out keep their current value (status, date, short description, slug...).
+	 *
+	 * @param array $post Post fields the import would write.
+	 * @param array $row  The row, keyed by column letter.
+	 * @return array
+	 */
+	public static function keep_mapped_fields( $post, $row ) {
+		$keep = array( 'ID' => $post['ID'] );
+		foreach ( array( 'post_title', 'post_author', 'post_date', 'post_name', 'post_content', 'post_status', 'post_excerpt' ) as $field ) {
+			$column = isset( $_POST[ $field ] ) ? sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( array_key_exists( $field, $post ) && '' !== $column && isset( $row[ $column ] ) && '' !== trim( (string) $row[ $column ] ) ) {
+				$keep[ $field ] = $post[ $field ];
+			}
+		}
+		return $keep;
+	}
+
+	public static function find_existing( $title, $type, $row ) {
+		$type  = '' === (string) $type ? 'post' : (string) $type;
+		$match = isset( $_POST['cexl_match'] ) ? sanitize_key( wp_unslash( $_POST['cexl_match'] ) ) : 'title'; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked in import_content().
+		if ( 'sku' === $match || 'id' === $match ) {
+			$column = isset( $_POST['cexl_match_column'] ) ? sanitize_text_field( wp_unslash( $_POST['cexl_match_column'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$key    = ( '' !== $column && isset( $row[ $column ] ) ) ? trim( (string) $row[ $column ] ) : '';
+			if ( '' === $key ) {
+				return 0;
+			}
+			if ( 'sku' === $match ) {
+				$id = function_exists( 'wc_get_product_id_by_sku' ) ? (int) wc_get_product_id_by_sku( $key ) : 0;
+			} else {
+				$id = ctype_digit( $key ) ? (int) $key : 0;
+			}
+			return ( $id && get_post_type( $id ) === $type ) ? $id : 0;
+		}
+		return '' === (string) $title ? 0 : (int) post_exists( $title, '', '', $type );
+	}
+
 public function importProductsDisplay() {
 	/** this method provides the html for the import display form */
 	?>
@@ -261,7 +318,9 @@ public function importProducts() {
 				}
 
 						// Check if post exists: same title inside the chosen post type only (a page or image with that title is never touched).
-				$existing_id = ( '' === $title ) ? 0 : (int) post_exists( $title, '', '', '' === $type ? 'post' : $type ); // No type chosen: WordPress saves a post.
+				$existing_id = self::find_existing( $title, $type, $allDataInSheet[ $i ] );
+				// An update in "only the columns in this sheet" mode leaves every unmapped field as it is.
+				$keep_unmapped = self::only_mapped_columns() && 0 !== $existing_id && empty( $_POST['add_always_new'] );
 				if ( 0 === $existing_id || ! empty( $_POST['add_always_new'] ) ) {
 					$post = array(
 						'post_author'  => $author,
@@ -317,6 +376,9 @@ public function importProducts() {
 							'post_type'    => $type,
 						);
 
+					}
+					if ( $keep_unmapped ) {
+						$post = self::keep_mapped_fields( $post, $allDataInSheet[ $i ] );
 					}
 					wp_update_post( $post, $wp_error );
 					print "<p class='warning'><a href='" . esc_url( get_permalink( $id ) ) . "' target='_blank'>" . esc_html( $title ) . '</a> ' . esc_html__( 'already exists. Updated', 'content-excel-importer' ) . '.</p>';
@@ -421,7 +483,7 @@ public function importProducts() {
 						}
 						update_post_meta( $id, '_manage_stock', 'yes' );
 
-					} else {
+					} elseif ( ! $keep_unmapped ) {
 						update_post_meta( $id, '_stock_status', 'instock' );
 					}
 					if ( $length !== '' ) {
@@ -500,9 +562,11 @@ public function importProducts() {
 				if ( $type === 'product' ) {
 					$product = wc_get_product( $id );
 					$product->set_stock_quantity( get_post_meta( $id, '_stock', true ) );
-					$product->set_stock_status( 'instock' );
-					if ( get_post_meta( $id, '_stock', true ) === '0' ) {
-						$product->set_stock_status( 'outofstock' );
+					if ( ! $keep_unmapped || '' !== (string) $stock ) {
+						$product->set_stock_status( 'instock' );
+						if ( get_post_meta( $id, '_stock', true ) === '0' ) {
+							$product->set_stock_status( 'outofstock' );
+						}
 					}
 					$product->set_price( get_post_meta( $id, '_price', true ) );
 					// The prices were written straight to the database above, so WooCommerce would not see them change. Write them
