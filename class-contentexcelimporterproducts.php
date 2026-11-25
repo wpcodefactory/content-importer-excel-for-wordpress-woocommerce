@@ -27,6 +27,39 @@ public function __construct() {
 		add_action( 'wp_ajax_import_content', array( $this, 'import_content' ) );
 }
 
+	/**
+	 * Folder that holds uploaded sheets while an import runs (uploads/content-excel-importer), closed to visitors.
+	 *
+	 * @return string
+	 */
+	public static function import_dir() {
+		$upload = wp_upload_dir( null, false );
+		$dir    = trailingslashit( $upload['basedir'] ) . 'content-excel-importer';
+		if ( ! is_dir( $dir ) ) {
+			wp_mkdir_p( $dir );
+		}
+		if ( ! file_exists( $dir . '/index.php' ) ) {
+			file_put_contents( $dir . '/index.php', "<?php\n// Silence is golden.\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		}
+		if ( ! file_exists( $dir . '/.htaccess' ) ) {
+			file_put_contents( $dir . '/.htaccess', "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from all\n</IfModule>\n" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		}
+		return $dir;
+	}
+
+	/**
+	 * Path of the sheet for one import, from the random name the mapping screen carries.
+	 *
+	 * @param string $token Random 32 character name.
+	 * @return string Empty when the name is not valid.
+	 */
+	public static function import_file( $token ) {
+		if ( ! is_string( $token ) || ! preg_match( '/^[A-Za-z0-9]{32}$/', $token ) ) {
+			return '';
+		}
+		return self::import_dir() . '/import-' . $token . '.xlsx';
+	}
+
 public function importProductsDisplay() {
 	/** this method provides the html for the import display form */
 	?>
@@ -123,6 +156,8 @@ public function importProducts() {
 						<?php $this->getFields( $post_type ); ?>
 
 						<?php
+						$token = wp_generate_password( 32, false, false );
+						print "<input type='hidden' name='cexl_file' value='" . esc_attr( $token ) . "' />";
 						print "<input type='hidden' name='finalupload' value='" . esc_attr( $total ) . "' />
 						   <input type='hidden' name='import' value='import' />
 						   <input type='hidden' name='start' value='2' />
@@ -133,7 +168,13 @@ public function importProducts() {
 							print '</div>';
 						print '</form></div>';
 
-						if ( isset( $_FILES['file']['tmp_name'] ) ) move_uploaded_file( $_FILES['file']['tmp_name'], plugin_dir_path( __FILE__ ) . 'import.xlsx' );
+						// Remove sheets of imports that were never finished, then keep this one until its last row is imported.
+						foreach ( (array) glob( self::import_dir() . '/import-*.xlsx' ) as $old_file ) {
+							if ( filemtime( $old_file ) < time() - DAY_IN_SECONDS ) {
+								wp_delete_file( $old_file );
+							}
+						}
+						if ( isset( $_FILES['file']['tmp_name'] ) ) move_uploaded_file( $_FILES['file']['tmp_name'], self::import_file( $token ) );
 
 				} else {
 					'<h3>' . esc_html_e( 'Invalid File:Please Upload Excel File', 'content-excel-importer' ) . '</h3>';
@@ -154,7 +195,12 @@ public function importProducts() {
 
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			require_once ABSPATH . 'wp-admin/includes/media.php';
-			$filename = plugin_dir_path( __FILE__ ) . 'import.xlsx';
+			$token    = isset( $_POST['cexl_file'] ) ? sanitize_text_field( wp_unslash( $_POST['cexl_file'] ) ) : '';
+			$filename = self::import_file( $token );
+			if ( '' === $filename || ! file_exists( $filename ) ) {
+				print "<p class='warning' style='color:red'>" . esc_html__( 'The uploaded file was not found. Please upload it again.', 'content-excel-importer' ) . '</p>';
+				die;
+			}
 
 			$objPHPExcel      = IOFactory::load( $filename );
 			$allDataInSheet   = $objPHPExcel->getActiveSheet()->toArray( null, true, true, true );
@@ -208,8 +254,9 @@ public function importProducts() {
 					$date        = date( 'Y-m-d H:i:s', $date_stamp );
 				}
 
-						// Check if post exists.
-				if ( post_exists( $title ) === 0 || ! empty( $_POST['add_always_new'] ) ) {
+						// Check if post exists: same title inside the chosen post type only (a page or image with that title is never touched).
+				$existing_id = ( '' === $title ) ? 0 : (int) post_exists( $title, '', '', '' === $type ? 'post' : $type ); // No type chosen: WordPress saves a post.
+				if ( 0 === $existing_id || ! empty( $_POST['add_always_new'] ) ) {
 					$post = array(
 						'post_author'  => $author,
 						'post_date'    => $date,
@@ -232,7 +279,7 @@ public function importProducts() {
 					}
 				} else {
 					// Update.
-					$id = post_exists( $title );
+					$id = $existing_id;
 					if ( in_array( $id, $idsArray ) ) {
 					} else {
 						array_push( $idsArray, $id );
@@ -452,8 +499,21 @@ public function importProducts() {
 						$product->set_stock_status( 'outofstock' );
 					}
 					$product->set_price( get_post_meta( $id, '_price', true ) );
-					$product->set_sale_price( get_post_meta( $id, '_sale_price', true ) );
-					$product->set_sale_price( get_post_meta( $id, '_regular_price', true ) );
+					// The prices were written straight to the database above, so WooCommerce would not see them change. Write them
+					// again through WooCommerce so that it applies its own rules on save: a sale price at or above the regular price
+					// is dropped, the shop price follows, the lookup table is refreshed (5.0.4 got this by overwriting the sale price).
+					$no_sale_price = '' === (string) get_post_meta( $id, '_sale_price', true );
+					foreach ( array( '_regular_price' => 'set_regular_price', '_sale_price' => 'set_sale_price' ) as $price_key => $price_setter ) {
+						$price_value = get_post_meta( $id, $price_key, true );
+						if ( '' !== (string) $price_value ) {
+							delete_post_meta( $id, $price_key );
+							$product->{$price_setter}( '' );
+							$product->{$price_setter}( $price_value );
+						}
+					}
+					if ( $no_sale_price && '' !== (string) $product->get_regular_price( 'edit' ) ) {
+						update_post_meta( $id, '_sale_price', '' );
+					}
 					$product->save();
 				}
 
