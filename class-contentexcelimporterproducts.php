@@ -169,12 +169,13 @@ public function importProducts() {
 						print '</form></div>';
 
 						// Remove sheets of imports that were never finished, then keep this one until its last row is imported.
-						foreach ( (array) glob( self::import_dir() . '/import-*.xlsx' ) as $old_file ) {
+						foreach ( (array) glob( self::import_dir() . '/import-*' ) as $old_file ) {
 							if ( filemtime( $old_file ) < time() - DAY_IN_SECONDS ) {
 								wp_delete_file( $old_file );
 							}
 						}
 						if ( isset( $_FILES['file']['tmp_name'] ) ) move_uploaded_file( $_FILES['file']['tmp_name'], self::import_file( $token ) );
+						file_put_contents( substr( self::import_file( $token ), 0, -5 ) . '.json', (string) wp_json_encode( $allDataInSheet ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 
 				} else {
 					'<h3>' . esc_html_e( 'Invalid File:Please Upload Excel File', 'content-excel-importer' ) . '</h3>';
@@ -202,8 +203,13 @@ public function importProducts() {
 				die;
 			}
 
-			$objPHPExcel      = IOFactory::load( $filename );
-			$allDataInSheet   = $objPHPExcel->getActiveSheet()->toArray( null, true, true, true );
+			// The sheet is read once, when it is uploaded; every row request reads that copy (5.0.4 re-read the whole file per row).
+			$sheet_cache    = substr( $filename, 0, -5 ) . '.json';
+			$allDataInSheet = file_exists( $sheet_cache ) ? json_decode( (string) file_get_contents( $sheet_cache ), true ) : null; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			if ( ! is_array( $allDataInSheet ) ) {
+				$objPHPExcel    = IOFactory::load( $filename );
+				$allDataInSheet = $objPHPExcel->getActiveSheet()->toArray( null, true, true, true );
+			}
 			$data             = count( $allDataInSheet );  // Here get total count of row in that Excel sheet.
 			$images           = array();
 			$finalIdsArray    = array();
@@ -526,6 +532,7 @@ public function importProducts() {
 					print "<div class='importMessageSussess'><h2>" . esc_html( $i ) . ' / ' . esc_html( $finalUpload ) . esc_html__( ' - Job Done! ', 'content-excel-importer' ) . "<a href='" . esc_url( admin_url( 'edit.php?post_type=' . esc_attr( $type ) ) ) . "' target='_blank'><i class='fa fa-eye'></i> " . esc_html__( 'GO VIEW YOUR ', 'content-excel-importer' ) . ' ' . esc_html( $type ) . 's!</a></h2></div>';
 
 					wp_delete_file( $filename );
+					wp_delete_file( $sheet_cache );
 
 				} else {
 
