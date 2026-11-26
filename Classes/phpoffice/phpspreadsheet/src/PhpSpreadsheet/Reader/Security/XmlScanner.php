@@ -6,22 +6,25 @@ use PhpOffice\PhpSpreadsheet\Reader;
 
 class XmlScanner
 {
-    private const ENCODING_PATTERN = '/encoding\\s*=\\s*(["\'])(.+?)\\1/s';
-    private const ENCODING_UTF7 = '/encoding\\s*=\\s*(["\'])UTF-7\\1/si';
+    private const ENCODING_PATTERN = '/encoding\s*=\s*(["\'])(.+?)\1/s';
+    private const ENCODING_UTF7 = '/encoding\s*=\s*(["\'])UTF-7\1/si';
 
     private string $pattern;
 
     /** @var ?callable */
     private $callback;
 
-    public function __construct(string $pattern = '<!DOCTYPE')
+    public const HTML_PATTERN = '<!ENTITY';
+    public const XML_PATTERN = '<!DOCTYPE';
+
+    public function __construct(string $pattern = self::XML_PATTERN)
     {
         $this->pattern = $pattern;
     }
 
     public static function getInstance(Reader\IReader $reader): self
     {
-        $pattern = ($reader instanceof Reader\Html) ? '<!ENTITY' : '<!DOCTYPE';
+        $pattern = ($reader instanceof Reader\Html) ? self::HTML_PATTERN : self::XML_PATTERN;
 
         return new self($pattern);
     }
@@ -41,7 +44,7 @@ class XmlScanner
         $charset = $this->findCharSet($xml);
         $foundUtf7 = $charset === 'UTF-7';
         if ($charset !== 'UTF-8') {
-            $testStart = '/^.{0,4}\\s*<?xml/s';
+            $testStart = '/^.{0,4}\s*<?xml/s';
             $startWithXml1 = preg_match($testStart, $xml);
             $xml = self::forceString(mb_convert_encoding($xml, 'UTF-8', $charset));
             if ($startWithXml1 === 1 && preg_match($testStart, $xml) !== 1) {
@@ -56,6 +59,11 @@ class XmlScanner
             throw new Reader\Exception('UTF-7 encoding not permitted');
         }
         if (substr($xml, 0, Reader\Csv::UTF8_BOM_LEN) === Reader\Csv::UTF8_BOM) {
+            if (preg_match(self::ENCODING_PATTERN, $xml, $matches) === 1) {
+                if (strtolower($matches[2]) !== 'utf-8') {
+                    throw new Reader\Exception("BOM says UTF-8 but encoding says {$matches[2]}");
+                }
+            }
             $xml = substr($xml, Reader\Csv::UTF8_BOM_LEN);
         }
 
@@ -87,7 +95,7 @@ class XmlScanner
     public function scan($xml): string
     {
         // Don't rely purely on libxml_disable_entity_loader()
-        $pattern = '/\\0*' . implode('\\0*', str_split($this->pattern)) . '\\0*/';
+        $pattern = '/\0*' . implode('\0*', str_split($this->pattern)) . '\0*/';
 
         $xml = "$xml";
         if (preg_match($pattern, $xml)) {

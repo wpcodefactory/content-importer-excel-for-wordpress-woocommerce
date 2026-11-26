@@ -4,21 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "975a31b1bba1e5b13ef53e6b3d59cf0b",
+    "content-hash": "e19e8ae26dc458932e883bd5592ab32a",
     "packages": [
         {
             "name": "wpfactory/wpfactory-admin-menu",
-            "version": "v1.0.3",
+            "version": "v1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpcodefactory/wpfactory-admin-menu.git",
-                "reference": "fe48c4100a6b436a3dd39308814887119063c140"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wpcodefactory/wpfactory-admin-menu/zipball/fe48c4100a6b436a3dd39308814887119063c140",
-                "reference": "fe48c4100a6b436a3dd39308814887119063c140",
-                "shasum": ""
+                "reference": "52aa90349253dce5a91837e004e62576f8684059"
             },
             "require-dev": {
                 "wp-cli/wp-cli-bundle": "*"
@@ -48,36 +42,54 @@
                     "@composer run wp-make-mo"
                 ]
             },
-            "support": {
-                "source": "https://github.com/wpcodefactory/wpfactory-admin-menu/tree/v1.0.3",
-                "issues": "https://github.com/wpcodefactory/wpfactory-admin-menu/issues"
+            "time": "2026-10-14T20:54:53+00:00"
+        },
+        {
+            "name": "wpfactory/wpfactory-ai",
+            "version": "1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wpcodefactory/wpfactory-ai.git",
+                "reference": "d31d3ed264f9ba95c06e52c7c5bf506b5e8a0e1e"
             },
-            "time": "2024-10-14T14:01:02+00:00"
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "wpfactory-ai.php"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "WPFactory AI for WordPress plugins: connect a site with an email code, call AI with WPFactory credits, balance, refunds and usage. The newest bundled copy loads.",
+            "homepage": "https://ai.wpfactory.com",
+            "time": "2026-11-26T07:08:34+00:00"
         },
         {
             "name": "wpfactory/wpfactory-cross-selling",
-            "version": "v1.0.3",
+            "version": "v1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpcodefactory/wpfactory-cross-selling.git",
-                "reference": "d37c73013e897d3ce3db05b97046b30fdd2fd403"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wpcodefactory/wpfactory-cross-selling/zipball/d37c73013e897d3ce3db05b97046b30fdd2fd403",
-                "reference": "d37c73013e897d3ce3db05b97046b30fdd2fd403",
-                "shasum": ""
+                "reference": "b36614afd61e0c77e2c5b58e5161c0daac680bea"
             },
             "require": {
                 "wpfactory/wpfactory-admin-menu": "*"
             },
             "require-dev": {
+                "composer/composer": "^2.10.3",
                 "wp-cli/wp-cli-bundle": "*"
             },
             "type": "library",
             "autoload": {
                 "classmap": [
                     "src/php/"
+                ],
+                "files": [
+                    "src/php/my-plugins/loader.php"
                 ]
             },
             "scripts": {
@@ -99,11 +111,7 @@
                     "@composer run wp-make-mo"
                 ]
             },
-            "support": {
-                "source": "https://github.com/wpcodefactory/wpfactory-cross-selling/tree/v1.0.3",
-                "issues": "https://github.com/wpcodefactory/wpfactory-cross-selling/issues"
-            },
-            "time": "2024-10-31T15:55:35+00:00"
+            "time": "2026-11-26T07:07:38+00:00"
         }
     ],
     "packages-dev": [],
@@ -114,5 +122,5 @@
     "prefer-lowest": false,
     "platform": {},
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.11.0"
 }

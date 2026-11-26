@@ -2,9 +2,11 @@
 
 namespace PhpOffice\PhpSpreadsheet\Reader;
 
+use Composer\Pcre\Preg;
 use DateTime;
 use DateTimeZone;
 use PhpOffice\PhpSpreadsheet\Cell\AddressHelper;
+use PhpOffice\PhpSpreadsheet\Cell\AddressRange;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\DefinedName;
@@ -15,9 +17,9 @@ use PhpOffice\PhpSpreadsheet\Reader\Xml\PageSettings;
 use PhpOffice\PhpSpreadsheet\Reader\Xml\Properties;
 use PhpOffice\PhpSpreadsheet\Reader\Xml\Style;
 use PhpOffice\PhpSpreadsheet\RichText\RichText;
-use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Shared\File;
+use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\SheetView;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -50,9 +52,16 @@ class Xml extends BaseReader
 
     public static function unentity(string $contents): string
     {
-        $contents = preg_replace('/&(amp|lt|gt|quot|apos);/', "\u{fffe}\u{feff}\$1;", trim($contents)) ?? $contents;
+        // fffe is invalid, replace with replacement char
+        $contents = str_replace("\u{fffe}", "\u{fffd}", $contents);
+        // Excel allows X; Xml does not; changing to x allows both
+        $contents = Preg::replace('/&#X(?=[0-9a-fA-F]+;)/', '&#x', $contents);
+        // use positive lookahead to "protect" valid xml entities
+        $contents = Preg::replace('/&(?=(?:amp|lt|gt|quot|apos|#[0-9]+|#x[0-9a-fA-F]+);)/', "\u{fffe}", trim($contents));
+        // now decode remaining html entities
         $contents = html_entity_decode($contents, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8');
-        $contents = str_replace("\u{fffe}\u{feff}", '&', $contents);
+        // Escape remaining ampersands, restore those which were replaced with fffe
+        $contents = str_replace(['&', "\u{fffe}"], ['&amp;', '&'], $contents);
 
         return $contents;
     }
@@ -90,6 +99,7 @@ class Xml extends BaseReader
         ];
 
         // Open file
+        File::assertFile($filename);
         $data = (string) file_get_contents($filename);
         $data = $this->getSecurityScannerOrThrow()->scan($data);
 
@@ -132,9 +142,8 @@ class Xml extends BaseReader
             }
             if ($continue) {
                 $xml = @simplexml_load_string(
-                    $this->getSecurityScannerOrThrow()->scan($data),
-                    'SimpleXMLElement',
-                    Settings::getLibXmlLoaderOptions()
+                    $this->getSecurityScannerOrThrow()
+                        ->scan($data)
                 );
             }
         } catch (Throwable $e) {
@@ -302,6 +311,7 @@ class Xml extends BaseReader
         $worksheetID = 0;
         $xml_ss = $xml->children(self::NAMESPACES_SS);
 
+        $sheetCreated = false;
         /** @var null|SimpleXMLElement $worksheetx */
         foreach ($xml_ss->Worksheet as $worksheetx) {
             $worksheet = $worksheetx ?? new SimpleXMLElement('<xml></xml>');
@@ -316,6 +326,7 @@ class Xml extends BaseReader
 
             // Create new Worksheet
             $spreadsheet->createSheet();
+            $sheetCreated = true;
             $spreadsheet->setActiveSheetIndex($worksheetID);
             $worksheetName = '';
             if (isset($worksheet_ss['Name'])) {
@@ -344,49 +355,90 @@ class Xml extends BaseReader
                 }
             }
 
-            $columnID = 'A';
+            $columnIndex = $oldColumnIndex = 0;
             if (isset($worksheet->Table->Column)) {
                 foreach ($worksheet->Table->Column as $columnData) {
                     $columnData_ss = self::getAttributes($columnData, self::NAMESPACES_SS);
+                    $temp = 0;
+                    if (isset($columnData_ss['Index'])) {
+                        $temp2 = (string) $columnData_ss['Index'];
+                        $temp3 = (int) $temp2;
+                        if (is_numeric($temp2) && $temp3 > 0 && $temp3 <= AddressRange::MAX_COLUMN_INT) {
+                            $temp = $temp3;
+                        }
+                    }
+                    if ($temp > 0) {
+                        $columnIndex = $temp;
+                    } elseif ($columnIndex === $oldColumnIndex) {
+                        $columnIndex = min($columnIndex + 1, AddressRange::MAX_COLUMN_INT);
+                    }
                     $colspan = 0;
                     if (isset($columnData_ss['Span'])) {
                         $spanAttr = (string) $columnData_ss['Span'];
                         if (is_numeric($spanAttr)) {
-                            $colspan = max(0, (int) $spanAttr);
+                            $temp = (int) $spanAttr;
+                            $colspan = min(max(0, $temp), AddressRange::MAX_COLUMN_INT - $columnIndex);
                         }
                     }
-                    if (isset($columnData_ss['Index'])) {
-                        $columnID = Coordinate::stringFromColumnIndex((int) $columnData_ss['Index']);
-                    }
+                    $oldColumnIndex = $columnIndex;
+                    $columnID = Coordinate::stringFromColumnIndex($columnIndex);
                     $columnWidth = null;
                     if (isset($columnData_ss['Width'])) {
-                        $columnWidth = $columnData_ss['Width'];
+                        $temp = (string) $columnData_ss['Width'];
+                        if (is_numeric($temp)) {
+                            $columnWidth = $temp / 5.4;
+                        }
                     }
                     $columnVisible = null;
                     if (isset($columnData_ss['Hidden'])) {
                         $columnVisible = ((string) $columnData_ss['Hidden']) !== '1';
                     }
-                    while ($colspan >= 0) {
-                        if (isset($columnWidth)) {
-                            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setWidth($columnWidth / 5.4);
+                    $sheet = $spreadsheet->getActiveSheet();
+                    if (isset($columnWidth, $columnVisible)) {
+                        while ($colspan >= 0) {
+                            $sheet->getColumnDimension($columnID)
+                                ->setWidth($columnWidth)
+                                ->setVisible($columnVisible);
+                            ++$columnIndex;
+                            StringHelper::stringIncrement($columnID);
+                            --$colspan;
                         }
-                        if (isset($columnVisible)) {
-                            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setVisible($columnVisible);
+                    } elseif (isset($columnWidth)) {
+                        while ($colspan >= 0) {
+                            $sheet->getColumnDimension($columnID)
+                                ->setWidth($columnWidth);
+                            ++$columnIndex;
+                            StringHelper::stringIncrement($columnID);
+                            --$colspan;
                         }
-                        ++$columnID;
-                        --$colspan;
+                    } elseif (isset($columnVisible)) {
+                        while ($colspan >= 0) {
+                            $sheet->getColumnDimension($columnID)
+                                ->setVisible($columnVisible);
+                            ++$columnIndex;
+                            StringHelper::stringIncrement($columnID);
+                            --$colspan;
+                        }
+                    } else {
+                        $columnIndex += $colspan + 1;
+                        $columnIndex = min($columnIndex, AddressRange::MAX_COLUMN_INT);
+                        $columnID = Coordinate::stringFromColumnIndex($columnIndex);
                     }
                 }
             }
 
-            $rowID = 1;
+            $rowID = 0;
             if (isset($worksheet->Table->Row)) {
                 $additionalMergedCells = 0;
                 foreach ($worksheet->Table->Row as $rowData) {
+                    ++$rowID;
                     $rowHasData = false;
                     $row_ss = self::getAttributes($rowData, self::NAMESPACES_SS);
                     if (isset($row_ss['Index'])) {
                         $rowID = (int) $row_ss['Index'];
+                    }
+                    if ($rowID < 1 || $rowID > AddressRange::MAX_ROW) {
+                        continue;
                     }
                     if (isset($row_ss['Hidden'])) {
                         $rowVisible = ((string) $row_ss['Hidden']) !== '1';
@@ -408,7 +460,7 @@ class Xml extends BaseReader
 
                         if ($this->getReadFilter() !== null) {
                             if (!$this->getReadFilter()->readCell($columnID, $rowID, $worksheetName)) {
-                                ++$columnID;
+                                StringHelper::stringIncrement($columnID);
 
                                 continue;
                             }
@@ -522,9 +574,9 @@ class Xml extends BaseReader
                                     ->applyFromArray($this->styles[$style]);
                             }
                         }
-                        ++$columnID;
+                        StringHelper::stringIncrement($columnID);
                         while ($additionalMergedCells > 0) {
-                            ++$columnID;
+                            StringHelper::stringIncrement($columnID);
                             --$additionalMergedCells;
                         }
                     }
@@ -535,8 +587,6 @@ class Xml extends BaseReader
                             $spreadsheet->getActiveSheet()->getRowDimension($rowID)->setRowHeight((float) $rowHeight);
                         }
                     }
-
-                    ++$rowID;
                 }
             }
 
@@ -621,7 +671,7 @@ class Xml extends BaseReader
                 }
                 $rangeCalculated = false;
                 if (isset($xmlX->WorksheetOptions->Panes->Pane->RangeSelection)) {
-                    if (1 === preg_match('/^R(\d+)C(\d+):R(\d+)C(\d+)$/', (string) $xmlX->WorksheetOptions->Panes->Pane->RangeSelection, $selectionMatches)) {
+                    if (Preg::isMatch('/^R(\d+)C(\d+):R(\d+)C(\d+)$/', (string) $xmlX->WorksheetOptions->Panes->Pane->RangeSelection, $selectionMatches)) {
                         $selectedCell = Coordinate::stringFromColumnIndex((int) $selectionMatches[2])
                             . $selectionMatches[1]
                             . ':'
@@ -663,6 +713,9 @@ class Xml extends BaseReader
                 }
             }
             ++$worksheetID;
+        }
+        if ($this->createBlankSheetIfNoneRead && !$sheetCreated) {
+            $spreadsheet->createSheet();
         }
 
         // Globally scoped defined names

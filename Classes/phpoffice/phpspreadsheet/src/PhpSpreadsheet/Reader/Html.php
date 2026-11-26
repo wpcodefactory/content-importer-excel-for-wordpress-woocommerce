@@ -7,6 +7,8 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMText;
+use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
+use PhpOffice\PhpSpreadsheet\Cell\AddressRange;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Comment;
@@ -15,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
 use PhpOffice\PhpSpreadsheet\Helper\Dimension as CssDimension;
 use PhpOffice\PhpSpreadsheet\Helper\Html as HelperHtml;
 use PhpOffice\PhpSpreadsheet\Reader\Security\XmlScanner;
+use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
@@ -34,7 +37,11 @@ class Html extends BaseReader
 
     private const STARTS_WITH_BOM = '/^(?:\xfe\xff|\xff\xfe|\xEF\xBB\xBF)/';
 
-    private const DECLARES_CHARSET = '/ charset=/i';
+    private const DECLARES_CHARSET = '/\bcharset=/i';
+
+    protected int $maxBorderSpannedCells = 2500;
+
+    private int $usedBorderSpannedCells = 0;
 
     /**
      * Input encoding.
@@ -126,7 +133,11 @@ class Html extends BaseReader
         ], //    Italic
     ];
 
+    /** @var array<string, list<array{int, int}>> merged row ranges per column, sorted by low row */
     protected array $rowspan = [];
+
+    /** @var array<string, list<int>> running maximum of the high row per column, parallel to the range list */
+    protected array $rowspanMax = [];
 
     /**
      * Create a new HTML Reader instance.
@@ -271,6 +282,12 @@ class Html extends BaseReader
                                 ->setQuotePrefix(true);
                         }
                     }
+                    if ($datatype === DataType::TYPE_BOOL) {
+                        $cellContent = self::convertBoolean($cellContent);
+                        if (!is_bool($cellContent)) {
+                            $attributeArray['data-type'] = DataType::TYPE_STRING;
+                        }
+                    }
 
                     //catching the Exception and ignoring the invalid data types
                     try {
@@ -289,6 +306,31 @@ class Html extends BaseReader
             $this->dataArray[$row][$column] = 'RICH TEXT: ' . $cellContent;
         }
         $cellContent = (string) '';
+    }
+
+    /** @var array<int, array<int, string>> */
+    private static array $falseTrueArray = [];
+
+    private static function convertBoolean(?string $cellContent): bool|string
+    {
+        if ($cellContent === '1') {
+            return true;
+        }
+        if ($cellContent === '0' || $cellContent === '' || $cellContent === null) {
+            return false;
+        }
+        if (empty(self::$falseTrueArray)) {
+            $calc = Calculation::getInstance();
+            self::$falseTrueArray = $calc->getFalseTrueArray();
+        }
+        if (in_array(mb_strtoupper($cellContent), self::$falseTrueArray[1], true)) {
+            return true;
+        }
+        if (in_array(mb_strtoupper($cellContent), self::$falseTrueArray[0], true)) {
+            return false;
+        }
+
+        return $cellContent;
     }
 
     private function processDomElementBody(Worksheet $sheet, int &$row, string &$column, string &$cellContent, DOMElement $child): void
@@ -331,6 +373,12 @@ class Html extends BaseReader
 
     private function processDomElementSpanEtc(Worksheet $sheet, int &$row, string &$column, string &$cellContent, DOMElement $child, array &$attributeArray): void
     {
+        if ((string) $child->nodeName === 'span') {
+            $parent = $child->parentNode;
+            if ($parent instanceof DOMElement && $parent->childElementCount === 1 && ($parent->nodeName === 'td' || $parent->nodeName === 'th')) {
+                $this->applyInlineStyle($sheet, $row, $column, $attributeArray);
+            }
+        }
         if (in_array((string) $child->nodeName, self::SPAN_ETC, true)) {
             if (isset($attributeArray['class']) && $attributeArray['class'] === 'comment') {
                 $sheet->getComment($column . $row)
@@ -341,7 +389,7 @@ class Html extends BaseReader
                 }
                 if (isset($attributeArray['style'])) {
                     $alignStyle = $attributeArray['style'];
-                    if (preg_match('/\\btext-align:\\s*(left|right|center|justify)\\b/', $alignStyle, $matches) === 1) {
+                    if (preg_match('/\btext-align:\s*(left|right|center|justify)\b/', $alignStyle, $matches) === 1) {
                         $sheet->getComment($column . $row)->setAlignment($matches[1]);
                     }
                 }
@@ -493,7 +541,7 @@ class Html extends BaseReader
             $this->processDomElement($child, $sheet, $row, $column, $cellContent);
             $column = $this->releaseTableStartColumn();
             if ($this->tableLevel > 1) {
-                ++$column;
+                StringHelper::stringIncrement($column);
             } else {
                 ++$row;
             }
@@ -506,7 +554,7 @@ class Html extends BaseReader
     {
         if ($child->nodeName === 'col') {
             $this->applyInlineStyle($sheet, -1, $this->currentColumn, $attributeArray);
-            ++$this->currentColumn;
+            StringHelper::stringIncrement($this->currentColumn);
         } elseif ($child->nodeName === 'tr') {
             $column = $this->getTableStartColumn();
             $cellContent = '';
@@ -582,8 +630,8 @@ class Html extends BaseReader
 
     private function processDomElementThTd(Worksheet $sheet, int &$row, string &$column, string &$cellContent, DOMElement $child, array &$attributeArray): void
     {
-        while (isset($this->rowspan[$column . $row])) {
-            ++$column;
+        while ($this->isRowspanCovered($column, $row)) {
+            $column = StringHelper::stringIncrement($column);
         }
         $this->processDomElement($child, $sheet, $row, $column, $cellContent);
 
@@ -599,36 +647,109 @@ class Html extends BaseReader
         $this->processDomElementVAlign($sheet, $row, $column, $attributeArray);
         $this->processDomElementDataFormat($sheet, $row, $column, $attributeArray);
 
-        if (isset($attributeArray['rowspan'], $attributeArray['colspan'])) {
+        $columnTo = $column;
+        if (isset($attributeArray['colspan'])) {
+            // Browsers tolerate errors like colspan='3"'
+            $temp2 = (int) (string) $attributeArray['colspan'];
+            if ($temp2 > 1) {
+                $endCol = min(Coordinate::columnIndexFromString($column) + $temp2 - 1, AddressRange::MAX_COLUMN_INT);
+                $columnTo = Coordinate::stringFromColumnIndex($endCol);
+            }
+        }
+        $rowTo = $row;
+        if (isset($attributeArray['rowspan'])) {
+            // Browsers tolerate errors like colspan='3"'
+            $temp2 = (int) (string) $attributeArray['rowspan'];
+            if ($temp2 > 1) {
+                $rowTo = min($row + $temp2 - 1, AddressRange::MAX_ROW);
+            }
+        }
+        if ($column !== $columnTo && $row !== $rowTo) {
             //create merging rowspan and colspan
-            $columnTo = $column;
-            for ($i = 0; $i < (int) $attributeArray['colspan'] - 1; ++$i) {
-                ++$columnTo;
-            }
-            $range = $column . $row . ':' . $columnTo . ($row + (int) $attributeArray['rowspan'] - 1);
-            foreach (Coordinate::extractAllCellReferencesInRange($range) as $value) {
-                $this->rowspan[$value] = true;
-            }
+            $range = "$column$row:$columnTo$rowTo";
+            $this->registerRowspan($column, $columnTo, $row, $rowTo);
             $sheet->mergeCells($range);
             $column = $columnTo;
-        } elseif (isset($attributeArray['rowspan'])) {
+        } elseif ($row !== $rowTo) {
             //create merging rowspan
-            $range = $column . $row . ':' . $column . ($row + (int) $attributeArray['rowspan'] - 1);
-            foreach (Coordinate::extractAllCellReferencesInRange($range) as $value) {
-                $this->rowspan[$value] = true;
-            }
+            $range = "$column$row:$columnTo$rowTo";
+            $this->registerRowspan($column, $columnTo, $row, $rowTo);
             $sheet->mergeCells($range);
-        } elseif (isset($attributeArray['colspan'])) {
+        } elseif ($column !== $columnTo) {
             //create merging colspan
-            $columnTo = $column;
-            for ($i = 0; $i < (int) $attributeArray['colspan'] - 1; ++$i) {
-                ++$columnTo;
-            }
-            $sheet->mergeCells($column . $row . ':' . $columnTo . $row);
+            $range = "$column$row:$columnTo$rowTo";
+            $sheet->mergeCells($range);
             $column = $columnTo;
         }
 
-        ++$column;
+        StringHelper::stringIncrement($column);
+    }
+
+    private function registerRowspan(string $columnFrom, string $columnTo, int $rowFrom, int $rowTo): void
+    {
+        $column = $columnFrom;
+        while (true) {
+            $this->appendRowspanRange($column, $rowFrom, $rowTo);
+            if ($column === $columnTo) {
+                break;
+            }
+            $column = StringHelper::stringIncrement($column);
+        }
+    }
+
+    private function appendRowspanRange(string $column, int $rowFrom, int $rowTo): void
+    {
+        if (!isset($this->rowspan[$column])) {
+            $this->rowspan[$column] = [[$rowFrom, $rowTo]];
+            $this->rowspanMax[$column] = [$rowTo];
+
+            return;
+        }
+        $count = count($this->rowspan[$column]);
+        if ($this->rowspan[$column][$count - 1][0] <= $rowFrom) {
+            $previousMax = $this->rowspanMax[$column][$count - 1];
+            $this->rowspan[$column][] = [$rowFrom, $rowTo];
+            $this->rowspanMax[$column][] = max($previousMax, $rowTo);
+
+            return;
+        }
+        // out-of-order registration (nested tables): keep sorted and recompute running maxima
+        $ranges = $this->rowspan[$column];
+        $insertAt = $count;
+        while ($insertAt > 0 && $ranges[$insertAt - 1][0] > $rowFrom) {
+            --$insertAt;
+        }
+        array_splice($ranges, $insertAt, 0, [[$rowFrom, $rowTo]]);
+        $maxima = [];
+        $runningMax = PHP_INT_MIN;
+        foreach ($ranges as $range) {
+            $runningMax = max($runningMax, $range[1]);
+            $maxima[] = $runningMax;
+        }
+        $this->rowspan[$column] = $ranges;
+        $this->rowspanMax[$column] = $maxima;
+    }
+
+    private function isRowspanCovered(string $column, int $row): bool
+    {
+        $ranges = $this->rowspan[$column] ?? [];
+        if ($ranges === []) {
+            return false;
+        }
+        $low = 0;
+        $high = count($ranges) - 1;
+        $candidate = -1;
+        while ($low <= $high) {
+            $middle = intdiv($low + $high, 2);
+            if ($ranges[$middle][0] <= $row) {
+                $candidate = $middle;
+                $low = $middle + 1;
+            } else {
+                $high = $middle - 1;
+            }
+        }
+
+        return $candidate >= 0 && ($this->rowspanMax[$column][$candidate] ?? PHP_INT_MIN) >= $row;
     }
 
     protected function processDomElement(DOMNode $element, Worksheet $sheet, int &$row, string &$column, string &$cellContent): void
@@ -813,10 +934,12 @@ class Html extends BaseReader
         // Discard white space
         $document->preserveWhiteSpace = false;
 
+        $this->usedBorderSpannedCells = 0;
         $row = 0;
         $column = 'A';
         $content = '';
         $this->rowspan = [];
+        $this->rowspanMax = [];
         $this->processDomElement($document, $spreadsheet->getActiveSheet(), $row, $column, $content);
 
         // Return
@@ -860,25 +983,43 @@ class Html extends BaseReader
         if (!isset($attributeArray['style'])) {
             return;
         }
+        $columnTo = $column;
+        if ($column !== '' && isset($attributeArray['colspan'])) {
+            // Browsers tolerate errors like colspan='3"'
+            $temp2 = (int) (string) $attributeArray['colspan'];
+            if ($temp2 > 1) {
+                $endCol = min(Coordinate::columnIndexFromString($column) + $temp2 - 1, AddressRange::MAX_COLUMN_INT);
+                $columnTo = Coordinate::stringFromColumnIndex($endCol);
+            }
+        }
+        $rowTo = $row;
+        if ($row > 0 && isset($attributeArray['rowspan'])) {
+            // Browsers tolerate errors like colspan='3"'
+            $temp2 = (int) (string) $attributeArray['rowspan'];
+            if ($temp2 > 1) {
+                $rowTo = min($row + $temp2 - 1, AddressRange::MAX_ROW);
+            }
+        }
+
+        if (str_contains($attributeArray['style'], 'border')) {
+            $tempCol = (int) (string) ($attributeArray['colspan'] ?? '1');
+            $tempRow = (int) (string) ($attributeArray['rowspan'] ?? '1');
+            $newBorderCells = $this->usedBorderSpannedCells + $tempRow * $tempCol;
+            if ($tempCol > 0 && $tempRow > 0 && $tempRow * $tempCol > 1 && $this->maxBorderSpannedCells >= $newBorderCells) {
+                $this->usedBorderSpannedCells = $newBorderCells;
+            } else {
+                $rowTo = $row;
+                $columnTo = $column;
+            }
+        } else {
+            $rowTo = $row;
+            $columnTo = $column;
+        }
 
         if ($row <= 0 || $column === '') {
             $cellStyle = new Style();
-        } elseif (isset($attributeArray['rowspan'], $attributeArray['colspan'])) {
-            $columnTo = $column;
-            for ($i = 0; $i < (int) $attributeArray['colspan'] - 1; ++$i) {
-                ++$columnTo;
-            }
-            $range = $column . $row . ':' . $columnTo . ($row + (int) $attributeArray['rowspan'] - 1);
-            $cellStyle = $sheet->getStyle($range);
-        } elseif (isset($attributeArray['rowspan'])) {
-            $range = $column . $row . ':' . $column . ($row + (int) $attributeArray['rowspan'] - 1);
-            $cellStyle = $sheet->getStyle($range);
-        } elseif (isset($attributeArray['colspan'])) {
-            $columnTo = $column;
-            for ($i = 0; $i < (int) $attributeArray['colspan'] - 1; ++$i) {
-                ++$columnTo;
-            }
-            $range = $column . $row . ':' . $columnTo . $row;
+        } elseif ($rowTo !== $row || $columnTo !== $column) {
+            $range = $column . $row . ':' . $columnTo . $rowTo;
             $cellStyle = $sheet->getStyle($range);
         } else {
             $cellStyle = $sheet->getStyle($column . $row);
@@ -890,7 +1031,7 @@ class Html extends BaseReader
             $value = explode(':', $st);
             $styleName = isset($value[0]) ? trim($value[0]) : null;
             $styleValue = isset($value[1]) ? trim($value[1]) : null;
-            $styleValueString = (string) $styleValue;
+            $styleValueString = self::cssUnescape((string) $styleValue);
 
             if (!$styleName) {
                 continue;
@@ -966,7 +1107,8 @@ class Html extends BaseReader
                     break;
 
                 case 'font-family':
-                    $cellStyle->getFont()->setName(str_replace('\'', '', $styleValueString));
+                    $cellStyle->getFont()
+                        ->setName(trim($styleValueString, "'"));
 
                     break;
 
@@ -1029,6 +1171,17 @@ class Html extends BaseReader
         }
     }
 
+    /** @param string[] $matches */
+    private static function replaceCssEscaped(array $matches): string
+    {
+        return mb_chr((int) hexdec($matches[1]));
+    }
+
+    private static function cssUnescape(string $convert): string
+    {
+        return preg_replace_callback('/\\\([0-9a-fA-F]+) ?/', self::replaceCssEscaped(...), $convert) ?? 'unparseable';
+    }
+
     /**
      * Check if has #, so we can get clean hex.
      */
@@ -1058,7 +1211,7 @@ class Html extends BaseReader
         $name = $attributes['alt'] ?? null;
 
         $drawing = new Drawing();
-        $drawing->setPath($src, false);
+        $drawing->setPath($src, false, allowExternal: $this->allowExternalImages, isWhitelisted: $this->isWhitelisted);
         if ($drawing->getPath() === '') {
             return;
         }
