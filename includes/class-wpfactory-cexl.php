@@ -145,7 +145,7 @@ final class WPFactory_CEXL {
 			__( 'Settings', 'content-excel-importer' ) .
 		'</a>';
 
-		$pro_url = 'https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/';
+		$pro_url = 'https://wpfactory.com/item/content-importer-for-wordpress-woocommerce-with-excel/';
 		$custom_links[] = '<a target="_blank" style="font-weight: bold; color: green;" href="' . $pro_url . '">' .
 			__( 'Go Pro', 'content-excel-importer' ) .
 		'</a>';

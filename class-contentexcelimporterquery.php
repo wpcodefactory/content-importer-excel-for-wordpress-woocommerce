@@ -77,9 +77,7 @@ class ContentExcelImporterQuery {
 
 			print '<p><b>' . esc_html__( 'POST TYPE ', 'content-excel-importer' ) . "</b> <input type='text' name='post_type' id='post_type_insert' required readonly  value='" . esc_attr( $post_type ) . "' /></p>";
 
-			$data = array( 'post_title', 'post_author', 'post_date', 'post_name', 'post_status', 'post_content', 'post_excerpt', 'image', '_virtual' );
-
-			$pro = array( 'image_gallery', '_downloadable', 'download_name', 'download_file', '_download_limit', '_download_expiry' );
+			$data = array( 'post_title', 'post_author', 'post_date', 'post_name', 'post_status', 'post_content', 'post_excerpt', '_virtual' );
 
 			foreach ( $data as $d ) {
 
@@ -87,21 +85,8 @@ class ContentExcelImporterQuery {
 
 					print "<p><b>url </b> <input type='text' name='" . esc_attr( $d ) . "'  readonly class='droppable' placeholder='Drop here column' /></p>";
 
-				} elseif ( 'image' === $d ) {
-
-					echo "<p class='proVersion' >" . esc_html__( 'IMAGE', 'content-excel-importer' ) . " <input style='border:1px solid red;background:#ccc;' type='text' style='min-width:200px' name='image' required readonly class='' placeholder='" . esc_html__( 'PRO Version Only', 'content-excel-importer' ) . "'  /></p>";
-
 				} else {
 					print '<p><b>' . esc_html( $d ) . " </b> <input type='text' name='" . esc_attr( $d ) . "'  readonly class='droppable' placeholder='Drop here column' /></p>";
-				}
-			}
-
-			if ( 'product' === $post_type ) {
-
-				foreach ( $pro as $d ) {
-
-					print "<p  class='proVersion' ><b>" . esc_html( $d ) . " </b> <input  style='border:1px solid red;background:#ccc;' type='text' style='min-width:200px' name='image' required readonly placeholder='" . esc_html__( 'PRO Version Only', 'content-excel-importer' ) . "' /></p>";
-
 				}
 			}
 
@@ -166,8 +151,6 @@ class ContentExcelImporterQuery {
 					}
 				}
 			}
-
-			echo '<p>' . esc_html__( 'Custom Taxonomy', 'content-excel-importer' ) . " <input type='text' name='custom_tax' style='border:1px solid red;background:#ccc;' readonly  placeholder='" . esc_html__( 'PRO Version Only', 'content-excel-importer' ) . "'  /></p>";
 
 		}
 	}

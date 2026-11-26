@@ -163,14 +163,6 @@
 						dragDrop();
 						automatch_columns();
 
-						$('.content-excel-importer #product_process p.proVersion').hover(function(){
-							$(this).css("background","red");
-							$(this).css("cursor","pointer");
-						});
-						$('.content-excel-importer #product_process p.proVersion').click(function(){
-							window.open('https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/', '_blank');
-						});
-
 						$(".content-excel-importer #product_process").on('submit',function(e) {
 							e.preventDefault();
 							if($("input[name='post_title']").val() !='' ){
@@ -240,52 +232,5 @@
 				}
 			}
 
-		$("#contentExceIimporter_signup").on('submit',function(e){
-			e.preventDefault();
-			var dat = $(this).serialize();
-			$.ajax({
-
-				url:	"https://extend-wp.com/wp-json/signups/v2/post",
-				data:  dat,
-				type: 'POST',
-				beforeSend: function(data) {
-						console.log(dat);
-				},
-				success: function(data){
-					alert(data);
-
-				},
-				complete: function(data){
-					contentExceIimporter();
-				}
-			});
-		});
-
-		function contentExceIimporter(){
-
-				var ajax_options = {
-					action: 'contentExceIimporter_push_not',
-					data: 'title=1',
-					nonce: 'contentExceIimporter_push_not',
-					url: contentExcelImporter.ajax_url,
-				};
-
-				$.post( contentExcelImporter.ajax_url, ajax_options, function(data) {
-					$(".contentExceIimporter_notification").fadeOut();
-				});
-		}
-
-		$(".contentExceIimporter_notification .dismiss").on('click',function(e){
-				var ajax_options = {
-					action: 'contentExceIimporter_push_not',
-					data: 'title=1',
-					nonce: 'contentExceIimporter_push_not',
-					url: contentExcelImporter.ajax_url,
-				};
-
-				$.post( contentExcelImporter.ajax_url, ajax_options, function(data) {
-					$(".contentExceIimporter_notification").fadeOut();
-				});
-		});
 
 })( jQuery )
