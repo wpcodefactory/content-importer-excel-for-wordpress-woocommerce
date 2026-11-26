@@ -533,6 +533,7 @@
 
 	/* ------------------------------------------------------- 4 Importing, 5 Result */
 
+	// The import runs on the server as a job: this page starts it and shows its progress; it goes on after the page closes.
 	var run = {};
 
 	$q( '#cexl-start-import' ).on( 'click', function () {
@@ -541,82 +542,103 @@
 			post( { action: cfg.actions.setDefault, nonce: cfg.nonces.setDefault, update: update } );
 			cfg.updateDefault = update;
 		}
-		run = { data: $.extend( request(), { action: cfg.actions.import } ), row: 2, done: 0, paused: false, stopped: false, failed: 0, log: [] };
+		var $btn = $( this ).addClass( 'is-busy' ).prop( 'disabled', true );
+		post( $.extend( request(), { action: cfg.actions.bgStart } ) ).done( function ( r ) {
+			if ( ! r || ! r.success ) {
+				banner( $q( '#cexl-preview-msg' ), 'bad', r && r.data && r.data.message ? r.data.message : t.failed );
+				return;
+			}
+			watch( r.data );
+		} ).fail( function ( xhr ) {
+			banner( $q( '#cexl-preview-msg' ), 'bad', failText( xhr ) );
+		} ).always( function () {
+			$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+		} );
+	} );
+
+	function watch( job ) {
+		run = { token: job.token, failed: 0, finished: false };
+		state.token = job.token;
+		state.total = job.total;
+		state.file_name = job.file || state.file_name;
+		state.type = job.type || state.type;
 		$q( '#cexl-run-eyebrow' ).text( state.file_name );
 		$q( '#cexl-run-list' ).empty();
-		$q( '#cexl-pause' ).text( t.pause ).prop( 'disabled', false );
 		$q( '#cexl-stop' ).prop( 'disabled', false );
 		banner( $q( '#cexl-run-msg' ), '', '' );
 		show( 'run' );
-		progress();
-		next();
-	} );
+		render( job );
+		poll();
+	}
 
-	function progress() {
-		var total = Math.max( 1, state.total - 1 );
-		var pct = Math.round( run.done / total * 100 );
-		$q( '#cexl-run-count' ).text( fmt( t.rowOf, Math.min( run.done + 1, total ), total ) );
+	function render( job ) {
+		var total = Math.max( 1, job.total - 1 );
+		var pct = Math.round( job.done / total * 100 );
+		run.state = job.state;
+		$q( '#cexl-run-count' ).text( fmt( t.rowOf, Math.min( job.done + ( 'running' === job.state ? 1 : 0 ), total ), total ) );
 		$q( '#cexl-run-bar' ).attr( 'aria-valuenow', pct ).find( 'i' ).css( 'width', pct + '%' );
+		$q( '#cexl-pause' ).text( 'paused' === job.state ? t.resume : t.pause ).prop( 'disabled', 'running' !== job.state && 'paused' !== job.state );
+		var html = '';
+		$.each( ( job.last || [] ).slice().reverse(), function ( i, row ) {
+			var chip = { created: [ 'ok', t.created ], updated: [ 'info', t.updated ], skipped: [ 'plain', t.skipped ] }[ row.result ] || [ 'bad', t.failedRow ];
+			html += '<li><span>' + esc( fmt( t.rowN, row.row ) ) + ' &middot; ' + esc( row.title ) + '</span><span class="chip ' + chip[ 0 ] + '">' + esc( chip[ 1 ] ) + '</span></li>';
+		} );
+		$q( '#cexl-run-list' ).html( html );
 	}
 
-	function logRow( rowNo, html ) {
-		var row = state.previewRows && state.previewRows[ rowNo ];
-		var $p = $( '<div>' ).html( html ).find( 'p' ).first();
-		var cls = $p.attr( 'class' ) || '';
-		var chip = 'skipped' === cls ? [ 'plain', t.skipped ] : ( 'success' === cls ? [ 'ok', t.created ] : ( 'warning' === cls && ! $p.attr( 'style' ) ? [ 'info', t.updated ] : [ 'bad', t.failedRow ] ) );
-		if ( 'bad' === chip[ 0 ] ) {
-			run.failed++;
-		}
-		var title = row ? row.title : $p.text();
-		$q( '#cexl-run-list' ).prepend( '<li><span>' + esc( fmt( t.rowN, rowNo ) ) + ' &middot; ' + esc( title ) + '</span><span class="chip ' + chip[ 0 ] + '">' + esc( chip[ 1 ] ) + '</span></li>' );
-		$q( '#cexl-run-list li' ).slice( 8 ).remove();
-	}
-
-	function next() {
-		if ( run.stopped ) {
-			return finish( true );
-		}
-		if ( run.paused ) {
+	function poll() {
+		if ( run.finished ) {
 			return;
 		}
-		if ( run.row > state.total ) {
-			return finish( false );
-		}
-		var rowNo = run.row;
-		run.data.start = rowNo;
-		post( run.data, { dataType: 'text' } ).done( function ( html ) {
-			if ( '-1' === html || '0' === html ) {
-				run.stopped = true;
-				banner( $q( '#cexl-run-msg' ), 'bad', t.expired );
+		post( { action: cfg.actions.bgStatus, secNonce: cfg.nonces.process, cexl_file: run.token } ).done( function ( r ) {
+			if ( ! r || ! r.success ) {
+				banner( $q( '#cexl-run-msg' ), 'bad', r && r.data && r.data.message ? r.data.message : t.failed );
+				setTimeout( poll, 5000 );
 				return;
 			}
-			logRow( rowNo, html );
-		} ).fail( function () {
-			run.failed++;
-			$q( '#cexl-run-list' ).prepend( '<li><span>' + esc( fmt( t.rowN, rowNo ) ) + '</span><span class="chip bad">' + esc( t.failedRow ) + '</span></li>' );
-		} ).always( function () {
-			run.row++;
-			run.done++;
-			progress();
-			next();
+			render( r.data );
+			if ( 'done' === r.data.state ) {
+				return finish( false );
+			}
+			if ( 'stopped' === r.data.state || 'failed' === r.data.state ) {
+				return finish( true );
+			}
+			setTimeout( poll, 'paused' === r.data.state ? 3000 : 300 );
+		} ).fail( function ( xhr ) {
+			banner( $q( '#cexl-run-msg' ), 'warn', failText( xhr ) );
+			setTimeout( poll, 5000 );
+		} );
+	}
+
+	function control( what ) {
+		return post( { action: cfg.actions.bgControl, secNonce: cfg.nonces.process, cexl_file: run.token, do: what } ).done( function ( r ) {
+			if ( r && r.success ) {
+				render( r.data );
+			}
 		} );
 	}
 
 	$q( '#cexl-pause' ).on( 'click', function () {
-		run.paused = ! run.paused;
-		$( this ).text( run.paused ? t.resume : t.pause );
-		if ( ! run.paused ) {
-			next();
-		}
+		control( 'paused' === run.state ? 'resume' : 'pause' );
 	} );
 
 	$q( '#cexl-stop' ).on( 'click', function () {
-		run.stopped = true;
 		$( this ).prop( 'disabled', true );
-		if ( run.paused ) {
-			finish( true );
-		}
+		control( 'stop' );
 	} );
+
+	// Imports of this user still running or paused (the page was left or reloaded): offer to watch each, newest first.
+	if ( cfg.running && cfg.running.length ) {
+		var openHtml = '';
+		$.each( cfg.running, function ( i, job ) {
+			openHtml += '<div class="banner info" role="status">' + esc( fmt( t.stillRunning, job.file, job.done, Math.max( 1, job.total - 1 ) ) ) +
+				' <button type="button" class="btn btn-secondary" data-watch="' + i + '">' + esc( t.showProgress ) + '</button></div>';
+		} );
+		$q( '#cexl-start-msg' ).html( openHtml );
+		$q( '#cexl-start-msg' ).on( 'click', '[data-watch]', function () {
+			watch( cfg.running[ parseInt( this.getAttribute( 'data-watch' ), 10 ) ] );
+		} );
+	}
 
 	function finish( stopped ) {
 		if ( run.finished ) {
@@ -634,7 +656,7 @@
 			$q( '#cexl-res-updated' ).text( c ? c.updated : '-' );
 			$q( '#cexl-res-created' ).text( c ? c.created : '-' );
 			$q( '#cexl-res-skipped' ).text( c ? c.skipped : '-' );
-			$q( '#cexl-res-failed' ).text( c ? c.failed + run.failed : run.failed );
+			$q( '#cexl-res-failed' ).text( c ? c.failed : '-' );
 			$q( '#cexl-report-csv' ).prop( 'hidden', ! c );
 			describeOffer( r && r.success ? r.data.describe : [] );
 		} ).always( function () {

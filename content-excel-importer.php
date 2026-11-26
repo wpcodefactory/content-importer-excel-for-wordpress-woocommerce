@@ -51,6 +51,7 @@ require plugin_dir_path( __FILE__ ) . '/class-contentexcelimportermappings.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterreport.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterapp.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterai.php';
+require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterbackground.php';
 
 register_activation_hook( __FILE__, array( 'ContentExcelImporterApp', 'activate' ) );
 

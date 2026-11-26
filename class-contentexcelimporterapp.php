@@ -235,6 +235,9 @@ class ContentExcelImporterApp {
 					'aiDescribe'    => 'cexl_ai_describe',
 					'aiApply'       => 'cexl_ai_apply',
 					'aiCheck'       => 'cexl_ai_check',
+					'bgStart'       => 'cexl_bg_start',
+					'bgStatus'      => 'cexl_bg_status',
+					'bgControl'     => 'cexl_bg_control',
 				),
 				'ai'            => ContentExcelImporterAI::script_settings(),
 				'nonces'        => array(
@@ -243,6 +246,7 @@ class ContentExcelImporterApp {
 					'report'     => wp_create_nonce( 'cexl_report_csv' ),
 					'setDefault' => wp_create_nonce( 'cexl_set_default' ),
 				),
+				'running'       => ContentExcelImporterBackground::open_jobs(),
 				'i18n'          => self::strings(),
 			)
 		);
@@ -315,6 +319,9 @@ class ContentExcelImporterApp {
 			'aiSkip'        => __( 'Skip', 'content-excel-importer' ),
 			'aiSaved'       => __( 'Saved', 'content-excel-importer' ),
 			'aiSkipped'     => __( 'Skipped', 'content-excel-importer' ),
+			/* translators: 1: file name, 2: rows done, 3: number of rows */
+			'stillRunning'  => __( 'An import is still running: %1$s, row %2$s of %3$s.', 'content-excel-importer' ),
+			'showProgress'  => __( 'Show progress', 'content-excel-importer' ),
 			'aiChecking'    => __( 'Checking the planned changes with AI...', 'content-excel-importer' ),
 			/* translators: %s: number of rows */
 			'aiFlags'       => __( 'AI flagged rows to look at: %s. They are marked AI below. Nothing was changed.', 'content-excel-importer' ),
@@ -719,7 +726,7 @@ class ContentExcelImporterApp {
 
 		<section data-screen="run" hidden>
 			<div class="page-head"><div><div class="eyebrow" id="cexl-run-eyebrow"></div><h2 class="cexl-h1"><?php esc_html_e( 'Importing', 'content-excel-importer' ); ?></h2>
-				<p class="lead"><?php esc_html_e( 'Keep this page open until the import finishes. You can pause or stop at any row.', 'content-excel-importer' ); ?></p></div>
+				<p class="lead"><?php esc_html_e( 'You can leave this page. The import keeps running, and its result appears on the History page. You can pause or stop it here.', 'content-excel-importer' ); ?></p></div>
 				<div class="row-actions"><button type="button" class="btn btn-secondary" id="cexl-pause"><?php esc_html_e( 'Pause', 'content-excel-importer' ); ?></button><button type="button" class="btn btn-danger" id="cexl-stop"><?php esc_html_e( 'Stop', 'content-excel-importer' ); ?></button></div></div>
 			<div id="cexl-run-msg" aria-live="polite"></div>
 			<div class="card"><div class="card-body">

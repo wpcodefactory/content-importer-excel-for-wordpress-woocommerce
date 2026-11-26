@@ -257,8 +257,12 @@ public function importProducts() {
 		if ( isset( $_POST['finalupload'] ) && current_user_can( 'manage_options' ) ) {
 
 			$time_start = microtime( true );
-			check_admin_referer( 'excel_process', 'secNonce' );
-			check_ajax_referer( 'excel_process', 'secNonce' );
+			// A background import (the runner of this plugin) has no browser nonce; it was checked when the import started.
+			$cexl_bg = class_exists( 'ContentExcelImporterBackground' ) && ContentExcelImporterBackground::$active;
+			if ( ! $cexl_bg ) {
+				check_admin_referer( 'excel_process', 'secNonce' );
+				check_ajax_referer( 'excel_process', 'secNonce' );
+			}
 
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			require_once ABSPATH . 'wp-admin/includes/media.php';
@@ -266,6 +270,9 @@ public function importProducts() {
 			$filename = self::import_file( $token );
 			if ( '' === $filename || ! file_exists( $filename ) ) {
 				print "<p class='warning' style='color:red'>" . esc_html__( 'The uploaded file was not found. Please upload it again.', 'content-excel-importer' ) . '</p>';
+				if ( $cexl_bg ) {
+					return; // The runner imports the next row in the same request.
+				}
 				die;
 			}
 
@@ -348,6 +355,9 @@ public function importProducts() {
 					if ( (int) $i === (int) $_POST['finalupload'] ) {
 						wp_delete_file( $filename );
 						wp_delete_file( $sheet_cache );
+					}
+					if ( $cexl_bg ) {
+						return; // The runner imports the next row in the same request.
 					}
 					die;
 				}
@@ -662,6 +672,9 @@ public function importProducts() {
 							</div>";
 				}
 
+					if ( $cexl_bg ) {
+						return; // The runner imports the next row in the same request.
+					}
 					die;
 
 			} else {
