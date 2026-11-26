@@ -296,6 +296,17 @@ public function importProducts() {
 
 				$title = sanitize_text_field( $allDataInSheet[ $i ][ wp_unslash( $_POST['post_title'] ) ] );
 
+				// The import screen can ask to remember this mapping for the next sheet with the same columns.
+				if ( 2 === (int) $i && ! empty( $_POST['cexl_save_mapping'] ) && isset( $allDataInSheet[1] ) && class_exists( 'ContentExcelImporterMappings' ) ) {
+					$used = array();
+					foreach ( $_POST as $field => $column ) {
+						if ( is_string( $column ) && preg_match( '/^[A-Z]{1,3}$/', $column ) ) {
+							$used[ sanitize_key( $field ) ] = $column;
+						}
+					}
+					ContentExcelImporterMappings::save( array_map( 'strval', $allDataInSheet[1] ), sanitize_key( $_POST['post_type'] ), $used );
+				}
+
 				if ( ! empty( $allDataInSheet[ $i ][ wp_unslash( $_POST['post_name'] ) ] ) ) {
 					$url = sanitize_title_with_dashes( $allDataInSheet[ $i ][ $_POST['post_name'] ] );
 				}
