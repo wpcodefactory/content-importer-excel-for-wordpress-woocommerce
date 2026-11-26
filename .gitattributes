@@ -12,3 +12,5 @@ composer.json
 composer.lock export ignore
 includes/pro/composer.lock export-ignore
 includes/pro/composer.json
+.gitattributes export-ignore
+.distignore export-ignore

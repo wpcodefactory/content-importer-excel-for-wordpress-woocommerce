@@ -53,6 +53,41 @@ public function __construct() {
 	 * @param string $token Random 32 character name.
 	 * @return string Empty when the name is not valid.
 	 */
+	/**
+	 * Saves an uploaded sheet at the given path through WordPress's upload handling.
+	 *
+	 * @param array  $upload One entry of $_FILES.
+	 * @param string $dest   Full path of the file to write (inside import_dir()).
+	 * @return bool Whether the file is there.
+	 */
+	public static function store_upload( $upload, $dest ) {
+		if ( ! function_exists( 'wp_handle_upload' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		$dir    = dirname( $dest );
+		$name   = basename( $dest );
+		$to_dir = function ( $uploads ) use ( $dir ) {
+			$uploads['path']   = $dir;
+			$uploads['url']    = '';
+			$uploads['subdir'] = '';
+			$uploads['error']  = false;
+			return $uploads;
+		};
+		add_filter( 'upload_dir', $to_dir, 99 );
+		$result = wp_handle_upload(
+			$upload,
+			array(
+				'test_form'                => false,
+				'test_type'                => false, // The sheet readers check the file; .xls, .ods and .csv are kept as before.
+				'unique_filename_callback' => function () use ( $name ) {
+					return $name;
+				},
+			)
+		);
+		remove_filter( 'upload_dir', $to_dir, 99 );
+		return empty( $result['error'] ) && is_file( $dest );
+	}
+
 	public static function import_file( $token ) {
 		if ( ! is_string( $token ) || ! preg_match( '/^[A-Za-z0-9]{32}$/', $token ) ) {
 			return '';
@@ -240,7 +275,7 @@ public function importProducts() {
 								wp_delete_file( $old_file );
 							}
 						}
-						if ( isset( $_FILES['file']['tmp_name'] ) ) move_uploaded_file( $_FILES['file']['tmp_name'], self::import_file( $token ) );
+						if ( isset( $_FILES['file']['tmp_name'] ) ) self::store_upload( $_FILES['file'], self::import_file( $token ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- PHP's upload entry, handled by wp_handle_upload().
 						file_put_contents( substr( self::import_file( $token ), 0, -5 ) . '.json', (string) wp_json_encode( $allDataInSheet ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 
 				} else {
@@ -341,7 +376,7 @@ public function importProducts() {
 				} else {
 					$date_string = $allDataInSheet[ $i ][ $_POST['post_date'] ];
 					$date_stamp  = strtotime( $date_string );
-					$date        = date( 'Y-m-d H:i:s', $date_stamp );
+					$date        = gmdate( 'Y-m-d H:i:s', $date_stamp ); // WordPress runs PHP in UTC, so this equals the old date().
 				}
 
 						// Check if post exists: same title inside the chosen post type only (a page or image with that title is never touched).

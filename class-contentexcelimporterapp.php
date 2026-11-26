@@ -385,7 +385,7 @@ class ContentExcelImporterApp {
 		}
 		$token = wp_generate_password( 32, false, false );
 		$file  = ContentExcelImporterProducts::import_file( $token );
-		move_uploaded_file( $tmp, $file );
+		ContentExcelImporterProducts::store_upload( $_FILES['file'], $file ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- PHP's upload entry, handled by wp_handle_upload().
 		file_put_contents( substr( $file, 0, -5 ) . '.json', (string) wp_json_encode( $rows ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 
 		$headers = array_map( 'strval', $rows[1] );
