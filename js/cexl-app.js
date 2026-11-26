@@ -171,14 +171,16 @@
 		var rows = '';
 		$.each( state.headers, function ( letter, header ) {
 			var field = byColumn[ letter ] || '';
-			var name = '' === String( header ).trim() ? fmt( t.column, letter ) : header;
 			var low = field && 'saved' !== state.suggestion.source && ! ( state.suggestion.sure && state.suggestion.sure[ field ] );
-			rows += '<tr data-letter="' + esc( letter ) + '"><td><b>' + esc( name ) + '</b> <span class="muted small">' + esc( letter ) + '</span></td>' +
-				'<td class="muted">' + esc( String( state.first[ letter ] || '' ).slice( 0, 60 ) ) + '</td>' +
-				'<td><select aria-label="' + esc( fmt( t.fieldFor, name ) ) + '"' + ( low ? ' class="low"' : '' ) + '>' + options( field ) + '</select></td>' +
-				'<td class="nowrap" data-chip>' + chipFor( letter, field ) + '</td></tr>';
+			rows += mapRow( letter, header, field, low );
 		} );
 		$q( '#cexl-map-rows' ).html( rows );
+		state.translated = false;
+		$q( 'input[name="cexl_match"]' ).prop( 'disabled', false );
+		$q( 'input[name="cexl_tr_lang"]' ).prop( 'checked', false );
+		banner( $q( '#cexl-tr-msg' ), '', '' );
+		$q( '#cexl-ai-translate' ).prop( 'hidden', ! cfg.translate || ( 'wpml' === cfg.translate.plugin && 'product' !== state.type ) );
+		trCost();
 		$q( '#cexl-map-eyebrow' ).text( fmt( t.stepTwo, state.file_name, state.rows ) );
 		banner( $q( '#cexl-map-msg' ), 'saved' === state.suggestion.source ? 'ok' : '', 'saved' === state.suggestion.source ? t.usedSaved : '' );
 
@@ -198,6 +200,92 @@
 		$q( '#cexl-attributes-only' ).prop( 'checked', false );
 		updateOptions();
 	}
+
+	function mapRow( letter, header, field, low ) {
+		var name = '' === String( header ).trim() ? fmt( t.column, letter ) : header;
+		return '<tr data-letter="' + esc( letter ) + '"><td><b>' + esc( name ) + '</b> <span class="muted small">' + esc( letter ) + '</span></td>' +
+			'<td class="muted">' + esc( String( state.first[ letter ] || '' ).slice( 0, 60 ) ) + '</td>' +
+			'<td><select aria-label="' + esc( fmt( t.fieldFor, name ) ) + '"' + ( low ? ' class="low"' : '' ) + '>' + options( field ) + '</select></td>' +
+			'<td class="nowrap" data-chip>' + chipFor( letter, field ) + '</td></tr>';
+	}
+
+	// Pro: translate rows with AI for WPML or Polylang. Translated copies are added to the sheet copy on the server.
+	function trCost() {
+		var n = $q( 'input[name="cexl_tr_lang"]:checked' ).length;
+		$q( '#cexl-tr-cost' ).text( n && state.rows ? fmt( t.aiAbout, state.rows * n * 2 ) : '' );
+	}
+
+	$q( '#cexl-ai-translate' ).on( 'change', 'input[name="cexl_tr_lang"]', trCost );
+
+	$q( '#cexl-ai-translate-go' ).on( 'click', function () {
+		var langs = $q( 'input[name="cexl_tr_lang"]:checked' ).map( function () {
+			return this.value;
+		} ).get();
+		if ( ! langs.length ) {
+			banner( $q( '#cexl-tr-msg' ), 'warn', t.trPick );
+			return;
+		}
+		$q( 'input[name="cexl_match"][value="title"]' ).prop( 'checked', true );
+		$q( 'input[name="cexl_missing"][value="create"]' ).prop( 'checked', true );
+		if ( 'new' === $q( 'input[name="cexl_update"]:checked' ).val() ) {
+			$q( 'input[name="cexl_update"][value="' + ( 'mapped' === cfg.updateDefault ? 'mapped' : 'all' ) + '"]' ).prop( 'checked', true );
+		}
+		var $btn = $( this ).addClass( 'is-busy' ).prop( 'disabled', true );
+		var added = 0;
+		var offset = 0;
+		// The sheet copy is rewritten while this runs: no preview until it is done.
+		$q( '#cexl-to-preview' ).prop( 'disabled', true );
+		banner( $q( '#cexl-tr-msg' ), 'info', fmt( t.trProgress, 0, state.rows ) );
+		( function step() {
+			post( $.extend( request(), { action: cfg.actions.aiTranslate, nonce: cfg.ai && cfg.ai.nonce, offset: offset, languages: langs } ) ).done( function ( r ) {
+				if ( ! r || ! r.success ) {
+					var d = r && r.data ? r.data : {};
+					$q( '#cexl-tr-msg' ).html( '<div class="banner warn" role="alert">' + esc( d.message || t.failed ) +
+						( d.connect ? ' <a href="' + esc( d.connect ) + '">' + esc( t.aiConnect ) + '</a>' : '' ) + '</div>' );
+					$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+					updateOptions();
+					return;
+				}
+				var x = r.data;
+				state.total = x.total;
+				state.rows = x.total - 1;
+				$.each( x.headers, function ( letter, header ) {
+					if ( undefined === state.headers[ letter ] ) {
+						state.headers[ letter ] = header;
+						$q( '#cexl-map-rows' ).append( mapRow( letter, header, '', false ) );
+					}
+				} );
+				$.each( [ [ x.lang_col, cfg.translate.langField ], [ x.orig_col, cfg.translate.origField ] ], function ( i, pair ) {
+					var $tr = $q( '#cexl-map-rows tr[data-letter="' + pair[ 0 ] + '"]' );
+					$q( '#cexl-map-rows select' ).each( function () {
+						if ( $( this ).val() === pair[ 1 ] ) {
+							$( this ).val( '' );
+						}
+					} );
+					$tr.find( 'select' ).val( pair[ 1 ] );
+					state.touched[ pair[ 0 ] ] = true;
+					$tr.find( '[data-chip]' ).html( chipFor( pair[ 0 ], pair[ 1 ] ) );
+				} );
+				added += x.added;
+				if ( x.next ) {
+					banner( $q( '#cexl-tr-msg' ), 'info', fmt( t.trProgress, x.done, x.sources ) );
+					offset = x.next;
+					step();
+					return;
+				}
+				state.translated = true;
+				$q( 'input[name="cexl_match"]' ).not( '[value="title"]' ).prop( 'disabled', true );
+				$q( '#cexl-map-eyebrow' ).text( fmt( t.stepTwo, state.file_name, state.rows ) );
+				banner( $q( '#cexl-tr-msg' ), 'ok', fmt( t.trDone, added ) + ' ' + t.trLocked );
+				$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+				updateOptions();
+			} ).fail( function ( xhr ) {
+				banner( $q( '#cexl-tr-msg' ), 'bad', failText( xhr ) );
+				$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+				updateOptions();
+			} );
+		}() );
+	} );
 
 	function currentMap() {
 		var map = {};
