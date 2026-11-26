@@ -293,6 +293,9 @@
 			data.cexl_match = match;
 			data.cexl_match_column = 'sku' === match ? map._sku : map.cexl_id;
 		}
+		if ( cfg.undo ) {
+			data.cexl_undo = 1; // Pro keeps what each row changes, for Undo.
+		}
 		if ( $q( '#cexl-attributes-only' ).is( ':checked' ) && 'product' === state.type ) {
 			data.product_type = 'simple';
 		}
@@ -503,6 +506,8 @@
 		$q( '#cexl-result-title' ).text( stopped ? t.stoppedTitle : t.doneTitle );
 		$q( '#cexl-view-items' ).attr( 'href', cfg.editUrl + encodeURIComponent( state.type || 'post' ) );
 		$q( '#cexl-report-csv' ).attr( 'href', cfg.reportCsv + '&report=' + encodeURIComponent( state.token ) );
+		$q( '#cexl-undo' ).attr( 'data-undo', state.token ).prop( 'hidden', ! cfg.undo );
+		banner( $q( '#cexl-undo-msg' ), '', '' );
 		post( { action: cfg.actions.report, nonce: cfg.nonces.report, report: state.token } ).done( function ( r ) {
 			var c = r && r.success ? r.data.counts : null;
 			$q( '#cexl-res-updated' ).text( c ? c.updated : '-' );
@@ -510,15 +515,114 @@
 			$q( '#cexl-res-skipped' ).text( c ? c.skipped : '-' );
 			$q( '#cexl-res-failed' ).text( c ? c.failed + run.failed : run.failed );
 			$q( '#cexl-report-csv' ).prop( 'hidden', ! c );
+			describeOffer( r && r.success ? r.data.describe : [] );
 		} ).always( function () {
 			show( 'result' );
 		} );
 	}
 
+	// Write missing descriptions with AI: drafts are shown for review; Save writes one item.
+	var drafts = [];
+
+	function describeOffer( ids ) {
+		drafts = ids && cfg.ai && cfg.ai.available ? ids : [];
+		$q( '#cexl-ai-drafts' ).empty();
+		banner( $q( '#cexl-ai-describe-msg' ), '', '' );
+		$q( '#cexl-ai-describe' ).prop( 'hidden', ! drafts.length );
+		$q( '#cexl-ai-write' ).prop( 'disabled', false ).removeClass( 'is-busy' );
+		$q( '#cexl-ai-describe-title' ).text( fmt( t.aiDescribeN, drafts.length ) );
+		$q( '#cexl-ai-estimate' ).text( fmt( t.aiAbout, drafts.length * 3 ) );
+	}
+
+	$q( '#cexl-ai-write' ).on( 'click', function () {
+		var $btn = $( this ).addClass( 'is-busy' ).prop( 'disabled', true );
+		var queue = drafts.slice();
+		var n = 0;
+		( function next() {
+			if ( ! queue.length ) {
+				$btn.removeClass( 'is-busy' );
+				banner( $q( '#cexl-ai-describe-msg' ), 'info', t.aiReview );
+				return;
+			}
+			var id = queue.shift();
+			n++;
+			banner( $q( '#cexl-ai-describe-msg' ), 'info', fmt( t.aiWriting, n, drafts.length ) );
+			post( { action: cfg.actions.aiDescribe, nonce: cfg.ai.nonce, id: id } ).done( function ( r ) {
+				if ( ! r || ! r.success ) {
+					var d = r && r.data ? r.data : {};
+					$q( '#cexl-ai-describe-msg' ).html( '<div class="banner warn" role="alert">' + esc( d.message || t.failed ) +
+						( d.connect ? ' <a href="' + esc( d.connect ) + '">' + esc( t.aiConnect ) + '</a>' : '' ) + '</div>' );
+					$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+					return;
+				}
+				var x = r.data;
+				$q( '#cexl-ai-drafts' ).append( '<li data-draft="' + esc( x.id ) + '" style="display:block"><b>' + esc( x.title ) + '</b>' +
+					'<textarea class="cexl-draft-text" rows="5" style="width:100%;margin:8px 0" aria-label="' + esc( x.title ) + '">' + esc( x.description ) + '</textarea>' +
+					( x.short ? '<label class="small">' + esc( t.aiShort ) + ' <input type="text" class="cexl-draft-short" style="width:100%" value="' + esc( x.short ) + '"></label>' : '' ) +
+					'<span class="row-actions" style="margin-top:8px"><button type="button" class="btn btn-primary" data-draft-save>' + esc( t.aiSave ) + '</button>' +
+					'<button type="button" class="btn btn-text" data-draft-skip>' + esc( t.aiSkip ) + '</button></span></li>' );
+				next();
+			} ).fail( function ( xhr ) {
+				banner( $q( '#cexl-ai-describe-msg' ), 'bad', failText( xhr ) );
+				$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+			} );
+		}() );
+	} );
+
+	$q( '#cexl-ai-drafts' ).on( 'click', '[data-draft-save]', function () {
+		var $li = $( this ).closest( 'li' );
+		var $b = $( this ).addClass( 'is-busy' ).prop( 'disabled', true );
+		post( { action: cfg.actions.aiApply, nonce: cfg.ai.nonce, id: $li.attr( 'data-draft' ), description: $li.find( '.cexl-draft-text' ).val(), short: $li.find( '.cexl-draft-short' ).val() || '' } ).done( function ( r ) {
+			if ( r && r.success ) {
+				$li.find( '.row-actions' ).replaceWith( '<span class="chip ok">' + esc( t.aiSaved ) + '</span>' );
+				$li.find( 'textarea, input' ).prop( 'readonly', true );
+			} else {
+				$b.removeClass( 'is-busy' ).prop( 'disabled', false );
+			}
+		} ).fail( function () {
+			$b.removeClass( 'is-busy' ).prop( 'disabled', false );
+		} );
+	} ).on( 'click', '[data-draft-skip]', function () {
+		var $li = $( this ).closest( 'li' );
+		$li.find( '.row-actions' ).replaceWith( '<span class="chip plain">' + esc( t.aiSkipped ) + '</span>' );
+		$li.find( 'textarea, input' ).prop( 'readonly', true );
+	} );
+
 	$q( '#cexl-again' ).on( 'click', function ( e ) {
 		e.preventDefault();
 		state = {};
 		show( 'start' );
+	} );
+
+	/* -------------------------------------------------------------- Pro: undo */
+
+	$( document ).on( 'click', '.cexl-app [data-undo]', function ( e ) {
+		e.preventDefault();
+		var token = this.getAttribute( 'data-undo' );
+		if ( ! token || ! cfg.actions.undo || ! window.confirm( t.undoConfirm ) ) {
+			return;
+		}
+		var $btn = $( this ).addClass( 'is-busy' ).prop( 'disabled', true );
+		var $msg = $q( '#cexl-undo-msg' );
+		( function step() {
+			post( { action: cfg.actions.undo, nonce: cfg.nonces.undo, report: token } ).done( function ( r ) {
+				if ( ! r || ! r.success ) {
+					banner( $msg, 'bad', r && r.data && r.data.message ? r.data.message : t.failed );
+					$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+					return;
+				}
+				if ( r.data.left ) {
+					banner( $msg, 'info', fmt( t.undoing, r.data.done ) );
+					step();
+					return;
+				}
+				banner( $msg, 'ok', t.undoDone );
+				$btn.replaceWith( '<span class="chip plain">' + esc( t.undoDone ) + '</span>' );
+			} ).fail( function ( xhr ) {
+				banner( $msg, 'bad', failText( xhr ) );
+				$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+			} );
+		}() );
 	} );
 
 	/* ---------------------------------------------------- Pro: delete preview */

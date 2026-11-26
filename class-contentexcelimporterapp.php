@@ -232,6 +232,8 @@ class ContentExcelImporterApp {
 					'report'     => 'cexl_report_get',
 					'setDefault' => 'cexl_set_default',
 					'aiMap'      => 'cexl_ai_map',
+					'aiDescribe'    => 'cexl_ai_describe',
+					'aiApply'       => 'cexl_ai_apply',
 				),
 				'ai'            => ContentExcelImporterAI::script_settings(),
 				'nonces'        => array(
@@ -300,6 +302,18 @@ class ContentExcelImporterApp {
 			'aiDone'        => __( 'AI matched your columns. Check the ones marked Check before you go on.', 'content-excel-importer' ),
 			'aiMatch'       => __( 'AI match', 'content-excel-importer' ),
 			'aiConnect'     => __( 'Turn on AI credits', 'content-excel-importer' ),
+			/* translators: %s: number of items */
+			'aiDescribeN'   => __( 'New items without a description: %s', 'content-excel-importer' ),
+			/* translators: %s: number of credits */
+			'aiAbout'       => __( 'about %s credits', 'content-excel-importer' ),
+			/* translators: 1: item number, 2: number of items */
+			'aiWriting'     => __( 'Writing %1$s of %2$s...', 'content-excel-importer' ),
+			'aiReview'      => __( 'Check each text, change it if you like, then save it. Nothing is saved on the item until you click Save.', 'content-excel-importer' ),
+			'aiShort'       => __( 'Short description', 'content-excel-importer' ),
+			'aiSave'        => __( 'Save', 'content-excel-importer' ),
+			'aiSkip'        => __( 'Skip', 'content-excel-importer' ),
+			'aiSaved'       => __( 'Saved', 'content-excel-importer' ),
+			'aiSkipped'     => __( 'Skipped', 'content-excel-importer' ),
 		);
 	}
 
@@ -416,7 +430,12 @@ class ContentExcelImporterApp {
 		if ( null === $report ) {
 			wp_send_json_error();
 		}
-		wp_send_json_success( array( 'counts' => $report['counts'] ) );
+		wp_send_json_success(
+			array(
+				'counts'   => $report['counts'],
+				'describe' => ContentExcelImporterAI::available() ? ContentExcelImporterAI::describe_candidates( $report ) : array(),
+			)
+		);
 	}
 
 	/**
@@ -711,6 +730,10 @@ class ContentExcelImporterApp {
 				<div class="tile"><b id="cexl-res-skipped">0</b><span><?php esc_html_e( 'skipped', 'content-excel-importer' ); ?></span></div>
 				<div class="tile"><b id="cexl-res-failed">0</b><span><?php esc_html_e( 'failed', 'content-excel-importer' ); ?></span></div>
 			</div>
+						<div class="card" id="cexl-ai-describe" hidden><div class="card-body" style="display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+				<div><b><span class="spark" aria-hidden="true">&#10022;</span> <span id="cexl-ai-describe-title"></span></b><p class="muted" style="margin:4px 0 0"><?php esc_html_e( 'Write them from each item\'s own data (title, categories, attributes, SKU). You check every text before it is saved.', 'content-excel-importer' ); ?></p></div>
+				<button type="button" class="btn btn-secondary" id="cexl-ai-write"><?php esc_html_e( 'Write with AI', 'content-excel-importer' ); ?> <span class="muted small" id="cexl-ai-estimate"></span></button>
+			</div><div id="cexl-ai-describe-msg" aria-live="polite" style="padding:0 20px"></div><ul class="list" id="cexl-ai-drafts" style="padding:0 20px"></ul></div>
 			<div class="card"><div class="card-body"><p class="muted"><?php esc_html_e( 'The report lists every row with its result and a link to the item. It is also on the History page for 30 days.', 'content-excel-importer' ); ?></p></div></div>
 		</section>
 		<?php

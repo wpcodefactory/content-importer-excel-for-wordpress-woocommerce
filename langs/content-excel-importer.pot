@@ -7,36 +7,46 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-26T08:28:01+00:00\n"
+"POT-Creation-Date: 2026-11-26T10:02:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: content-excel-importer\n"
 
-#: class-contentexcelimporterai.php:67
+#: class-contentexcelimporterai.php:69
 #: class-contentexcelimporterapp.php:81
 msgid "Excel Importer for WooCommerce"
 msgstr ""
 
-#: class-contentexcelimporterai.php:131
+#: class-contentexcelimporterai.php:133
 msgid "The AI library is missing from this copy of the plugin."
 msgstr ""
 
-#: class-contentexcelimporterai.php:285
-#: class-contentexcelimporterapp.php:326
+#: class-contentexcelimporterai.php:287
+#: class-contentexcelimporterapp.php:340
 #: class-contentexcelimportermappings.php:155
 #: class-contentexcelimporterpreview.php:31
 msgid "Sorry, you are not allowed to import."
 msgstr ""
 
-#: class-contentexcelimporterai.php:292
+#: class-contentexcelimporterai.php:294
 #: class-contentexcelimportermappings.php:163
 #: class-contentexcelimporterpreview.php:37
 #: class-contentexcelimporterproducts.php:268
 msgid "The uploaded file was not found. Please upload it again."
 msgstr ""
 
+#: class-contentexcelimporterai.php:411
+#: class-contentexcelimporterai.php:452
+#: class-contentexcelimporterreport.php:134
+msgid "Sorry, you are not allowed to do that."
+msgstr ""
+
+#: class-contentexcelimporterai.php:430
+msgid "The AI did not return a description. Nothing was saved."
+msgstr ""
+
 #: class-contentexcelimporterapp.php:148
-#: class-contentexcelimporterapp.php:642
+#: class-contentexcelimporterapp.php:661
 #: class-contentexcelimporterpreview.php:150
 #: class-contentexcelimporterreport.php:146
 msgid "Title"
@@ -52,6 +62,7 @@ msgid "Content"
 msgstr ""
 
 #: class-contentexcelimporterapp.php:150
+#: class-contentexcelimporterapp.php:312
 #: class-contentexcelimporterpreview.php:152
 msgid "Short description"
 msgstr ""
@@ -88,7 +99,7 @@ msgid "Product data"
 msgstr ""
 
 #: class-contentexcelimporterapp.php:166
-#: class-contentexcelimporterapp.php:640
+#: class-contentexcelimporterapp.php:659
 #: class-contentexcelimporterpreview.php:205
 msgid "SKU"
 msgstr ""
@@ -134,545 +145,583 @@ msgid "ID (used to find the item, not imported)"
 msgstr ""
 
 #. translators: %s: list of file types
-#: class-contentexcelimporterapp.php:256
-#: class-contentexcelimporterapp.php:342
+#: class-contentexcelimporterapp.php:258
+#: class-contentexcelimporterapp.php:356
 msgid "This file type cannot be read. Use one of: %s."
 msgstr ""
 
 #. translators: %s: list of file types
-#: class-contentexcelimporterapp.php:257
+#: class-contentexcelimporterapp.php:259
 msgid "Reading your sheet..."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:258
+#: class-contentexcelimporterapp.php:260
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:259
+#: class-contentexcelimporterapp.php:261
 msgid "Your session has expired. Reload the page and try again."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:260
+#: class-contentexcelimporterapp.php:262
 msgid "Skip this column"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:261
+#: class-contentexcelimporterapp.php:263
+#: class-contentexcelimporterapp.php:316
 msgid "Skipped"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:262
+#: class-contentexcelimporterapp.php:264
 msgid "Set"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:263
+#: class-contentexcelimporterapp.php:265
 msgid "Saved match"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:264
+#: class-contentexcelimporterapp.php:266
 msgid "Matched"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:265
+#: class-contentexcelimporterapp.php:267
 msgid "Check"
 msgstr ""
 
 #. translators: %s: column letter
-#: class-contentexcelimporterapp.php:267
+#: class-contentexcelimporterapp.php:269
 msgid "Column %s"
 msgstr ""
 
 #. translators: %s: column name
-#: class-contentexcelimporterapp.php:269
+#: class-contentexcelimporterapp.php:271
 msgid "Field for %s"
 msgstr ""
 
 #. translators: 1: file name, 2: number of rows
-#: class-contentexcelimporterapp.php:271
+#: class-contentexcelimporterapp.php:273
 msgid "Step 2 of 3 · %1$s · rows: %2$s"
 msgstr ""
 
 #. translators: 1: file name, 2: number of rows
-#: class-contentexcelimporterapp.php:272
+#: class-contentexcelimporterapp.php:274
 msgid "This sheet has the same columns as one you imported before, so your earlier matches are used."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:273
+#: class-contentexcelimporterapp.php:275
 msgid "Match a column to Title. It is needed for every import."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:274
+#: class-contentexcelimporterapp.php:276
 msgid "To find products by SKU, match a column to SKU."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:275
+#: class-contentexcelimporterapp.php:277
 msgid "To find items by ID, match a column to \"ID (used to find the item)\"."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:276
+#: class-contentexcelimporterapp.php:278
 msgid "empty"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:277
+#: class-contentexcelimporterapp.php:279
 msgid "Some rows need a look: see the rows marked Check below."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:278
+#: class-contentexcelimporterapp.php:280
 msgid "No change"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:279
+#: class-contentexcelimporterapp.php:281
 msgid "Update"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:280
+#: class-contentexcelimporterapp.php:282
 msgid "Create"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:281
+#: class-contentexcelimporterapp.php:283
 msgid "Same"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:282
+#: class-contentexcelimporterapp.php:284
+#: class-contentexcelimporterapp.php:314
 msgid "Skip"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:283
+#: class-contentexcelimporterapp.php:285
 msgid "(no title)"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:284
+#: class-contentexcelimporterapp.php:286
 msgid "new"
 msgstr ""
 
 #. translators: %s: number of rows not shown
-#: class-contentexcelimporterapp.php:286
+#: class-contentexcelimporterapp.php:288
 msgid "Rows not shown here: %s. They are imported too."
 msgstr ""
 
 #. translators: %s: number of rows not shown
-#: class-contentexcelimporterapp.php:287
+#: class-contentexcelimporterapp.php:289
 msgid "This sheet has no rows to import below the column names."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:288
-#: class-contentexcelimporterapp.php:696
+#: class-contentexcelimporterapp.php:290
+#: class-contentexcelimporterapp.php:715
 msgid "Pause"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:289
+#: class-contentexcelimporterapp.php:291
 msgid "Resume"
 msgstr ""
 
 #. translators: 1: current row, 2: number of rows
-#: class-contentexcelimporterapp.php:291
+#: class-contentexcelimporterapp.php:293
 msgid "Row %1$s of %2$s"
 msgstr ""
 
 #. translators: %s: row number
-#: class-contentexcelimporterapp.php:293
+#: class-contentexcelimporterapp.php:295
 msgid "Row %s"
 msgstr ""
 
 #. translators: %s: row number
-#: class-contentexcelimporterapp.php:294
+#: class-contentexcelimporterapp.php:296
 msgid "Created"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:295
+#: class-contentexcelimporterapp.php:297
 msgid "Updated"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:296
+#: class-contentexcelimporterapp.php:298
 msgid "Failed"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:297
-#: class-contentexcelimporterapp.php:706
+#: class-contentexcelimporterapp.php:299
+#: class-contentexcelimporterapp.php:725
 msgid "Import done"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:298
+#: class-contentexcelimporterapp.php:300
 msgid "Import stopped"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:299
+#: class-contentexcelimporterapp.php:301
 msgid "Matching your columns with AI..."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:300
+#: class-contentexcelimporterapp.php:302
 msgid "AI matched your columns. Check the ones marked Check before you go on."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:301
+#: class-contentexcelimporterapp.php:303
 msgid "AI match"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:302
+#: class-contentexcelimporterapp.php:304
 msgid "Turn on AI credits"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:332
+#. translators: %s: number of items
+#: class-contentexcelimporterapp.php:306
+msgid "New items without a description: %s"
+msgstr ""
+
+#. translators: %s: number of credits
+#: class-contentexcelimporterapp.php:308
+msgid "about %s credits"
+msgstr ""
+
+#. translators: 1: item number, 2: number of items
+#: class-contentexcelimporterapp.php:310
+msgid "Writing %1$s of %2$s..."
+msgstr ""
+
+#. translators: 1: item number, 2: number of items
+#: class-contentexcelimporterapp.php:311
+msgid "Check each text, change it if you like, then save it. Nothing is saved on the item until you click Save."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:313
+msgid "Save"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:315
+msgid "Saved"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:346
 msgid "Choose what you are importing first."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:338
+#: class-contentexcelimporterapp.php:352
 msgid "The file did not arrive. It may be larger than your server allows."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:347
+#: class-contentexcelimporterapp.php:361
 msgid "This file could not be read. Open it in Excel, save it again as .xlsx and upload that copy."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:350
+#: class-contentexcelimporterapp.php:364
 msgid "The first row of the sheet is empty. Put the column names in the first row."
 msgstr ""
 
 #. translators: %s: number of items
-#: class-contentexcelimporterapp.php:456
+#: class-contentexcelimporterapp.php:475
 msgid "%s updated"
 msgid_plural "%s updated"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of items
-#: class-contentexcelimporterapp.php:460
+#: class-contentexcelimporterapp.php:479
 msgid "%s created"
 msgid_plural "%s created"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of rows
-#: class-contentexcelimporterapp.php:464
+#: class-contentexcelimporterapp.php:483
 msgid "%s skipped"
 msgid_plural "%s skipped"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of rows
-#: class-contentexcelimporterapp.php:468
+#: class-contentexcelimporterapp.php:487
 msgid "%s failed"
 msgid_plural "%s failed"
 msgstr[0] ""
 msgstr[1] ""
 
-#: class-contentexcelimporterapp.php:470
+#: class-contentexcelimporterapp.php:489
 msgid "Nothing imported"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:480
-#: class-contentexcelimporterapp.php:557
+#: class-contentexcelimporterapp.php:499
+#: class-contentexcelimporterapp.php:576
 msgid "Import"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:481
-#: class-contentexcelimporterapp.php:525
+#: class-contentexcelimporterapp.php:500
+#: class-contentexcelimporterapp.php:544
 msgid "History"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:486
-#: class-contentexcelimporterapp.php:507
+#: class-contentexcelimporterapp.php:505
+#: class-contentexcelimporterapp.php:526
 #: content-excel-importer.php:120
 #: includes/class-wpfactory-cexl.php:190
 #: includes/class-wpfactory-cexl.php:191
 msgid "Excel Importer"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:487
+#: class-contentexcelimporterapp.php:506
 msgid "Importer"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:494
+#: class-contentexcelimporterapp.php:513
 msgid "Pro version"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:525
+#: class-contentexcelimporterapp.php:544
 msgid "Past imports"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:526
+#: class-contentexcelimporterapp.php:545
 msgid "Every import made on this screen, kept for 30 days. Download a report to see the result of each row."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:528
+#: class-contentexcelimporterapp.php:547
 msgid "File"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:528
+#: class-contentexcelimporterapp.php:547
 msgid "Type"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:528
+#: class-contentexcelimporterapp.php:547
 msgid "When"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:528
+#: class-contentexcelimporterapp.php:547
 #: class-contentexcelimporterreport.php:146
 msgid "Result"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:528
+#: class-contentexcelimporterapp.php:547
 msgid "Actions"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:531
+#: class-contentexcelimporterapp.php:550
 msgid "No imports yet. Imports you make from now on are listed here."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:535
-#: class-contentexcelimporterapp.php:593
+#: class-contentexcelimporterapp.php:554
+#: class-contentexcelimporterapp.php:612
 msgid "(no file name)"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:539
+#: class-contentexcelimporterapp.php:558
 msgid "Report"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:557
+#: class-contentexcelimporterapp.php:576
 msgid "Import from Excel"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:558
+#: class-contentexcelimporterapp.php:577
 msgid "Update your products, posts and pages from a sheet. You see every change before it is saved."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:563
+#: class-contentexcelimporterapp.php:582
 msgid "What are you importing?"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:565
+#: class-contentexcelimporterapp.php:584
 msgid "Content type"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:571
+#: class-contentexcelimporterapp.php:590
 msgid "Drop your sheet here"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:572
+#: class-contentexcelimporterapp.php:591
 msgid ".xlsx, .xls, .ods or .csv. The first row holds the column names."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:575
+#: class-contentexcelimporterapp.php:594
 msgid "Choose a file"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:579
+#: class-contentexcelimporterapp.php:598
 msgid "No sheet yet? Start from a sample:"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:580
+#: class-contentexcelimporterapp.php:599
 msgid "Products"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:581
+#: class-contentexcelimporterapp.php:600
 msgid "Posts and pages"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:586
+#: class-contentexcelimporterapp.php:605
 msgid "Recent imports"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:586
+#: class-contentexcelimporterapp.php:605
 msgid "All"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:589
+#: class-contentexcelimporterapp.php:608
 msgid "No imports yet."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:599
+#: class-contentexcelimporterapp.php:618
 msgid "Same sheet every week?"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:599
+#: class-contentexcelimporterapp.php:618
 msgid "Your column matches are saved per sheet layout. Next time the columns match themselves."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:618
+#: class-contentexcelimporterapp.php:637
 msgid "Match your columns"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:619
+#: class-contentexcelimporterapp.php:638
 msgid "We matched what we could. Check the highlighted ones; columns set to \"Skip this column\" are not imported."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:621
+#: class-contentexcelimporterapp.php:640
 msgid "Match with AI"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:621
+#: class-contentexcelimporterapp.php:640
 msgid "about 2 credits"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:628
+#: class-contentexcelimporterapp.php:647
 msgid "Your column"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:628
+#: class-contentexcelimporterapp.php:647
 msgid "First value"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:628
+#: class-contentexcelimporterapp.php:647
 msgid "Goes to"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:628
+#: class-contentexcelimporterapp.php:647
 #: class-contentexcelimporterpreview.php:153
 msgid "Status"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:631
-#: class-contentexcelimporterapp.php:678
+#: class-contentexcelimporterapp.php:650
+#: class-contentexcelimporterapp.php:697
 msgid "Back"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:631
+#: class-contentexcelimporterapp.php:650
 msgid "Preview changes"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:636
+#: class-contentexcelimporterapp.php:655
 msgid "How to update"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:638
+#: class-contentexcelimporterapp.php:657
 msgid "Find existing items by"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:641
+#: class-contentexcelimporterapp.php:660
 #: class-contentexcelimporterreport.php:146
 msgid "ID"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:644
+#: class-contentexcelimporterapp.php:663
 msgid "When an item exists"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:645
+#: class-contentexcelimporterapp.php:664
 msgid "Change only the columns in this sheet"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:646
+#: class-contentexcelimporterapp.php:665
 msgid "Overwrite every field (the old behaviour)"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:647
+#: class-contentexcelimporterapp.php:666
 msgid "Add a new item anyway"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:648
+#: class-contentexcelimporterapp.php:667
 msgid "Use this choice for my next imports too"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:650
+#: class-contentexcelimporterapp.php:669
 msgid "When nothing matches"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:651
+#: class-contentexcelimporterapp.php:670
 msgid "Create it"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:652
+#: class-contentexcelimporterapp.php:671
 msgid "Skip the row"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:656
+#: class-contentexcelimporterapp.php:675
 msgid "Attributes"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:657
+#: class-contentexcelimporterapp.php:676
 msgid "Add attributes only, no variations (one row per product)"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:677
+#: class-contentexcelimporterapp.php:696
 msgid "Step 3 of 3 · nothing is saved yet"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:677
+#: class-contentexcelimporterapp.php:696
 msgid "Preview the changes"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:678
+#: class-contentexcelimporterapp.php:697
 msgid "Start the import"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:681
+#: class-contentexcelimporterapp.php:700
 msgid "will be updated"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:682
+#: class-contentexcelimporterapp.php:701
 msgid "will be created"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:683
+#: class-contentexcelimporterapp.php:702
 msgid "skipped or unchanged"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:684
+#: class-contentexcelimporterapp.php:703
 msgid "to check"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:688
+#: class-contentexcelimporterapp.php:707
 #: class-contentexcelimporterreport.php:146
 msgid "Row"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:688
+#: class-contentexcelimporterapp.php:707
 msgid "Item"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:688
+#: class-contentexcelimporterapp.php:707
 msgid "What changes"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:688
+#: class-contentexcelimporterapp.php:707
 msgid "Action"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:694
+#: class-contentexcelimporterapp.php:713
 msgid "Importing"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:695
+#: class-contentexcelimporterapp.php:714
 msgid "Keep this page open until the import finishes. You can pause or stop at any row."
 msgstr ""
 
-#: class-contentexcelimporterapp.php:696
+#: class-contentexcelimporterapp.php:715
 msgid "Stop"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:700
+#: class-contentexcelimporterapp.php:719
 msgid "Import progress"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:707
+#: class-contentexcelimporterapp.php:726
 msgid "Download the report"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:707
+#: class-contentexcelimporterapp.php:726
 msgid "Import another file"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:707
+#: class-contentexcelimporterapp.php:726
 msgid "View items"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:709
+#: class-contentexcelimporterapp.php:728
 msgid "updated"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:710
+#: class-contentexcelimporterapp.php:729
 #: class-contentexcelimporterproducts.php:370
 msgid "created"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:711
+#: class-contentexcelimporterapp.php:730
 msgid "skipped"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:712
+#: class-contentexcelimporterapp.php:731
 msgid "failed"
 msgstr ""
 
-#: class-contentexcelimporterapp.php:714
+#: class-contentexcelimporterapp.php:734
+msgid "Write them from each item's own data (title, categories, attributes, SKU). You check every text before it is saved."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:735
+msgid "Write with AI"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:737
 msgid "The report lists every row with its result and a link to the item. It is also on the History page for 30 days."
 msgstr ""
 
@@ -858,10 +907,6 @@ msgstr ""
 
 #: class-contentexcelimporterquery.php:138
 msgid "CATEGORY AND TAGS"
-msgstr ""
-
-#: class-contentexcelimporterreport.php:134
-msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
 #: class-contentexcelimporterreport.php:140

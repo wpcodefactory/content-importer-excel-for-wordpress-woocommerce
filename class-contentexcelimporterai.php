@@ -36,6 +36,8 @@ class ContentExcelImporterAI {
 		$this->rows_for   = $rows_for ? $rows_for : array( 'ContentExcelImporterPreview', 'rows' );
 		add_action( 'init', array( __CLASS__, 'register' ) );
 		add_action( 'wp_ajax_cexl_ai_map' . $suffix, array( $this, 'ajax_map' ) );
+		add_action( 'wp_ajax_cexl_ai_describe' . $suffix, array( $this, 'ajax_describe' ) );
+		add_action( 'wp_ajax_cexl_ai_apply' . $suffix, array( $this, 'ajax_apply' ) );
 	}
 
 	/**
@@ -312,6 +314,153 @@ class ContentExcelImporterAI {
 				'balance' => isset( $result['balance'] ) ? $result['balance'] : null,
 			)
 		);
+	}
+
+	/**
+	 * Items an import created that have no description yet (at most 50), for "Write with AI".
+	 *
+	 * @param array $report Report data (rows with result and ID).
+	 * @return array Post IDs.
+	 */
+	public static function describe_candidates( $report ) {
+		$ids = array();
+		foreach ( isset( $report['rows'] ) ? (array) $report['rows'] : array() as $row ) {
+			$id = isset( $row['id'] ) ? (int) $row['id'] : 0;
+			if ( 'created' === ( isset( $row['result'] ) ? $row['result'] : '' ) && $id && ! in_array( $id, $ids, true ) ) {
+				$post = get_post( $id );
+				if ( $post && '' === trim( (string) $post->post_content ) && in_array( $post->post_type, array( 'product', 'post', 'page' ), true ) && current_user_can( 'edit_post', $id ) ) {
+					$ids[] = $id;
+				}
+			}
+			if ( count( $ids ) >= 50 ) {
+				break;
+			}
+		}
+		return $ids;
+	}
+
+	/**
+	 * Request body for writing one item's description from its own data.
+	 *
+	 * @param WP_Post $post Item.
+	 * @return array
+	 */
+	public static function describe_body( $post ) {
+		$facts = array(
+			'title'             => $post->post_title,
+			'type'              => $post->post_type,
+			'short_description' => wp_strip_all_tags( $post->post_excerpt ),
+		);
+		foreach ( get_object_taxonomies( $post->post_type, 'objects' ) as $tax ) {
+			if ( ! $tax->public || in_array( $tax->name, array( 'product_type', 'product_visibility', 'post_format', 'language', 'post_translations' ), true ) ) {
+				continue;
+			}
+			$names = wp_get_object_terms( $post->ID, $tax->name, array( 'fields' => 'names' ) );
+			if ( is_array( $names ) && $names ) {
+				$facts[ $tax->labels->name ] = implode( ', ', $names );
+			}
+		}
+		if ( 'product' === $post->post_type ) {
+			$facts['sku'] = (string) get_post_meta( $post->ID, '_sku', true );
+		}
+		return array(
+			'model'       => 'claude-haiku-5-5',
+			'max_tokens'  => 700,
+			'system'      => 'You write descriptions for items of an online store from the facts given, in the store language. Use only those facts: never invent materials, sizes, ingredients, prices, stock, shipping, guarantees or claims. When the facts are thin, write less. The description: one to three short HTML paragraphs (<p>), at most 120 words. The short description: one plain sentence, at most 25 words.',
+			'tools'       => array(
+				array(
+					'name'         => 'set_text',
+					'description'  => 'The texts for this item.',
+					'input_schema' => array(
+						'type'       => 'object',
+						'properties' => array(
+							'description'       => array( 'type' => 'string' ),
+							'short_description' => array( 'type' => 'string' ),
+						),
+						'required'   => array( 'description', 'short_description' ),
+					),
+				),
+			),
+			'tool_choice' => array(
+				'type' => 'tool',
+				'name' => 'set_text',
+			),
+			'messages'    => array(
+				array(
+					'role'    => 'user',
+					'content' => (string) wp_json_encode(
+						array(
+							'store'          => get_bloginfo( 'name' ),
+							'store_language' => get_locale(),
+							'facts'          => array_filter( $facts, 'strlen' ),
+						)
+					),
+				),
+			),
+		);
+	}
+
+	/**
+	 * AJAX: draft a description for one item. Nothing is saved on the item until the merchant applies it.
+	 */
+	public function ajax_describe() {
+		check_ajax_referer( 'cexl_ai', 'nonce' );
+		$id   = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
+		$post = get_post( $id );
+		if ( ! current_user_can( $this->capability ) || ! $post || ! current_user_can( 'edit_post', $id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'content-excel-importer' ) ), 403 );
+		}
+		$result = self::complete( self::describe_body( $post ), 'write-descriptions' );
+		if ( is_wp_error( $result ) ) {
+			$data = array( 'message' => $result->get_error_message() );
+			if ( 'wpfactory_ai_not_connected' === $result->get_error_code() && self::available() ) {
+				$data['connect'] = wpfactory_ai()->admin_url();
+			}
+			wp_send_json_error( $data );
+		}
+		$text = array();
+		foreach ( isset( $result['message']['content'] ) ? (array) $result['message']['content'] : array() as $block ) {
+			if ( is_array( $block ) && 'tool_use' === ( isset( $block['type'] ) ? $block['type'] : '' ) && isset( $block['input'] ) ) {
+				$text = (array) $block['input'];
+			}
+		}
+		$description = wp_kses_post( isset( $text['description'] ) ? (string) $text['description'] : '' );
+		$short       = sanitize_text_field( isset( $text['short_description'] ) ? (string) $text['short_description'] : '' );
+		if ( '' === trim( wp_strip_all_tags( $description ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'The AI did not return a description. Nothing was saved.', 'content-excel-importer' ) ) );
+		}
+		wp_send_json_success(
+			array(
+				'id'          => $id,
+				'title'       => get_the_title( $id ),
+				'description' => $description,
+				'short'       => '' === trim( $post->post_excerpt ) ? $short : '',
+				'credits'     => isset( $result['credits'] ) ? $result['credits'] : null,
+				'balance'     => isset( $result['balance'] ) ? $result['balance'] : null,
+			)
+		);
+	}
+
+	/**
+	 * AJAX: save a reviewed description on the item (the short description only when the item has none).
+	 */
+	public function ajax_apply() {
+		check_ajax_referer( 'cexl_ai', 'nonce' );
+		$id   = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
+		$post = get_post( $id );
+		if ( ! current_user_can( $this->capability ) || ! $post || ! current_user_can( 'edit_post', $id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'content-excel-importer' ) ), 403 );
+		}
+		$update = array(
+			'ID'           => $id,
+			'post_content' => wp_kses_post( wp_unslash( isset( $_POST['description'] ) ? $_POST['description'] : '' ) ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_kses_post.
+		);
+		$short = sanitize_text_field( wp_unslash( isset( $_POST['short'] ) ? $_POST['short'] : '' ) );
+		if ( '' !== $short && '' === trim( $post->post_excerpt ) ) {
+			$update['post_excerpt'] = $short;
+		}
+		wp_update_post( $update );
+		wp_send_json_success();
 	}
 }
 
