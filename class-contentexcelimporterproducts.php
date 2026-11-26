@@ -556,24 +556,42 @@ public function importProducts() {
 
 							if ( $voc->name === 'language' ) {
 								if ( class_exists( 'Polylang' ) ) {
-										global $polylang;
-										$polylang->model->set_post_language( $id, $taxonomy );
+										if ( function_exists( 'pll_set_post_language' ) ) {
+											pll_set_post_language( $id, $taxonomy ); // Polylang 3 removed the model method of the old code (the row stopped with an error).
+										} else {
+											global $polylang;
+											$polylang->model->set_post_language( $id, $taxonomy );
+										}
 								}
 							}
 
 							if ( 'post_translations' === $voc->name ) {
 
-								if ( class_exists( 'Polylang' ) ) {
-									global $polylang;
+								if ( class_exists( 'Polylang' ) && function_exists( 'pll_save_post_translations' ) ) {
+									// Link this item to the original with Polylang's own functions: the model method of the old code is gone in
+									// Polylang 3, where every row with a translation column stopped with an error.
+									$translateId   = (int) post_exists( $taxonomy );
+									$translateLang = $translateId ? pll_get_post_language( $translateId, 'slug' ) : '';
+									$ownLang       = pll_get_post_language( $id, 'slug' );
+									if ( $translateLang && $ownLang && $translateLang !== $ownLang && $translateId !== (int) $id ) {
+										$links                   = (array) pll_get_post_translations( $translateId );
+										$links[ $translateLang ] = $translateId;
+										$links[ $ownLang ]       = (int) $id;
+										pll_save_post_translations( $links );
+									}
+								} else {
+									if ( class_exists( 'Polylang' ) ) {
+										global $polylang;
 
-									$translateId   = post_exists( $taxonomy );
-									$translateLang = pll_get_post_language( $translateId, 'slug' );
-									$translations  = $polylang->model->post->get_translations( $translateId );
+										$translateId   = post_exists( $taxonomy );
+										$translateLang = pll_get_post_language( $translateId, 'slug' );
+										$translations  = $polylang->model->post->get_translations( $translateId );
 
-									$polylang->model->save_translations( $type, $id, array( $translateLang => $translateId ) );
+										$polylang->model->save_translations( $type, $id, array( $translateLang => $translateId ) );
+									}
+
+									wp_set_object_terms( $id, post_exists( $taxonomy ), 'post_translations', true );
 								}
-
-								wp_set_object_terms( $id, post_exists( $taxonomy ), 'post_translations', true );
 
 							} else {
 
