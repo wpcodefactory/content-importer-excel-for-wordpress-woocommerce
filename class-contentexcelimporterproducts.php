@@ -486,7 +486,8 @@ public function importProducts() {
 					} elseif ( ! $keep_unmapped ) {
 						update_post_meta( $id, '_stock_status', 'instock' );
 					}
-					if ( $length !== '' ) {
+					// The length is cast to a number, so a missing column writes 0; the "only my columns" mode skips it.
+					if ( $length !== '' && ! ( $keep_unmapped && ( empty( $_POST['_length'] ) || '' === trim( (string) $allDataInSheet[ $i ][ $_POST['_length'] ] ) ) ) ) {
 						update_post_meta( $id, '_length', $length );
 					}
 					if ( $width !== '' ) {

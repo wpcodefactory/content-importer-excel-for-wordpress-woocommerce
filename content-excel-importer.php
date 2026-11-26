@@ -43,6 +43,7 @@ add_action( 'plugins_loaded', 'wpfactory_cexl' );
  */
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterquery.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterproducts.php';
+require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterpreview.php';
 
 /**
  * load_contentExceIimporter_js.
