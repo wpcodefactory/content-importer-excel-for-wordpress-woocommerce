@@ -1,6 +1,6 @@
 <?php
 /**
- * Import Content in WordPress & WooCommerce with Excel - Main Class
+ * Excel Importer for WooCommerce - Main Class
  *
  * @version 5.0.0
  * @since   5.0.0
@@ -187,8 +187,8 @@ final class WPFactory_CEXL {
 
 		add_submenu_page(
 			$admin_menu->get_menu_slug(),
-			__( 'Content Excel Importer Settings', 'content-excel-importer' ),
-			__( 'Content Excel Importer', 'content-excel-importer' ),
+			__( 'Excel Importer', 'content-excel-importer' ),
+			__( 'Excel Importer', 'content-excel-importer' ),
 			'manage_options',
 			'content-excel-importer',
 			'contentExceIimporter_init',

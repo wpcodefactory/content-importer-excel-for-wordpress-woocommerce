@@ -1,6 +1,6 @@
 <?php
 /**
- * Import Content in WordPress & WooCommerce with Excel - dry run (preview of an import, nothing is saved).
+ * Excel Importer for WooCommerce - dry run (preview of an import, nothing is saved).
  *
  * Takes the same request as one import row (mapping, post type, file token, match and update options) and returns,
  * for every row, what the import will do: create, update or skip, the fields that change (old and new value) and
@@ -53,7 +53,7 @@ class ContentExcelImporterPreview {
 		$cache = substr( $file, 0, -5 ) . '.json';
 		$rows  = file_exists( $cache ) ? json_decode( (string) file_get_contents( $cache ), true ) : null; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		if ( ! is_array( $rows ) && file_exists( $file ) ) {
-			$rows = \PhpOffice\PhpSpreadsheet\IOFactory::load( $file )->getActiveSheet()->toArray( null, true, true, true );
+			$rows = \PhpOffice\PhpSpreadsheet\IOFactory::load( $file, 0, array( 'Xlsx', 'Xls', 'Ods', 'Csv' ) )->getActiveSheet()->toArray( null, true, true, true );
 		}
 		return is_array( $rows ) ? $rows : null;
 	}
@@ -118,6 +118,23 @@ class ContentExcelImporterPreview {
 			}
 			if ( '' === $title ) {
 				$warnings[] = __( 'This row has no title.', 'content-excel-importer' );
+			}
+			// "Skip the row" when nothing matches: the import leaves the row out.
+			if ( 'create' === $action && ! $always && isset( $request['cexl_missing'] ) && 'skip' === $request['cexl_missing'] ) {
+				if ( isset( $created[ $key ] ) && $created[ $key ] === $i ) {
+					unset( $created[ $key ] ); // Nothing is created, so a later row with the same key is skipped too.
+				}
+				$counts['skip']++;
+				$out[] = array(
+					'row'      => $i,
+					'title'    => $title,
+					'id'       => 0,
+					'action'   => 'skip',
+					'changes'  => array(),
+					'warnings' => array(),
+					'note'     => __( 'Not found, so this row is skipped.', 'content-excel-importer' ),
+				);
+				continue;
 			}
 			if ( ! $existing && '' !== $title && ! $always ) {
 				$other = (int) post_exists( $title );

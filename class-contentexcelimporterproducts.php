@@ -1,6 +1,6 @@
 <?php
 /**
- * Import Content in WordPress & WooCommerce with Excel - ContentExcelImporterProducts Class
+ * Excel Importer for WooCommerce - ContentExcelImporterProducts Class
  *
  * @author  WPFactory
  */
@@ -77,6 +77,15 @@ public function __construct() {
 	 */
 	public static function only_mapped_columns() {
 		return isset( $_POST['cexl_update'] ) && 'mapped' === $_POST['cexl_update']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked in import_content().
+	}
+
+	/**
+	 * Rows that match no existing item: cexl_missing = skip leaves them out. Anything else creates them (5.0.4).
+	 *
+	 * @return bool
+	 */
+	public static function skip_missing() {
+		return isset( $_POST['cexl_missing'] ) && 'skip' === $_POST['cexl_missing']; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked in import_content().
 	}
 
 	/**
@@ -171,7 +180,7 @@ public function importProducts() {
 
 				if ( $_FILES['file']['type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ) {
 
-					$objPHPExcel    = IOFactory::load( $filename );
+					$objPHPExcel    = IOFactory::load( $filename, 0, array( 'Xlsx' ) );
 					$allDataInSheet = $objPHPExcel->getActiveSheet()->toArray( null, true, true, true );
 					$data           = count( $allDataInSheet );  // Here get total count of row in that Excel sheet
 					$total          = $data;
@@ -264,7 +273,7 @@ public function importProducts() {
 			$sheet_cache    = substr( $filename, 0, -5 ) . '.json';
 			$allDataInSheet = file_exists( $sheet_cache ) ? json_decode( (string) file_get_contents( $sheet_cache ), true ) : null; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			if ( ! is_array( $allDataInSheet ) ) {
-				$objPHPExcel    = IOFactory::load( $filename );
+				$objPHPExcel    = IOFactory::load( $filename, 0, array( 'Xlsx', 'Xls', 'Ods', 'Csv' ) );
 				$allDataInSheet = $objPHPExcel->getActiveSheet()->toArray( null, true, true, true );
 			}
 			$data             = count( $allDataInSheet );  // Here get total count of row in that Excel sheet.
@@ -330,6 +339,18 @@ public function importProducts() {
 
 						// Check if post exists: same title inside the chosen post type only (a page or image with that title is never touched).
 				$existing_id = self::find_existing( $title, $type, $allDataInSheet[ $i ] );
+				// The import screen can ask to skip rows that match nothing (cexl_missing = skip). Default: they are created.
+				if ( 0 === $existing_id && empty( $_POST['add_always_new'] ) && self::skip_missing() ) {
+					print "<p class='skipped'>" . esc_html( $title ) . ' ' . esc_html__( 'was not found, row skipped', 'content-excel-importer' ) . '.</p>';
+					if ( ! empty( $_POST['cexl_report'] ) ) {
+						ContentExcelImporterReport::add_row( $token, $i, 'skipped', 0, $title, array( 'type' => $type, 'file' => isset( $_POST['cexl_file_name'] ) ? sanitize_file_name( wp_unslash( $_POST['cexl_file_name'] ) ) : '', 'total' => (int) $_POST['finalupload'] - 1 ) );
+					}
+					if ( (int) $i === (int) $_POST['finalupload'] ) {
+						wp_delete_file( $filename );
+						wp_delete_file( $sheet_cache );
+					}
+					die;
+				}
 				// An update in "only the columns in this sheet" mode leaves every unmapped field as it is.
 				$keep_unmapped = self::only_mapped_columns() && 0 !== $existing_id && empty( $_POST['add_always_new'] );
 				if ( 0 === $existing_id || ! empty( $_POST['add_always_new'] ) ) {

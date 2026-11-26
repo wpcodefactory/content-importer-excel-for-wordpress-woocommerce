@@ -1,127 +1,81 @@
-=== Import Content in WordPress & WooCommerce with Excel ===
+=== Excel Importer for WooCommerce: Products, Posts & Pages with Preview ===
 Contributors: wpcodefactory, anbinder, karzin, omardabbas
-Tags: excel import, content import, bulk import, import translations, migrate
-Requires at least: 3.0.1
+Tags: excel import, woocommerce import, product import, csv import, bulk edit
+Requires at least: 5.3
 Requires PHP: 8.1
 Tested up to: 7.0
 Stable tag: 5.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Import Posts, Pages, Simple Products for WooCommerce & Wordpress with Excel. Migrate Easily. No more CSV Hassle
+Update products, posts and pages from an Excel sheet: match by SKU or ID, preview every change before it is saved.
 
 == Description ==
 
-**You want to do a website migration without adding content 1 by 1? Bulk Edit Content from one screen? Use can now import content in WordPress from an Excel File with an easy Drag & Drop functionality.**
+Import and update your store from the sheet you already have: a supplier price list, a stock file, a blog migration.
 
-* **Import Posts, Pages, Simple Products for WooCommerce**, any Wordpress Content with Excel. No more CSV Hassle! Website Migration Made Easy
-* **Data mapping** by **drag & drop** excel columns to post type fields, or **automatch columns** based on Excel Labels( if same with fields names).
-* **Speed!** The form is submitted through **AJAX**, so there is no page reloading.
-* **Multilingual!** It is compatible with QTRANSLATE (using the relevant tags for the translations) and POLYLANG for Multilingual Import
-[Import any Post Type including WooCommerce Products with Excel](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
-With the latest update you have an option to Import with same title even if this exists.
+* **Works with your own files.** .xlsx, .xls, .ods and .csv. The first row holds the column names, in any language.
+* **See every change first.** The preview lists each row: what will be created, what will be updated (old value and new value) and what needs a look, such as a sale price above the regular price. Nothing is saved until you start the import.
+* **Only the columns in your sheet change.** A price list with three columns updates three fields. Descriptions, status, dates and stock you did not put in the sheet stay as they are.
 
-= Supports =
+= What you can do =
 
-* Title
-* Author
-* Date
-* Slug
-* Description (HTML allowed)
-* Short Description - Excerpt (HTML allowed)
-* Language
-* Translation of post (title)
-* [ACF fields - PRO version](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
-* [YOAST SEO Meta - PRO version](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
-* [WPML compatibility - PRO version](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
-<p>Categories/Tags are created along with the Product or Post creation if they don't pre exist.</p>
-<p> If a subcategory/subtag is selected on the excel, parent categories will also be added/selected for the relevant product. </p>
+* Import and update simple products, posts and pages.
+* Find existing items by SKU, by ID or by title. Items of other types with the same title are never touched.
+* Choose what happens to rows that match nothing: create them or skip them.
+* Columns match themselves: field names, common words in English, German, French and Spanish ("Art.-Nr.", "Lager", "Precio") and the matches you saved for the same sheet last time.
+* Match columns with AI on WPFactory AI credits, with 100 free credits a month (optional, see External services).
+* Product fields: SKU, regular price, sale price, stock quantity, weight, virtual, categories and tags.
+* Post and page fields: title, content, excerpt, status, date, URL slug, author, categories and tags, Polylang language and translations.
+* A report of every import: created, updated, skipped and failed rows with links, downloadable as CSV and listed on the History page for 30 days.
+* Pause or stop an import at any row.
 
-= Extra for Posts =
+= Pro =
 
-* Category (multiple comma separated)
-* Tags (multiple comma separated)
-
-= Extra for Products =
-
-* Product Category (multiple comma separated)
-* Product Tags (multiple comma separated)
-* Weight
-* SKU
-* Regular Price
-* Sale Price
-* Stock
-* Virtual
-
-**PRO VERSION**
-
-* IMPORT ANY CUSTOM POST TYPE
-* IMPORT ANY CUSTOM POST TYPE WMPL translations
-* IMPORT FEATURED IMAGE
-* IMPORT ANY CATEGORY, TAG, CUSTOM TAXONOMY
-* CUSTOM FIELDS SUPPORT: ACF and other plugin's post meta fields - you can even upload Images and Gallery Images in custom fields with plugins like [ACF PRO](https://www.advancedcustomfields.com/pro/ "ACF PRO")
-* IMPORT/UPDATE SIMPLE & VARIABLE PRODUCTS FOR WOOCOMMERCE
-* MULTIPLE ATTRIBUTES AND VARIATIONS
-* PRODUCT IMPORT - SIMPLE PRODUCTS WITH ATTRIBUTES: add multiple attributes,comma separated, this means you need only one Excel row for each product!
-* IMPORTS PRODUCT IMAGES FROM URL --- NEW! UPLOAD IMAGE FROM DROPBOX PUBLIC FILE
-* IMPORTS PRODUCT GALLERY IMAGES FROM URL
-* DEFINE IF DOWNLOADABLE, DOWNLOADABLE NAME,URL,EXPIRY DATA & LIMIT
-* IMPORT CATEGORY TERMS description HTML
-* IMPORT YOAST SEO Meta Product fields, like META TITLE, META DESCRIPTION
-* IMPORTS CUSTOM TAXONOMIES
-* DELETE PRODUCTS THROUGH EXCEL FILE BY id, slug or title
-* IMPORT CATEGORY TERMS AND SUB TERMS THROUGH EXCEL FILE
-* DELETE CATEGORY TERMS THROUGH EXCEL FILE
-* ADDED PROGRESS BAR IN ALL IMPORT / DELETE FUNCTIONS
-* ALL IMPORT / DELETE FUNCTIONS RUN IN CHUNKS - NO PHP SERVER TIMEOUTS!
-
-[Get it Here](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
-
-[youtube https://www.youtube.com/watch?v=znQXiG7c7Sg&rel=0]
+[Excel Importer for WooCommerce Pro](https://wpfactory.com/item/content-importer-for-wordpress-woocommerce-with-excel/) adds variable products and attributes, images and galleries by URL, downloadable files, custom fields (ACF and others), Yoast SEO fields, upsells and cross-sells, WPML, any post type, deleting content by sheet with a preview, importing and deleting categories, and a role setting for shop managers.
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins` directory and unzip, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the "Plugins" screen in WordPress
-3. Use the "WPFactory > Content Excel Importer" menu link, or "Settings" link on plugins page to use the plugin.
-4. Upload your excel file (there is a link for a sample excel file) and proceed to data mapping and creating your products, posts or pages.
+1. Upload the plugin folder to `/wp-content/plugins/`, or install it from the Plugins screen.
+2. Activate it.
+3. Open WPFactory > Excel Importer, choose what you are importing and drop your sheet.
 
 == Frequently Asked Questions ==
 
-= Can I do a date migration with this WordPress Plugin? =
-Yes absolutely, you just need to from an excel file with the content your website, slugs, titles etc, import it in the configuration screen, map the data with a simple drag and drop and voilla!
+= Will an import change things I did not put in my sheet? =
 
-= Can I import Translations for qtranslate? =
-Yes, insert the relevant taf for an excel field for title or description like in the example: [:en]Title[:][:el]Τίτλος[:]
+Not with "Change only the columns in this sheet", which new installs start with. Sites that used the plugin before keep the old "Overwrite every field" choice until you pick the other one on the matching screen and tick "Use this choice for my next imports too".
 
-= Can I import Translations for POLYLANG? =
-Yes, insert a new row for each translation, mention the language code and in the Map a field for the translated title with " Translation Of " taxonomy
+= How do I update prices only? =
 
-= Can I update the existing products? =
-Yes, update is also supported and will be mentioned while uploading.
+Make a sheet with a SKU column and the price columns, choose "Find existing items by SKU" and "Change only the columns in this sheet". The preview shows every old and new price before you start.
 
-= Can I add product categories? =
-Yes, when you add a category term in excel, this will be created along with the product.
-You can add them comma separated in an excel column.
+= What happens to a page with the same title as a product? =
 
-= How do i define if a product is in stock? =
-By default, leaving stock column blank will create products that are 'in stock'.
-If you need the to be as 'out of stock', simple add '0' to stock column and map it through the import process.
+Nothing. Rows only match items of the type you import.
 
-= Can I add product images / custom taxonomies along with the product? =
-This feature is available in the [PRO Version](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
+= Which files can I use? =
 
-= Can I add product gallery images along with the product? =
-This feature is available in the [PRO Version](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO")
+.xlsx, .xls, .ods and .csv. Use the first row for column names. Samples are linked on the import screen.
 
-= Can I import / update YOAST SEO Meta Fields like Title and description? =
-This feature is available in the [PRO Version](https://extend-wp.com/product/content-importer-wordpress-woocommerce-excel/ "Wordpress Content Excel Importer PRO").
+= What is sent to the AI? =
+
+Only when you click "Match with AI": the column names, up to three sample rows (cells cut to 80 characters, never the cells of columns that look personal, such as email or phone) and the list of fields. See External services.
+
+= Where are my uploaded files kept? =
+
+In a closed folder in your uploads directory, with a random name, until the import finishes. Unfinished uploads are removed after a day. Reports are kept for 30 days.
+
+== External services ==
+
+This plugin can use WPFactory AI (https://ai.wpfactory.com), a service by WPFactory, for its AI features, paid with WPFactory credits. Nothing is sent until a site administrator connects the site on the AI Credits screen with an email address and a 6-digit code sent to it. When connecting, the site address and that email address are sent. After that, the text of each AI request the plugin makes is sent when a user starts it; WPFactory AI passes it to Anthropic, its AI provider, to produce the answer. WPFactory AI keeps only numbers about each request (tokens, credits, time), never its content. Terms: https://wpfactory.com/terms-conditions/#wpfactory-ai Privacy: https://wpfactory.com/privacy-policy/#wpfactory-ai
 
 == Screenshots ==
 
-1. Import Content in WordPress with Excel - configuration screen
-2. Import Content in WordPress with Excel - data mapping
-3. Import Content in WordPress with Excel - mapped data
+1. Start: choose what you import and drop your sheet.
+2. Match your columns: automatic matches, SKU or ID matching and how to update.
+3. Preview: every change, old and new value, before anything is saved.
+4. Result and History: what was created, updated and skipped, with a downloadable report.
 
 == Changelog ==
 

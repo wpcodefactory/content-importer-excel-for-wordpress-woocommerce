@@ -1,0 +1,933 @@
+/**
+ * Excel Importer - admin screens (import, history, delete, settings).
+ *
+ * Every rule is scoped under .cexl-app, the wrapper of the plugin screen, so nothing leaks into wp-admin or other
+ * plugins. Loaded on the importer screen only. House set: paper #F7F4EA, white cards 22px, ink #171509, tool blue.
+ *
+ * @author WPFactory
+ */
+
+.cexl-app {
+	--bg: #f7f4ea;
+	--surface: #fff;
+	--surface-2: #faf7ef;
+	--line: #e6e0cf;
+	--line-strong: #cfc8b4;
+	--ink: #171509;
+	--muted: #5e5a4c;
+	--accent: #6bbfff;
+	--accent-hover: #56b2f7;
+	--accent-ink: #0b4f86;
+	--accent-soft: #eaf5ff;
+	--accent-line: #b9dcf7;
+	--ok: #1f7a43;
+	--ok-soft: #e7f5ec;
+	--warn: #8a5200;
+	--warn-soft: #fff4e0;
+	--warn-line: #e8c98a;
+	--bad: #b42318;
+	--bad-soft: #fdecea;
+	--bad-line: #f0b8b2;
+	--neutral-soft: #efebdf;
+	--r-card: 22px;
+	--r-ctl: 10px;
+	--r-pill: 999px;
+	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	--bar-top: var(--wp-admin--admin-bar--height, 32px);
+	color-scheme: light;
+	background: var(--bg);
+	color: var(--ink);
+	font: 14px/1.45 var(--font);
+}
+
+.cexl-app.wrap {
+	margin: 0 0 0 -20px;
+	padding: 0;
+	min-height: calc(100vh - var(--bar-top));
+}
+
+@media screen and (max-width: 782px) {
+	.cexl-app {
+		--bar-top: 46px;
+	}
+
+	.cexl-app.wrap {
+		margin-left: -10px;
+	}
+}
+
+.cexl-app *,
+.cexl-app *::before,
+.cexl-app *::after {
+	box-sizing: border-box;
+}
+
+.cexl-app a {
+	color: var(--accent-ink);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.cexl-app a:hover {
+	text-decoration: underline;
+}
+
+.cexl-app a:focus {
+	box-shadow: none;
+}
+
+.cexl-app a:focus-visible,
+.cexl-app button:focus-visible,
+.cexl-app input:focus-visible,
+.cexl-app select:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+.cexl-app button,
+.cexl-app input,
+.cexl-app select,
+.cexl-app textarea {
+	font-family: var(--font);
+}
+
+.cexl-app h1,
+.cexl-app h2,
+.cexl-app h3 {
+	color: var(--ink);
+	padding: 0;
+}
+
+.cexl-app p {
+	font-size: inherit;
+}
+
+.cexl-app [hidden] {
+	display: none !important;
+}
+
+/* WordPress notices that do not belong to the plugin stay out of the plugin screen. */
+body.cexl-screen #wpbody-content > .notice,
+body.cexl-screen #wpbody-content > .error,
+body.cexl-screen #wpbody-content > .updated,
+body.cexl-screen #wpbody-content > .update-nag,
+body.cexl-screen #wpbody-content > .wrap > .notice:not(.cexl-own) {
+	display: none !important;
+}
+
+body.cexl-screen #wpcontent {
+	background: #f7f4ea;
+}
+
+body.cexl-screen #wpbody-content {
+	padding-bottom: 0;
+}
+
+body.cexl-screen #wpfooter {
+	position: static;
+}
+
+/* Top bar */
+.cexl-app .topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	background: var(--surface);
+	border-bottom: 1px solid var(--line);
+	padding: 10px 16px;
+	position: sticky;
+	top: var(--bar-top);
+	z-index: 50;
+	flex-wrap: wrap;
+}
+
+.cexl-app .topbar .left {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+	min-width: 0;
+}
+
+.cexl-app .brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-weight: 700;
+	font-size: 15px;
+	margin: 0;
+}
+
+.cexl-app .brand-mark {
+	display: block;
+	flex: none;
+}
+
+.cexl-app .edition {
+	font-size: 11px;
+	font-weight: 700;
+	color: var(--muted);
+	border: 1px solid var(--line-strong);
+	border-radius: 6px;
+	padding: 1px 6px;
+}
+
+.cexl-app .nav {
+	display: flex;
+	gap: 2px;
+	flex-wrap: wrap;
+}
+
+.cexl-app .nav a {
+	color: var(--ink);
+	font-weight: 500;
+	padding: 8px 12px;
+	border-radius: var(--r-pill);
+}
+
+.cexl-app .nav a:hover {
+	background: var(--neutral-soft);
+	text-decoration: none;
+}
+
+.cexl-app .nav a.on {
+	background: var(--ink);
+	color: #fff;
+}
+
+.cexl-app .nav a:focus-visible {
+	outline-offset: -2px;
+}
+
+/* Page */
+.cexl-app .page {
+	max-width: 1180px;
+	margin: 0 auto;
+	padding: 24px 16px 64px;
+}
+
+.cexl-app .page-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 16px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+}
+
+.cexl-app .eyebrow {
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	color: var(--muted);
+	overflow-wrap: anywhere;
+}
+
+.cexl-app h1,
+.cexl-app .cexl-h1 {
+	font-size: 30px;
+	line-height: 1.15;
+	margin: 6px 0 0;
+	letter-spacing: -.01em;
+	font-weight: 700;
+}
+
+.cexl-app .lead {
+	color: var(--muted);
+	margin: 6px 0 0;
+	max-width: 640px;
+}
+
+.cexl-app .grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 340px;
+	gap: 16px;
+	align-items: start;
+}
+
+.cexl-app .stack {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	min-width: 0;
+}
+
+/* Cards */
+.cexl-app .card {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: var(--r-card);
+	overflow: hidden;
+	min-width: 0;
+	max-width: none;
+	padding: 0;
+	margin: 0;
+	box-shadow: none;
+}
+
+.cexl-app .card-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--line);
+	flex-wrap: wrap;
+}
+
+.cexl-app .card-title {
+	font-size: 16px;
+	font-weight: 700;
+	margin: 0;
+}
+
+.cexl-app .card-body {
+	padding: 20px;
+}
+
+.cexl-app .card-body > :first-child {
+	margin-top: 0;
+}
+
+.cexl-app .card-body > :last-child {
+	margin-bottom: 0;
+}
+
+.cexl-app .card-foot {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 20px;
+	border-top: 1px solid var(--line);
+	background: var(--surface-2);
+	flex-wrap: wrap;
+}
+
+/* Buttons */
+.cexl-app .btn {
+	font: 600 14px/1 var(--font);
+	height: 40px;
+	padding: 0 16px;
+	border-radius: var(--r-pill);
+	border: 1px solid transparent;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+	text-decoration: none;
+	color: var(--ink);
+	background: none;
+	box-shadow: none;
+}
+
+.cexl-app .btn:hover {
+	text-decoration: none;
+}
+
+.cexl-app .btn[disabled],
+.cexl-app .btn.is-busy {
+	opacity: .55;
+	cursor: default;
+}
+
+.cexl-app .btn-primary {
+	background: var(--accent);
+	color: var(--ink);
+}
+
+.cexl-app .btn-primary:hover:not([disabled]) {
+	background: var(--accent-hover);
+	color: var(--ink);
+}
+
+.cexl-app .btn-secondary {
+	background: var(--surface);
+	border-color: var(--line-strong);
+}
+
+.cexl-app .btn-secondary:hover:not([disabled]) {
+	background: var(--surface-2);
+}
+
+.cexl-app .btn-text {
+	color: var(--accent-ink);
+	padding: 0 8px;
+}
+
+.cexl-app .btn-danger {
+	color: var(--bad);
+	padding: 0 8px;
+}
+
+.cexl-app .btn-danger-outline {
+	background: var(--surface);
+	color: var(--bad);
+	border-color: var(--bad-line);
+}
+
+.cexl-app .row-actions {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+	position: static;
+	left: auto;
+	padding: 0;
+	color: inherit;
+}
+
+/* Segmented control (radio pills) */
+.cexl-app .seg {
+	display: inline-flex;
+	border: 1px solid var(--line-strong);
+	border-radius: var(--r-pill);
+	padding: 3px;
+	gap: 2px;
+	flex-wrap: wrap;
+	background: var(--surface);
+	max-width: 100%;
+}
+
+.cexl-app .seg label {
+	position: relative;
+	cursor: pointer;
+	font-weight: 600;
+	margin: 0;
+}
+
+.cexl-app .seg input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+	margin: 0;
+}
+
+.cexl-app .seg span {
+	display: block;
+	padding: 7px 14px;
+	border-radius: var(--r-pill);
+}
+
+.cexl-app .seg input:checked + span {
+	background: var(--ink);
+	color: #fff;
+}
+
+.cexl-app .seg input:focus-visible + span {
+	outline: 2px solid var(--accent);
+	outline-offset: 1px;
+}
+
+.cexl-app .choice {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+	margin: 6px 0 0;
+	font-weight: 400;
+}
+
+.cexl-app .choice input {
+	margin: 2px 0 0;
+}
+
+.cexl-app .group-label {
+	margin: 16px 0 8px;
+	font-weight: 700;
+}
+
+.cexl-app .card-body > .group-label:first-child {
+	margin-top: 0;
+}
+
+.cexl-app [aria-live]:empty {
+	display: none;
+}
+
+/* Drop zone */
+.cexl-app .drop {
+	border: 2px dashed var(--line-strong);
+	border-radius: 18px;
+	padding: 36px 20px;
+	text-align: center;
+	background: var(--surface-2);
+	margin-top: 16px;
+	transition: border-color .15s, background .15s;
+}
+
+.cexl-app .drop.is-over {
+	border-color: var(--accent);
+	background: var(--accent-soft);
+}
+
+.cexl-app .drop strong {
+	display: block;
+	font-size: 17px;
+	margin-bottom: 6px;
+}
+
+.cexl-app .drop .row-actions {
+	justify-content: center;
+	margin-top: 14px;
+}
+
+.cexl-app .file-input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	overflow: hidden;
+}
+
+.cexl-app .muted {
+	color: var(--muted);
+}
+
+.cexl-app .spark {
+	color: var(--accent-ink);
+}
+
+.cexl-app .btn .muted {
+	font-weight: 500;
+}
+
+.cexl-app .small {
+	font-size: 12.5px;
+}
+
+/* Chips */
+.cexl-app .chip {
+	display: inline-flex;
+	align-items: center;
+	font-size: 12px;
+	font-weight: 700;
+	border-radius: var(--r-pill);
+	padding: 2px 9px;
+	white-space: nowrap;
+	margin: 1px 0;
+}
+
+.cexl-app .chip.ok {
+	background: var(--ok-soft);
+	color: var(--ok);
+}
+
+.cexl-app .chip.warn {
+	background: var(--warn-soft);
+	color: var(--warn);
+}
+
+.cexl-app .chip.bad {
+	background: var(--bad-soft);
+	color: var(--bad);
+}
+
+.cexl-app .chip.info {
+	background: var(--accent-soft);
+	color: var(--accent-ink);
+}
+
+.cexl-app .chip.plain {
+	background: var(--neutral-soft);
+	color: var(--muted);
+}
+
+/* Tables */
+.cexl-app .table-wrap {
+	overflow-x: auto;
+}
+
+.cexl-app table.cexl-table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 0;
+	background: none;
+}
+
+.cexl-app .cexl-table th {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: .05em;
+	color: var(--muted);
+	text-align: left;
+	padding: 10px 20px;
+	border-bottom: 1px solid var(--line);
+	background: var(--surface-2);
+	white-space: nowrap;
+	font-weight: 700;
+}
+
+.cexl-app .cexl-table td {
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--line);
+	vertical-align: middle;
+	overflow-wrap: break-word;
+}
+
+.cexl-app .cexl-table tr:last-child td {
+	border-bottom: 0;
+}
+
+.cexl-app .cexl-table td.nowrap {
+	white-space: nowrap;
+	overflow-wrap: normal;
+}
+
+/* Form controls */
+.cexl-app select,
+.cexl-app input[type="text"],
+.cexl-app input[type="search"],
+.cexl-app input[type="number"] {
+	font: 14px var(--font);
+	height: 38px;
+	min-height: 38px;
+	border: 1px solid var(--line-strong);
+	border-radius: var(--r-ctl);
+	padding: 0 34px 0 12px;
+	background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235E5A4C' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 12px center;
+	color: var(--ink);
+	max-width: 100%;
+	-webkit-appearance: none;
+	appearance: none;
+	box-shadow: none;
+	line-height: 36px;
+}
+
+.cexl-app input[type="text"],
+.cexl-app input[type="search"],
+.cexl-app input[type="number"] {
+	background-image: none;
+	padding-right: 12px;
+}
+
+.cexl-app select:focus,
+.cexl-app input[type="text"]:focus {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 1px var(--accent);
+	outline: none;
+}
+
+.cexl-app select.low {
+	border-color: var(--warn-line);
+	background-color: #fffbf0;
+}
+
+.cexl-app .mapping select {
+	width: 100%;
+	min-width: 180px;
+}
+
+/* Tiles */
+.cexl-app .tiles {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.cexl-app .tile {
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: 18px;
+	padding: 16px;
+}
+
+.cexl-app .tile b {
+	display: block;
+	font-size: 26px;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+}
+
+.cexl-app .tile span {
+	color: var(--muted);
+	font-weight: 600;
+}
+
+/* Field changes in the preview */
+.cexl-app .change {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	background: var(--surface-2);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	padding: 2px 8px;
+	margin: 2px 4px 2px 0;
+	font-size: 13px;
+	max-width: 100%;
+	flex-wrap: wrap;
+	overflow-wrap: anywhere;
+}
+
+.cexl-app .change del {
+	color: var(--muted);
+}
+
+.cexl-app .change ins {
+	text-decoration: none;
+	font-weight: 700;
+	background: none;
+}
+
+.cexl-app .change em {
+	font-style: normal;
+	color: var(--muted);
+}
+
+/* Banners */
+.cexl-app .banner {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	border-radius: 14px;
+	padding: 12px 16px;
+	font-weight: 600;
+	flex-wrap: wrap;
+	margin: 0 0 16px;
+}
+
+.cexl-app .banner.info {
+	background: var(--accent-soft);
+	color: var(--accent-ink);
+}
+
+.cexl-app .banner.warn {
+	background: var(--warn-soft);
+	color: var(--warn);
+}
+
+.cexl-app .banner.ok {
+	background: var(--ok-soft);
+	color: var(--ok);
+}
+
+.cexl-app .banner.bad {
+	background: var(--bad-soft);
+	color: var(--bad);
+}
+
+/* Progress */
+.cexl-app .bar {
+	height: 10px;
+	background: var(--neutral-soft);
+	border-radius: var(--r-pill);
+	overflow: hidden;
+}
+
+.cexl-app .bar i {
+	display: block;
+	height: 100%;
+	width: 0;
+	background: var(--accent);
+	border-radius: var(--r-pill);
+	transition: width .3s;
+}
+
+.cexl-app .progress-head {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 8px;
+	flex-wrap: wrap;
+}
+
+/* Settings rows */
+.cexl-app .set {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--line);
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.cexl-app .set:last-child {
+	border-bottom: 0;
+}
+
+.cexl-app .set > div {
+	min-width: 0;
+	flex: 1 1 320px;
+}
+
+.cexl-app .set p {
+	margin: 2px 0 0;
+	color: var(--muted);
+	max-width: 560px;
+}
+
+.cexl-app .set input[type="text"],
+.cexl-app .set select {
+	width: 280px;
+}
+
+.cexl-app .switch {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 600;
+	cursor: pointer;
+	margin: 0;
+}
+
+.cexl-app .switch input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.cexl-app .switch i {
+	width: 40px;
+	height: 24px;
+	border-radius: var(--r-pill);
+	background: var(--line-strong);
+	position: relative;
+	flex: none;
+	transition: background .15s;
+}
+
+.cexl-app .switch i::after {
+	content: "";
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #fff;
+	transition: left .15s;
+}
+
+.cexl-app .switch input:checked + i {
+	background: var(--accent);
+}
+
+.cexl-app .switch input:checked + i::after {
+	left: 19px;
+}
+
+.cexl-app .switch input:focus-visible + i {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+/* Lists */
+.cexl-app .list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cexl-app .list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--line);
+	flex-wrap: wrap;
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+
+.cexl-app .list li:last-child {
+	border-bottom: 0;
+}
+
+.cexl-app .empty {
+	color: var(--muted);
+	padding: 8px 0;
+	margin: 0;
+}
+
+.cexl-app .help-list {
+	margin: 0;
+	padding-left: 18px;
+}
+
+.cexl-app .help-list li {
+	margin: 0 0 6px;
+}
+
+.cexl-app .legacy-form p {
+	margin: 0 0 12px;
+}
+
+.cexl-app .legacy-form .result:empty,
+.cexl-app .legacy-form .msg:empty {
+	display: none;
+}
+
+.cexl-app.is-loading .page {
+	cursor: progress;
+}
+
+@media (max-width: 900px) {
+	.cexl-app .grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cexl-app .tiles {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 600px) {
+	.cexl-app .cexl-table.stacked thead {
+		display: none;
+	}
+
+	.cexl-app .cexl-table.stacked tr {
+		display: block;
+		padding: 12px 16px;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.cexl-app .cexl-table.stacked tr:last-child {
+		border-bottom: 0;
+	}
+
+	.cexl-app .cexl-table.stacked td {
+		display: block;
+		padding: 2px 0;
+		border: 0;
+	}
+
+	.cexl-app .cexl-table.stacked td.nowrap {
+		white-space: normal;
+	}
+}
+
+@media (max-width: 520px) {
+	.cexl-app h1,
+	.cexl-app .cexl-h1 {
+		font-size: 24px;
+	}
+
+	.cexl-app .cexl-table td,
+	.cexl-app .cexl-table th {
+		padding: 10px 12px;
+	}
+
+	.cexl-app .card-body {
+		padding: 16px;
+	}
+
+	.cexl-app .mapping td:nth-child(2),
+	.cexl-app .mapping th:nth-child(2) {
+		display: none;
+	}
+
+	.cexl-app .mapping select {
+		min-width: 0;
+	}
+
+	.cexl-app .set input[type="text"],
+	.cexl-app .set select {
+		width: 100%;
+	}
+}

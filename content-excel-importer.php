@@ -1,8 +1,8 @@
 <?php
 /*
- * Plugin Name: Import Content in WordPress & WooCommerce with Excel
+ * Plugin Name: Excel Importer for WooCommerce: Products, Posts & Pages with Preview
  * Plugin URI: https://wpfactory.com/item/content-importer-for-wordpress-woocommerce-with-excel/
- * Description: Import Posts, Pages, Simple Products for WooCommerce & WordPress with Excel. Migrate Easily. No more CSV Hassle.
+ * Description: Update products, posts and pages from an Excel sheet: match by SKU or ID, preview every change before it is saved.
  * Version: 5.0.4
  * Author: WPFactory
  * Author URI: https://wpfactory.com
@@ -21,6 +21,9 @@ defined( 'ABSPATH' ) || exit;
 defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.4' );
 
 defined( 'WPFACTORY_CEXL_FILE' ) || define( 'WPFACTORY_CEXL_FILE', __FILE__ );
+
+// Libraries. Loaded on every request: the WPFactory AI library answers its site check on the REST API.
+require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wpfactory-cexl.php';
 
@@ -46,47 +49,10 @@ require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterproducts.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterpreview.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimportermappings.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterreport.php';
+require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterapp.php';
+require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterai.php';
 
-/**
- * load_contentExceIimporter_js.
- *
- * This function enqueues css and js files needed.
- *
- * @version 5.0.0
- */
-function load_contentExceIimporter_js() {
-
-	$screen = get_current_screen();
-
-	if ( 'wpfactory_page_content-excel-importer' !== $screen->base ) {
-		return;
-	}
-
-	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'jquery-ui-core' );
-	wp_enqueue_script( 'jquery-ui-accordion' );
-	wp_enqueue_script( 'jquery-ui-tabs' );
-	wp_enqueue_script( 'jquery-ui-draggable' );
-	wp_enqueue_script( 'jquery-ui-droppable' );
-
-	// ENQUEUED CSS FILE INSTEAD OF INLINE CSS.
-	wp_enqueue_style( 'contentExceIimporter_css', plugins_url( '/css/contentExceIimporter.css', __FILE__ ) );
-	wp_enqueue_style( 'contentExceIimporter_css' );
-
-	wp_enqueue_script( 'contentExceIimporter_js', plugins_url( '/js/contentExceIimporter.js?v=555', __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-draggable', 'jquery-ui-droppable' ), null, true );
-	wp_enqueue_script( 'contentExceIimporter_js' );
-
-	$cei = array(
-		'RestRoot'   => esc_url_raw( rest_url() ),
-		'plugin_url' => esc_url( plugins_url( '', __FILE__ ) ),
-		'siteUrl'    => esc_url( site_url() ),
-		'nonce'      => wp_create_nonce( 'wp_rest' ),
-		'ajax_url'   => esc_url( admin_url( 'admin-ajax.php' ) ),
-	);
-
-	wp_localize_script( 'contentExceIimporter_js', 'contentExcelImporter', $cei );
-}
-add_action( 'admin_enqueue_scripts', 'load_contentExceIimporter_js' );
+register_activation_hook( __FILE__, array( 'ContentExcelImporterApp', 'activate' ) );
 
 /**
  * contentExceIimporter_main.
@@ -119,6 +85,11 @@ function contentExceIimporter_main() {
  * This function contains plugin content.
  */
 function contentExceIimporter_init() {
+	// The new screen; the old upload form posted to the page still gets the old matching screen.
+	if ( ! ContentExcelImporterApp::legacy_request() ) {
+		ContentExcelImporterApp::render();
+		return;
+	}
 	contentExceIimporter_form_header();
 
 	?>
@@ -146,7 +117,7 @@ function contentExceIimporter_init() {
  */
 function contentExceIimporter_form_header() {
 	?>
-	<h1><?php esc_html_e( 'Import Content in WordPress & WooCommerce with Excel', 'content-excel-importer' ); ?></h1>
+	<h1><?php esc_html_e( 'Excel Importer', 'content-excel-importer' ); ?></h1>
 
 	<?php
 }

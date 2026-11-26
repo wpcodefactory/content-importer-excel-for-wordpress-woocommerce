@@ -1,155 +1,839 @@
-# Copyright (C) 2025 WPFactory
+# Copyright (C) 2026 WPFactory
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Import Content in WordPress & WooCommerce with Excel 5.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/content-excel-importer\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: Excel Importer for WooCommerce\n"
+"Report-Msgid-Bugs-To: https://wpfactory.com/\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-19T09:38:43+00:00\n"
+"POT-Creation-Date: 2026-11-26T08:28:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: content-excel-importer\n"
 
-#. Plugin Name of the plugin
-#: content-excel-importer.php
-#: content-excel-importer.php:181
-msgid "Import Content in WordPress & WooCommerce with Excel"
+#: class-contentexcelimporterai.php:67
+#: class-contentexcelimporterapp.php:81
+msgid "Excel Importer for WooCommerce"
 msgstr ""
 
-#. Plugin URI of the plugin
-#: content-excel-importer.php
-msgid "https://extend-wp.com/content-excel-importer-for-wordpress/"
+#: class-contentexcelimporterai.php:131
+msgid "The AI library is missing from this copy of the plugin."
 msgstr ""
 
-#. Description of the plugin
-#: content-excel-importer.php
-msgid "Import Posts, Pages, Simple Products for WooCommerce & WordPress with Excel. Migrate Easily. No more CSV Hassle."
+#: class-contentexcelimporterai.php:285
+#: class-contentexcelimporterapp.php:326
+#: class-contentexcelimportermappings.php:155
+#: class-contentexcelimporterpreview.php:31
+msgid "Sorry, you are not allowed to import."
 msgstr ""
 
-#. Author of the plugin
-#: content-excel-importer.php
-msgid "WPFactory"
+#: class-contentexcelimporterai.php:292
+#: class-contentexcelimportermappings.php:163
+#: class-contentexcelimporterpreview.php:37
+#: class-contentexcelimporterproducts.php:268
+msgid "The uploaded file was not found. Please upload it again."
 msgstr ""
 
-#. Author URI of the plugin
-#: content-excel-importer.php
-msgid "https://wpfactory.com"
+#: class-contentexcelimporterapp.php:148
+#: class-contentexcelimporterapp.php:642
+#: class-contentexcelimporterpreview.php:150
+#: class-contentexcelimporterreport.php:146
+msgid "Title"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:33
-msgid "IMPORT / UPDATE CONTENT"
+#: class-contentexcelimporterapp.php:149
+#: class-contentexcelimporterpreview.php:151
+msgid "Description"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:37
-msgid "Download the sample excel file, save it and add your products. You can add your Custom Columns. Upload it using the form below."
+#: class-contentexcelimporterapp.php:149
+msgid "Content"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:37
-msgid "SAMPLE EXCEL FILE"
+#: class-contentexcelimporterapp.php:150
+#: class-contentexcelimporterpreview.php:152
+msgid "Short description"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:41
-msgid "Download the sample excel file, save it and add your content. You can add your Custom Columns. Upload it using the form below."
+#: class-contentexcelimporterapp.php:150
+msgid "Excerpt"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:41
-msgid "CONTENT SAMPLE FILE"
+#: class-contentexcelimporterapp.php:151
+msgid "Status (publish, draft...)"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:105
-msgid "DATA MAPPING: Drag and drop excel columns on the right to product properties on the left."
+#: class-contentexcelimporterapp.php:152
+#: class-contentexcelimporterpreview.php:154
+msgid "Date"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:107
-msgid "Auto Match Columns"
+#: class-contentexcelimporterapp.php:153
+#: class-contentexcelimporterpreview.php:155
+#: class-contentexcelimporterpreview.php:195
+msgid "URL slug"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:110
-msgid "Always add new content even if title is the same"
+#: class-contentexcelimporterapp.php:154
+msgid "Author (user ID)"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:113
-msgid "EXCEL COLUMNS"
+#: class-contentexcelimporterapp.php:158
+msgid "Main"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:120
-msgid "FIELDS"
+#: class-contentexcelimporterapp.php:164
+msgid "Product data"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:139
-msgid "Invalid File:Please Upload Excel File"
+#: class-contentexcelimporterapp.php:166
+#: class-contentexcelimporterapp.php:640
+#: class-contentexcelimporterpreview.php:205
+msgid "SKU"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:226
+#: class-contentexcelimporterapp.php:167
+#: class-contentexcelimporterpreview.php:246
+msgid "Regular price"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:168
+#: class-contentexcelimporterpreview.php:249
+msgid "Sale price"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:169
+#: class-contentexcelimporterpreview.php:207
+msgid "Stock quantity"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:170
+#: class-contentexcelimporterpreview.php:206
+msgid "Weight"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:171
+msgid "Virtual (yes or no)"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:183
+msgid "Translation of (title)"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:188
+msgid "Categories and tags"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:193
+msgid "Finding items"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:194
+msgid "ID (used to find the item, not imported)"
+msgstr ""
+
+#. translators: %s: list of file types
+#: class-contentexcelimporterapp.php:256
+#: class-contentexcelimporterapp.php:342
+msgid "This file type cannot be read. Use one of: %s."
+msgstr ""
+
+#. translators: %s: list of file types
+#: class-contentexcelimporterapp.php:257
+msgid "Reading your sheet..."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:258
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:259
+msgid "Your session has expired. Reload the page and try again."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:260
+msgid "Skip this column"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:261
+msgid "Skipped"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:262
+msgid "Set"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:263
+msgid "Saved match"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:264
+msgid "Matched"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:265
+msgid "Check"
+msgstr ""
+
+#. translators: %s: column letter
+#: class-contentexcelimporterapp.php:267
+msgid "Column %s"
+msgstr ""
+
+#. translators: %s: column name
+#: class-contentexcelimporterapp.php:269
+msgid "Field for %s"
+msgstr ""
+
+#. translators: 1: file name, 2: number of rows
+#: class-contentexcelimporterapp.php:271
+msgid "Step 2 of 3 · %1$s · rows: %2$s"
+msgstr ""
+
+#. translators: 1: file name, 2: number of rows
+#: class-contentexcelimporterapp.php:272
+msgid "This sheet has the same columns as one you imported before, so your earlier matches are used."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:273
+msgid "Match a column to Title. It is needed for every import."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:274
+msgid "To find products by SKU, match a column to SKU."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:275
+msgid "To find items by ID, match a column to \"ID (used to find the item)\"."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:276
+msgid "empty"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:277
+msgid "Some rows need a look: see the rows marked Check below."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:278
+msgid "No change"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:279
+msgid "Update"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:280
+msgid "Create"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:281
+msgid "Same"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:282
+msgid "Skip"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:283
+msgid "(no title)"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:284
+msgid "new"
+msgstr ""
+
+#. translators: %s: number of rows not shown
+#: class-contentexcelimporterapp.php:286
+msgid "Rows not shown here: %s. They are imported too."
+msgstr ""
+
+#. translators: %s: number of rows not shown
+#: class-contentexcelimporterapp.php:287
+msgid "This sheet has no rows to import below the column names."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:288
+#: class-contentexcelimporterapp.php:696
+msgid "Pause"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:289
+msgid "Resume"
+msgstr ""
+
+#. translators: 1: current row, 2: number of rows
+#: class-contentexcelimporterapp.php:291
+msgid "Row %1$s of %2$s"
+msgstr ""
+
+#. translators: %s: row number
+#: class-contentexcelimporterapp.php:293
+msgid "Row %s"
+msgstr ""
+
+#. translators: %s: row number
+#: class-contentexcelimporterapp.php:294
+msgid "Created"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:295
+msgid "Updated"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:296
+msgid "Failed"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:297
+#: class-contentexcelimporterapp.php:706
+msgid "Import done"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:298
+msgid "Import stopped"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:299
+msgid "Matching your columns with AI..."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:300
+msgid "AI matched your columns. Check the ones marked Check before you go on."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:301
+msgid "AI match"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:302
+msgid "Turn on AI credits"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:332
+msgid "Choose what you are importing first."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:338
+msgid "The file did not arrive. It may be larger than your server allows."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:347
+msgid "This file could not be read. Open it in Excel, save it again as .xlsx and upload that copy."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:350
+msgid "The first row of the sheet is empty. Put the column names in the first row."
+msgstr ""
+
+#. translators: %s: number of items
+#: class-contentexcelimporterapp.php:456
+msgid "%s updated"
+msgid_plural "%s updated"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of items
+#: class-contentexcelimporterapp.php:460
+msgid "%s created"
+msgid_plural "%s created"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of rows
+#: class-contentexcelimporterapp.php:464
+msgid "%s skipped"
+msgid_plural "%s skipped"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of rows
+#: class-contentexcelimporterapp.php:468
+msgid "%s failed"
+msgid_plural "%s failed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: class-contentexcelimporterapp.php:470
+msgid "Nothing imported"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:480
+#: class-contentexcelimporterapp.php:557
+msgid "Import"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:481
+#: class-contentexcelimporterapp.php:525
+msgid "History"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:486
+#: class-contentexcelimporterapp.php:507
+#: content-excel-importer.php:120
+#: includes/class-wpfactory-cexl.php:190
+#: includes/class-wpfactory-cexl.php:191
+msgid "Excel Importer"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:487
+msgid "Importer"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:494
+msgid "Pro version"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:525
+msgid "Past imports"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:526
+msgid "Every import made on this screen, kept for 30 days. Download a report to see the result of each row."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:528
+msgid "File"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:528
+msgid "Type"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:528
+msgid "When"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:528
+#: class-contentexcelimporterreport.php:146
+msgid "Result"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:528
+msgid "Actions"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:531
+msgid "No imports yet. Imports you make from now on are listed here."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:535
+#: class-contentexcelimporterapp.php:593
+msgid "(no file name)"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:539
+msgid "Report"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:557
+msgid "Import from Excel"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:558
+msgid "Update your products, posts and pages from a sheet. You see every change before it is saved."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:563
+msgid "What are you importing?"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:565
+msgid "Content type"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:571
+msgid "Drop your sheet here"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:572
+msgid ".xlsx, .xls, .ods or .csv. The first row holds the column names."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:575
+msgid "Choose a file"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:579
+msgid "No sheet yet? Start from a sample:"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:580
+msgid "Products"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:581
+msgid "Posts and pages"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:586
+msgid "Recent imports"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:586
+msgid "All"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:589
+msgid "No imports yet."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:599
+msgid "Same sheet every week?"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:599
+msgid "Your column matches are saved per sheet layout. Next time the columns match themselves."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:618
+msgid "Match your columns"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:619
+msgid "We matched what we could. Check the highlighted ones; columns set to \"Skip this column\" are not imported."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:621
+msgid "Match with AI"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:621
+msgid "about 2 credits"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:628
+msgid "Your column"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:628
+msgid "First value"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:628
+msgid "Goes to"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:628
+#: class-contentexcelimporterpreview.php:153
+msgid "Status"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:631
+#: class-contentexcelimporterapp.php:678
+msgid "Back"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:631
+msgid "Preview changes"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:636
+msgid "How to update"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:638
+msgid "Find existing items by"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:641
+#: class-contentexcelimporterreport.php:146
+msgid "ID"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:644
+msgid "When an item exists"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:645
+msgid "Change only the columns in this sheet"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:646
+msgid "Overwrite every field (the old behaviour)"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:647
+msgid "Add a new item anyway"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:648
+msgid "Use this choice for my next imports too"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:650
+msgid "When nothing matches"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:651
+msgid "Create it"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:652
+msgid "Skip the row"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:656
+msgid "Attributes"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:657
+msgid "Add attributes only, no variations (one row per product)"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:677
+msgid "Step 3 of 3 · nothing is saved yet"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:677
+msgid "Preview the changes"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:678
+msgid "Start the import"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:681
+msgid "will be updated"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:682
+msgid "will be created"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:683
+msgid "skipped or unchanged"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:684
+msgid "to check"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:688
+#: class-contentexcelimporterreport.php:146
+msgid "Row"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:688
+msgid "Item"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:688
+msgid "What changes"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:688
+msgid "Action"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:694
+msgid "Importing"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:695
+msgid "Keep this page open until the import finishes. You can pause or stop at any row."
+msgstr ""
+
+#: class-contentexcelimporterapp.php:696
+msgid "Stop"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:700
+msgid "Import progress"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:707
+msgid "Download the report"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:707
+msgid "Import another file"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:707
+msgid "View items"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:709
+msgid "updated"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:710
+#: class-contentexcelimporterproducts.php:370
 msgid "created"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:269
+#: class-contentexcelimporterapp.php:711
+msgid "skipped"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:712
+msgid "failed"
+msgstr ""
+
+#: class-contentexcelimporterapp.php:714
+msgid "The report lists every row with its result and a link to the item. It is also on the History page for 30 days."
+msgstr ""
+
+#. translators: %d: row number
+#: class-contentexcelimporterpreview.php:109
+msgid "Same item as row %d: this row changes it again."
+msgstr ""
+
+#: class-contentexcelimporterpreview.php:120
+msgid "This row has no title."
+msgstr ""
+
+#: class-contentexcelimporterpreview.php:135
+msgid "Not found, so this row is skipped."
+msgstr ""
+
+#. translators: %s: post type label, for example "Page"
+#: class-contentexcelimporterpreview.php:143
+msgid "A %s has the same title; it is not touched, a new item is created."
+msgstr ""
+
+#: class-contentexcelimporterpreview.php:156
+msgid "Author"
+msgstr ""
+
+#: class-contentexcelimporterpreview.php:176
+msgid "time of the import"
+msgstr ""
+
+#: class-contentexcelimporterpreview.php:208
+msgid "Virtual"
+msgstr ""
+
+#: class-contentexcelimporterpreview.php:226
+msgid "Length"
+msgstr ""
+
+#. translators: %s: the price as written in the sheet
+#: class-contentexcelimporterpreview.php:237
+msgid "Price \"%s\" is not a plain number."
+msgstr ""
+
+#. translators: 1: sale price, 2: regular price
+#: class-contentexcelimporterpreview.php:242
+msgid "Sale price %1$s is not below the regular price %2$s, so it is dropped."
+msgstr ""
+
+#: class-contentexcelimporterpreview.php:256
+msgid "Stock status"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:132
+msgid "IMPORT / UPDATE CONTENT"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:136
+msgid "Download the sample excel file, save it and add your products. You can add your Custom Columns. Upload it using the form below."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:136
+msgid "SAMPLE EXCEL FILE"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:140
+msgid "Download the sample excel file, save it and add your content. You can add your Custom Columns. Upload it using the form below."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:140
+msgid "CONTENT SAMPLE FILE"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:204
+msgid "DATA MAPPING: Drag and drop excel columns on the right to product properties on the left."
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:206
+msgid "Auto Match Columns"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:209
+msgid "Always add new content even if title is the same"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:212
+msgid "EXCEL COLUMNS"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:219
+msgid "FIELDS"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:247
+msgid "Invalid File:Please Upload Excel File"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:344
+msgid "was not found, row skipped"
+msgstr ""
+
+#: class-contentexcelimporterproducts.php:419
 msgid "already exists. Updated"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:280
+#: class-contentexcelimporterproducts.php:433
 msgid "For sale price of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:280
-#: class-contentexcelimporterproducts.php:287
-#: class-contentexcelimporterproducts.php:298
-#: class-contentexcelimporterproducts.php:305
-#: class-contentexcelimporterproducts.php:316
-#: class-contentexcelimporterproducts.php:323
+#: class-contentexcelimporterproducts.php:433
+#: class-contentexcelimporterproducts.php:440
+#: class-contentexcelimporterproducts.php:451
+#: class-contentexcelimporterproducts.php:458
+#: class-contentexcelimporterproducts.php:469
+#: class-contentexcelimporterproducts.php:476
 msgid "you need numbers entered."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:287
+#: class-contentexcelimporterproducts.php:440
 msgid "For regular price of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:298
+#: class-contentexcelimporterproducts.php:451
 msgid "For weight of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:305
+#: class-contentexcelimporterproducts.php:458
 msgid "For stock of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:316
+#: class-contentexcelimporterproducts.php:469
 msgid "For length of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:323
+#: class-contentexcelimporterproducts.php:476
 msgid "For width of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:466
+#: class-contentexcelimporterproducts.php:635
 msgid " - Job Done! "
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:466
+#: class-contentexcelimporterproducts.php:635
 msgid "GO VIEW YOUR "
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:472
+#: class-contentexcelimporterproducts.php:642
 msgid "Please dont close this page. Your "
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:472
+#: class-contentexcelimporterproducts.php:642
 msgid "are imported..."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:480
+#: class-contentexcelimporterproducts.php:650
 msgid "No title selected for your content."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:487
+#: class-contentexcelimporterproducts.php:657
 msgid "Total Execution Time:"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:487
+#: class-contentexcelimporterproducts.php:657
 msgid "Mins"
 msgstr ""
 
@@ -165,145 +849,39 @@ msgstr ""
 msgid "POST TYPE "
 msgstr ""
 
-#: class-contentexcelimporterquery.php:92
-msgid "IMAGE"
-msgstr ""
-
-#: class-contentexcelimporterquery.php:92
-#: class-contentexcelimporterquery.php:103
-#: class-contentexcelimporterquery.php:170
-msgid "PRO Version Only"
-msgstr ""
-
-#: class-contentexcelimporterquery.php:120
-#: class-contentexcelimporterquery.php:137
+#: class-contentexcelimporterquery.php:105
+#: class-contentexcelimporterquery.php:122
+#: class-contentexcelimporterquery.php:135
 #: class-contentexcelimporterquery.php:150
-#: class-contentexcelimporterquery.php:165
 msgid "Drop here column"
 msgstr ""
 
-#: class-contentexcelimporterquery.php:153
+#: class-contentexcelimporterquery.php:138
 msgid "CATEGORY AND TAGS"
 msgstr ""
 
-#: class-contentexcelimporterquery.php:170
-msgid "Custom Taxonomy"
+#: class-contentexcelimporterreport.php:134
+msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: content-excel-importer.php:101
-msgid "Only available on PRO Version"
+#: class-contentexcelimporterreport.php:140
+msgid "This report was not found. Reports are kept for 30 days."
 msgstr ""
 
-#: content-excel-importer.php:101
-msgid "Get it Here"
+#: class-contentexcelimporterreport.php:146
+msgid "Link"
 msgstr ""
 
-#: content-excel-importer.php:114
-msgid "NEED MORE FEATURES?"
+#: content-excel-importer.php:76
+msgid "Need variable products, images by URL, custom fields, WPML or deleting by sheet?"
 msgstr ""
 
-#: content-excel-importer.php:116
-msgid "Import Any Custom Post Type"
+#: content-excel-importer.php:77
+msgid "See the Pro version"
 msgstr ""
 
-#: content-excel-importer.php:117
-msgid "Import post type WPML translation"
-msgstr ""
-
-#: content-excel-importer.php:118
-msgid "Import ACF and other Custom fields ( including Images and Galleries )"
-msgstr ""
-
-#: content-excel-importer.php:119
-msgid "Import Any Category / Custom Taxonomy with Excel"
-msgstr ""
-
-#: content-excel-importer.php:120
-msgid "Delete Category / Custom Taxonomy with Excel"
-msgstr ""
-
-#: content-excel-importer.php:121
-msgid "Import Featured Image along with Post"
-msgstr ""
-
-#: content-excel-importer.php:122
-msgid "Import Variable Woocommerce Products"
-msgstr ""
-
-#: content-excel-importer.php:123
-msgid "Import Product Featured Image from URL"
-msgstr ""
-
-#: content-excel-importer.php:124
-msgid "Import Product Gallery Images from URL!"
-msgstr ""
-
-#: content-excel-importer.php:125
-msgid "Import YOAST SEO Meta Title & Description"
-msgstr ""
-
-#: content-excel-importer.php:126
-msgid "Define Downloadable, name, URL for file, expiry date & limit!"
-msgstr ""
-
-#: content-excel-importer.php:127
-msgid "Import Category Term Description with HTML Support"
-msgstr ""
-
-#: content-excel-importer.php:131
-msgid "Content Excel Importer PRO"
-msgstr ""
-
-#: content-excel-importer.php:135
-msgid "Get it here"
-msgstr ""
-
-#: content-excel-importer.php:155
+#: content-excel-importer.php:100
 msgid "Import Content"
-msgstr ""
-
-#: content-excel-importer.php:156
-msgid "Delete Content"
-msgstr ""
-
-#: content-excel-importer.php:157
-msgid "Import Categories"
-msgstr ""
-
-#: content-excel-importer.php:158
-msgid "Delete Categories"
-msgstr ""
-
-#: content-excel-importer.php:180
-msgid "Get more plugins by extendWP"
-msgstr ""
-
-#: content-excel-importer.php:209
-msgid "You like this plugin? "
-msgstr ""
-
-#: content-excel-importer.php:209
-msgid "Then please give us "
-msgstr ""
-
-#: content-excel-importer.php:269
-msgid "close"
-msgstr ""
-
-#: content-excel-importer.php:270
-msgid "Add your Email below & get "
-msgstr ""
-
-#: content-excel-importer.php:270
-msgid " discounts"
-msgstr ""
-
-#: content-excel-importer.php:270
-msgid " in our pro plugins at"
-msgstr ""
-
-#: content-excel-importer.php:275
-msgid "Sign up"
 msgstr ""
 
 #: includes/class-wpfactory-cexl.php:145
@@ -314,78 +892,18 @@ msgstr ""
 msgid "Go Pro"
 msgstr ""
 
-#: includes/class-wpfactory-cexl.php:190
-msgid "Content Excel Importer Settings"
+#. Plugin Name of the plugin
+#: content-excel-importer.php
+msgid "Excel Importer for WooCommerce: Products, Posts & Pages with Preview"
 msgstr ""
 
-#: includes/class-wpfactory-cexl.php:191
-msgid "Content Excel Importer"
+#. Description of the plugin
+#: content-excel-importer.php
+msgid "Update products, posts and pages from an Excel sheet: match by SKU or ID, preview every change before it is saved."
 msgstr ""
 
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:38
-msgid "We are sorry to see you go..."
+#. Author of the plugin
+#: content-excel-importer.php
+msgid "WPFactory"
 msgstr ""
 
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:39
-msgid "If you would be kind enough, please tell us why you're deactivating?"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:40
-msgid "Please tell us which plugin?"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:41
-msgid "Please tell us the reason so we can improve the plugin"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:42
-msgid "Do not send my e-mail address with this feedback"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:44
-msgid "Please give us any feedback that could help us improve"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:46
-msgid "Cancel"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:47
-msgid "Skip &amp; Deactivate"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:48
-msgid "Submit &amp; Deactivate"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:49
-msgid "Please wait"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:50
-msgid "Thank you!"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:59
-msgid "The plugin suddenly stopped working"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:60
-msgid "The plugin broke my site"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:61
-msgid "I don't need this plugin any more"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:62
-msgid "I found a better plugin"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:63
-msgid "It's a temporary deactivation, I'm troubleshooting"
-msgstr ""
-
-#: lib/codecabin/plugin-deactivation-survey/deactivate-feedback-form.php:64
-msgid "Other"
-msgstr ""

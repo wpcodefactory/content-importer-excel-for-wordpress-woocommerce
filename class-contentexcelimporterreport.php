@@ -1,6 +1,6 @@
 <?php
 /**
- * Import Content in WordPress & WooCommerce with Excel - import report and history.
+ * Excel Importer for WooCommerce - import report and history.
  *
  * When the import screen asks for it (cexl_report = 1), every row's result is kept in a small JSON file next to the
  * upload in the closed uploads folder: created, updated, failed, with the item ID and title. Reports are listed on the

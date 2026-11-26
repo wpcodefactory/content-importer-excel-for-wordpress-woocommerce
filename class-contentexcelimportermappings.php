@@ -1,6 +1,6 @@
 <?php
 /**
- * Import Content in WordPress & WooCommerce with Excel - column matching: saved mappings and automatic matching.
+ * Excel Importer for WooCommerce - column matching: saved mappings and automatic matching.
  *
  * The import screen asks for a suggestion when a sheet is uploaded: the saved mapping of the same sheet layout (same
  * header row and post type) if there is one, else a match of each header against field names, labels and common
@@ -57,6 +57,7 @@ class ContentExcelImporterMappings {
 			'product_tag'    => array( 'tag', 'tags', 'producttag', 'keywords' ),
 			'category'       => array( 'category', 'categories' ),
 			'post_tag'       => array( 'tag', 'tags' ),
+			'cexl_id'        => array( 'id', 'postid', 'productid', 'itemid' ),
 		);
 		/**
 		 * Synonyms used to match sheet headers to fields.

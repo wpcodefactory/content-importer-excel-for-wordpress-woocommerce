@@ -1,6 +1,6 @@
 <?php
 /**
- * Import Content in WordPress & WooCommerce with Excel - ContentExcelImporterQuery Class
+ * Excel Importer for WooCommerce - ContentExcelImporterQuery Class
  *
  * @author  WPFactory
  */
