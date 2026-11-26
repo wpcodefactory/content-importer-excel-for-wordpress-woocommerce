@@ -218,6 +218,8 @@ class ContentExcelImporterBackground {
 				$row      = (int) $job['next'];
 				$_POST    = array_merge( $job['request'], array( 'start' => (string) $row ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				$_REQUEST = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				// Each row starts as it would in a request of its own (an earlier row can leave the global post set).
+				$GLOBALS['post'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 				ob_start();
 				try {
 					self::import_row();
@@ -226,7 +228,15 @@ class ContentExcelImporterBackground {
 				}
 				$html = (string) ob_get_clean();
 				self::after_row();
-				$job['last'][] = self::row_result( $token, $row, $html );
+				$result = self::row_result( $token, $row, $html );
+				if ( 'failed' === $result['result'] && ! empty( $job['request']['cexl_report'] ) ) {
+					$report = ContentExcelImporterReport::get( $token );
+					if ( ! $report || ! isset( $report['rows'][ $row ] ) ) {
+						// A row that stopped with an error counts as failed in the result and the History.
+						ContentExcelImporterReport::add_row( $token, $row, 'failed', 0, $result['title'], array( 'type' => $job['type'], 'file' => $job['file'], 'total' => (int) $job['total'] - 1 ) );
+					}
+				}
+				$job['last'][] = $result;
 				$job['last']   = array_slice( $job['last'], -8 );
 				$job['next']   = $row + 1;
 				$job['done']   = $row - 1;
