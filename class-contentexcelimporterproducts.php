@@ -347,6 +347,9 @@ public function importProducts() {
 					// Create.
 					$id = wp_insert_post( $post, $wp_error );
 					print "<p class='success'><a href='" . esc_url( get_permalink( $id ) ) . "' target='_blank'>" . esc_html( $title ) . '</a> ' . esc_html__( 'created', 'content-excel-importer' ) . '.</p>';
+					if ( ! empty( $_POST['cexl_report'] ) ) {
+						ContentExcelImporterReport::add_row( $token, $i, $id ? 'created' : 'failed', (int) $id, $title, array( 'type' => $type, 'file' => isset( $_POST['cexl_file_name'] ) ? sanitize_file_name( wp_unslash( $_POST['cexl_file_name'] ) ) : '', 'total' => (int) $_POST['finalupload'] - 1 ) );
+					}
 					wp_set_object_terms( $id, 'simple', 'product_type' );
 
 					if ( in_array( $id, $idsArray ) ) {
@@ -393,6 +396,9 @@ public function importProducts() {
 					}
 					wp_update_post( $post, $wp_error );
 					print "<p class='warning'><a href='" . esc_url( get_permalink( $id ) ) . "' target='_blank'>" . esc_html( $title ) . '</a> ' . esc_html__( 'already exists. Updated', 'content-excel-importer' ) . '.</p>';
+					if ( ! empty( $_POST['cexl_report'] ) ) {
+						ContentExcelImporterReport::add_row( $token, $i, 'updated', (int) $id, $title, array( 'type' => $type, 'file' => isset( $_POST['cexl_file_name'] ) ? sanitize_file_name( wp_unslash( $_POST['cexl_file_name'] ) ) : '', 'total' => (int) $_POST['finalupload'] - 1 ) );
+					}
 				}
 
 				if ( $type === 'product' ) {

@@ -45,6 +45,7 @@ require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterquery.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterproducts.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterpreview.php';
 require plugin_dir_path( __FILE__ ) . '/class-contentexcelimportermappings.php';
+require plugin_dir_path( __FILE__ ) . '/class-contentexcelimporterreport.php';
 
 /**
  * load_contentExceIimporter_js.
