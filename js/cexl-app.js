@@ -395,7 +395,7 @@
 			if ( row.warnings.length ) {
 				chip = [ 'warn', t.check ];
 			}
-			html += '<tr><td class="nowrap">' + esc( row.row ) + '</td><td><b>' + esc( row.title || t.noTitle ) + '</b>' +
+			html += '<tr data-row="' + esc( row.row ) + '"><td class="nowrap">' + esc( row.row ) + '</td><td><b>' + esc( row.title || t.noTitle ) + '</b>' +
 				( 'create' === row.action ? ' <span class="muted small">' + esc( t.isNew ) + '</span>' : '' ) +
 				( row.id ? '<br><span class="muted small">ID ' + esc( row.id ) + '</span>' : '' ) + '</td><td>' + what + '</td>' +
 				'<td class="nowrap"><span class="chip ' + chip[ 0 ] + '">' + esc( chip[ 1 ] ) + '</span></td></tr>';
@@ -408,7 +408,40 @@
 		}
 		$q( '#cexl-preview-rows' ).html( html );
 		$q( '#cexl-start-import' ).prop( 'disabled', ! p.rows.length );
+		var withChanges = $.grep( p.rows, function ( r ) {
+			return r.changes.length;
+		} ).length;
+		$q( '#cexl-ai-check' ).prop( 'hidden', ! withChanges ).prop( 'disabled', false );
+		$q( '#cexl-ai-check-cost' ).text( fmt( t.aiAbout, Math.max( 1, Math.ceil( Math.min( withChanges, 200 ) / 50 ) ) * 2 ) );
 	}
+
+	// Check with AI: flags unusual planned changes on the preview; nothing is changed.
+	$q( '#cexl-ai-check' ).on( 'click', function () {
+		var $btn = $( this ).addClass( 'is-busy' ).prop( 'disabled', true );
+		banner( $q( '#cexl-preview-msg' ), 'info', t.aiChecking );
+		post( $.extend( request(), { action: cfg.actions.aiCheck, nonce: cfg.ai && cfg.ai.nonce } ) ).done( function ( r ) {
+			if ( ! r || ! r.success ) {
+				var d = r && r.data ? r.data : {};
+				$q( '#cexl-preview-msg' ).html( '<div class="banner warn" role="alert">' + esc( d.message || t.failed ) +
+					( d.connect ? ' <a href="' + esc( d.connect ) + '">' + esc( t.aiConnect ) + '</a>' : '' ) + '</div>' );
+				$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+				return;
+			}
+			var rows = {};
+			$.each( r.data.flags, function ( i, f ) {
+				var $tr = $q( '#cexl-preview-rows tr[data-row="' + f.row + '"]' );
+				$tr.find( 'td' ).eq( 2 ).append( '<br><span class="chip warn"><span class="spark" aria-hidden="true">&#10022;</span>&nbsp;' + esc( f.message ) + '</span>' );
+				$tr.find( 'td' ).eq( 3 ).html( '<span class="chip warn">' + esc( t.check ) + '</span>' );
+				rows[ f.row ] = true;
+			} );
+			var n = Object.keys( rows ).length;
+			banner( $q( '#cexl-preview-msg' ), n ? 'warn' : 'ok', n ? fmt( t.aiFlags, n ) : t.aiNoFlags );
+			$btn.removeClass( 'is-busy' );
+		} ).fail( function ( xhr ) {
+			banner( $q( '#cexl-preview-msg' ), 'bad', failText( xhr ) );
+			$btn.removeClass( 'is-busy' ).prop( 'disabled', false );
+		} );
+	} );
 
 	/* ------------------------------------------------------- 4 Importing, 5 Result */
 

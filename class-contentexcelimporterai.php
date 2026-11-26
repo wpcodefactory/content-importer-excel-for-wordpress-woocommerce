@@ -33,11 +33,13 @@ class ContentExcelImporterAI {
 	public function __construct( $capability = 'manage_options', $suffix = '', $fields_for = null, $rows_for = null ) {
 		$this->capability = $capability;
 		$this->fields_for = $fields_for ? $fields_for : array( 'ContentExcelImporterApp', 'fields' );
-		$this->rows_for   = $rows_for ? $rows_for : array( 'ContentExcelImporterPreview', 'rows' );
+		$this->rows_for    = $rows_for ? $rows_for : array( 'ContentExcelImporterPreview', 'rows' );
+		$this->preview_for = array( 'ContentExcelImporterPreview', 'preview' );
 		add_action( 'init', array( __CLASS__, 'register' ) );
 		add_action( 'wp_ajax_cexl_ai_map' . $suffix, array( $this, 'ajax_map' ) );
 		add_action( 'wp_ajax_cexl_ai_describe' . $suffix, array( $this, 'ajax_describe' ) );
 		add_action( 'wp_ajax_cexl_ai_apply' . $suffix, array( $this, 'ajax_apply' ) );
+		add_action( 'wp_ajax_cexl_ai_check' . $suffix, array( $this, 'ajax_check' ) );
 	}
 
 	/**
@@ -60,6 +62,13 @@ class ContentExcelImporterAI {
 	 * @var callable
 	 */
 	public $rows_for;
+
+	/**
+	 * Preview of an import (rows, request).
+	 *
+	 * @var callable
+	 */
+	public $preview_for;
 
 	/**
 	 * Registers the product with the shared WPFactory AI library.
@@ -461,6 +470,143 @@ class ContentExcelImporterAI {
 		}
 		wp_update_post( $update );
 		wp_send_json_success();
+	}
+
+	/**
+	 * Request body for checking the planned changes of an import (at most 200 rows with changes).
+	 *
+	 * @param array $preview Preview (rows with action, changes and warnings).
+	 * @return array|null Null when there is nothing to check.
+	 */
+	public static function check_body( $preview ) {
+		$rows = array();
+		foreach ( isset( $preview['rows'] ) ? (array) $preview['rows'] : array() as $row ) {
+			if ( empty( $row['changes'] ) || count( $rows ) >= 200 ) {
+				continue;
+			}
+			$changes = array();
+			foreach ( $row['changes'] as $change ) {
+				$changes[] = array(
+					'field' => $change['label'],
+					'old'   => mb_substr( wp_strip_all_tags( (string) $change['old'] ), 0, 80 ),
+					'new'   => mb_substr( wp_strip_all_tags( (string) $change['new'] ), 0, 80 ),
+				);
+			}
+			$rows[] = array(
+				'row'     => (int) $row['row'],
+				'item'    => mb_substr( (string) $row['title'], 0, 80 ),
+				'action'  => $row['action'],
+				'changes' => $changes,
+			);
+		}
+		if ( ! $rows ) {
+			return null;
+		}
+		$categories = get_terms(
+			array(
+				'taxonomy'   => taxonomy_exists( 'product_cat' ) ? 'product_cat' : 'category',
+				'hide_empty' => false,
+				'fields'     => 'names',
+				'number'     => 300,
+			)
+		);
+		return array(
+			'model'       => 'claude-haiku-5-5',
+			'max_tokens'  => 1500,
+			'system'      => 'You check the planned changes of a store import before they are saved. Flag only real problems a merchant would want to see: a price that changes by more than half, a price or stock value that looks like a typo or uses the wrong unit or decimal sign, a weight or size that looks like the wrong unit, a category name that almost matches an existing one (for example a different spelling or plural), an empty or placeholder title, text that looks cut off or in the wrong column. Do not flag normal changes. Each flag: the row number and one short plain sentence, in the store language.',
+			'tools'       => array(
+				array(
+					'name'         => 'set_flags',
+					'description'  => 'The problems found, an empty list when there are none.',
+					'input_schema' => array(
+						'type'       => 'object',
+						'properties' => array(
+							'flags' => array(
+								'type'  => 'array',
+								'items' => array(
+									'type'       => 'object',
+									'properties' => array(
+										'row'     => array( 'type' => 'integer' ),
+										'message' => array( 'type' => 'string' ),
+									),
+									'required'   => array( 'row', 'message' ),
+								),
+							),
+						),
+						'required'   => array( 'flags' ),
+					),
+				),
+			),
+			'tool_choice' => array(
+				'type' => 'tool',
+				'name' => 'set_flags',
+			),
+			'messages'    => array(
+				array(
+					'role'    => 'user',
+					'content' => (string) wp_json_encode(
+						array(
+							'store_language'      => get_locale(),
+							'currency'            => function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : '',
+							'weight_unit'         => get_option( 'woocommerce_weight_unit', '' ),
+							'existing_categories' => is_array( $categories ) ? array_values( $categories ) : array(),
+							'rows'                => $rows,
+						)
+					),
+				),
+			),
+		);
+	}
+
+	/**
+	 * AJAX: check the planned changes of the uploaded sheet with AI. Only flags come back; nothing is changed.
+	 */
+	public function ajax_check() {
+		if ( ! current_user_can( $this->capability ) ) {
+			wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to import.', 'content-excel-importer' ) ), 403 );
+		}
+		check_ajax_referer( 'cexl_ai', 'nonce' );
+		$token = isset( $_POST['cexl_file'] ) ? sanitize_text_field( wp_unslash( $_POST['cexl_file'] ) ) : '';
+		$rows  = call_user_func( $this->rows_for, $token );
+		if ( null === $rows ) {
+			wp_send_json_error( array( 'message' => __( 'The uploaded file was not found. Please upload it again.', 'content-excel-importer' ) ) );
+		}
+		$preview = call_user_func( $this->preview_for, $rows, wp_unslash( $_POST ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized where used, as in the preview action.
+		$body    = self::check_body( $preview );
+		if ( null === $body ) {
+			wp_send_json_success( array( 'flags' => array() ) );
+		}
+		$result = self::complete( $body, 'check-sheet' );
+		if ( is_wp_error( $result ) ) {
+			$data = array( 'message' => $result->get_error_message() );
+			if ( 'wpfactory_ai_not_connected' === $result->get_error_code() && self::available() ) {
+				$data['connect'] = wpfactory_ai()->admin_url();
+			}
+			wp_send_json_error( $data );
+		}
+		$known = wp_list_pluck( $preview['rows'], 'row' );
+		$flags = array();
+		foreach ( isset( $result['message']['content'] ) ? (array) $result['message']['content'] : array() as $block ) {
+			if ( ! is_array( $block ) || 'tool_use' !== ( isset( $block['type'] ) ? $block['type'] : '' ) || empty( $block['input']['flags'] ) ) {
+				continue;
+			}
+			foreach ( (array) $block['input']['flags'] as $flag ) {
+				$row = isset( $flag['row'] ) ? (int) $flag['row'] : 0;
+				$msg = isset( $flag['message'] ) ? sanitize_text_field( (string) $flag['message'] ) : '';
+				if ( in_array( $row, $known, true ) && '' !== $msg && count( $flags ) < 300 ) {
+					$flags[] = array(
+						'row'     => $row,
+						'message' => mb_substr( $msg, 0, 200 ),
+					);
+				}
+			}
+		}
+		wp_send_json_success(
+			array(
+				'flags'   => $flags,
+				'credits' => isset( $result['credits'] ) ? $result['credits'] : null,
+			)
+		);
 	}
 }
 

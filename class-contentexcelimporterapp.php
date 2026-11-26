@@ -234,6 +234,7 @@ class ContentExcelImporterApp {
 					'aiMap'      => 'cexl_ai_map',
 					'aiDescribe'    => 'cexl_ai_describe',
 					'aiApply'       => 'cexl_ai_apply',
+					'aiCheck'       => 'cexl_ai_check',
 				),
 				'ai'            => ContentExcelImporterAI::script_settings(),
 				'nonces'        => array(
@@ -314,6 +315,11 @@ class ContentExcelImporterApp {
 			'aiSkip'        => __( 'Skip', 'content-excel-importer' ),
 			'aiSaved'       => __( 'Saved', 'content-excel-importer' ),
 			'aiSkipped'     => __( 'Skipped', 'content-excel-importer' ),
+			'aiChecking'    => __( 'Checking the planned changes with AI...', 'content-excel-importer' ),
+			/* translators: %s: number of rows */
+			'aiFlags'       => __( 'AI flagged rows to look at: %s. They are marked AI below. Nothing was changed.', 'content-excel-importer' ),
+			'aiNoFlags'     => __( 'AI found nothing unusual in the planned changes.', 'content-excel-importer' ),
+			'aiFlag'        => __( 'AI', 'content-excel-importer' ),
 		);
 	}
 
@@ -694,7 +700,9 @@ class ContentExcelImporterApp {
 		<section data-screen="preview" hidden>
 			<div class="page-head">
 				<div><div class="eyebrow"><?php esc_html_e( 'Step 3 of 3 · nothing is saved yet', 'content-excel-importer' ); ?></div><h2 class="cexl-h1"><?php esc_html_e( 'Preview the changes', 'content-excel-importer' ); ?></h2></div>
-				<div class="row-actions"><a class="btn btn-text" href="#" data-go="map"><?php esc_html_e( 'Back', 'content-excel-importer' ); ?></a><button type="button" class="btn btn-primary" id="cexl-start-import"><?php esc_html_e( 'Start the import', 'content-excel-importer' ); ?></button></div>
+				<div class="row-actions">
+				<?php if ( ContentExcelImporterAI::available() ) : ?><button type="button" class="btn btn-secondary" id="cexl-ai-check"><span class="spark" aria-hidden="true">&#10022;</span> <?php esc_html_e( 'Check with AI', 'content-excel-importer' ); ?> <span class="muted small" id="cexl-ai-check-cost"></span></button><?php endif; ?>
+				<a class="btn btn-text" href="#" data-go="map"><?php esc_html_e( 'Back', 'content-excel-importer' ); ?></a><button type="button" class="btn btn-primary" id="cexl-start-import"><?php esc_html_e( 'Start the import', 'content-excel-importer' ); ?></button></div>
 			</div>
 			<div class="tiles">
 				<div class="tile"><b id="cexl-tile-update">0</b><span><?php esc_html_e( 'will be updated', 'content-excel-importer' ); ?></span></div>

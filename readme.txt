@@ -24,7 +24,7 @@ Import and update your store from the sheet you already have: a supplier price l
 * Find existing items by SKU, by ID or by title. Items of other types with the same title are never touched.
 * Choose what happens to rows that match nothing: create them or skip them.
 * Columns match themselves: field names, common words in English, German, French and Spanish ("Art.-Nr.", "Lager", "Precio") and the matches you saved for the same sheet last time.
-* Match columns with AI on WPFactory AI credits, with 100 free credits a month (optional, see External services).
+* AI on WPFactory AI credits, with 100 free credits a month (optional, see External services): match columns, check the planned changes for odd prices, units and near-duplicate categories, and write missing descriptions for new items, which you review before saving.
 * Product fields: SKU, regular price, sale price, stock quantity, weight, virtual, categories and tags.
 * Post and page fields: title, content, excerpt, status, date, URL slug, author, categories and tags, Polylang language and translations.
 * A report of every import: created, updated, skipped and failed rows with links, downloadable as CSV and listed on the History page for 30 days.
@@ -60,7 +60,11 @@ Nothing. Rows only match items of the type you import.
 
 = What is sent to the AI? =
 
-Only when you click "Match with AI": the column names, up to three sample rows (cells cut to 80 characters, never the cells of columns that look personal, such as email or phone) and the list of fields. See External services.
+Only what the button you click needs, and only after an administrator connected the site to WPFactory AI. "Match with AI": the column names, up to three sample rows (cells cut to 80 characters, never the cells of columns that look personal, such as email or phone) and the list of fields. "Check with AI": the planned changes of up to 200 rows (old and new values cut to 80 characters), your currency, weight unit and category names. "Write with AI": the item's title, categories, attributes, SKU and short description. See External services.
+
+= Does the AI change my store? =
+
+No. It fills the matching screen, adds notes to the preview or writes drafts you check. Nothing is saved until you start the import or click Save on a draft.
 
 = Where are my uploaded files kept? =
 
