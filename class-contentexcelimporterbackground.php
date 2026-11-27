@@ -218,8 +218,12 @@ class ContentExcelImporterBackground {
 				$row      = (int) $job['next'];
 				$_POST    = array_merge( $job['request'], array( 'start' => (string) $row ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				$_REQUEST = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				// Each row starts as it would in a request of its own (an earlier row can leave the global post set).
+				// Each row starts as it would in a request of its own: no global post left by an earlier row, and fresh
+				// data instead of this request's memory cache (a variable product's list of variations, for example).
 				$GLOBALS['post'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+				if ( function_exists( 'wp_cache_flush_runtime' ) && function_exists( 'wp_cache_supports' ) && wp_cache_supports( 'flush_runtime' ) ) {
+					wp_cache_flush_runtime();
+				}
 				ob_start();
 				try {
 					self::import_row();
