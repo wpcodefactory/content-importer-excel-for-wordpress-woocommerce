@@ -3,8 +3,8 @@ Contributors: wpcodefactory, anbinder, karzin, omardabbas
 Tags: excel import, woocommerce import, product import, csv import, bulk edit
 Requires at least: 5.3
 Requires PHP: 8.1
-Tested up to: 7.0
-Stable tag: 5.0.4
+Tested up to: 7.1
+Stable tag: 7.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,27 @@ This plugin can use WPFactory AI (https://ai.wpfactory.com), a service by WPFact
 
 == Changelog ==
 
+= 7.0.0 - 27/11/2026 =
+* New - Plugin name: Excel Importer for WooCommerce: Products, Posts & Pages with Preview.
+* New - Import screens: upload, match your columns, preview every change with its old and new value, then import.
+* New - Find existing items by SKU or ID, and choose to change only the columns in the sheet (the default on new installs; existing sites keep their current behaviour until they switch).
+* New - Skip rows that match no existing item.
+* New - Column matching is remembered for the next sheet with the same columns.
+* New - History page with the result of each import and a downloadable report.
+* New - Imports keep running after you leave the page; pause, resume or stop at any row.
+* New - AI on WPFactory AI credits: Match with AI, Check with AI and Write missing descriptions with AI.
+* Fix - An existing item is matched by title only inside the chosen content type; a page, image or post with the same title is no longer turned into a product.
+* Fix - Uploaded sheets are stored in the uploads folder with a random name, not in the plugin folder.
+* Fix - Polylang 3: language and translation columns no longer stop the row.
+* Fix - The sale price from the sheet is applied, and an existing sale price is no longer erased by an update.
+* Dev - Removed the locked Pro fields, upsells, sign-up form and deactivation survey.
+* Dev - PhpSpreadsheet - Library updated (to 3.10.10).
+* Dev - WPFactory Admin Menu - Library updated (to 1.1.4).
+* Dev - WPFactory Cross-Selling - Library updated (to 1.2.3).
+* Dev - WPFactory AI - Library added (1.8.0).
+* WC tested up to: 11.3.
+* Tested up to: 7.1.
+
 = 5.0.4 - 24/05/2026 =
 * Tested up to: 7.0.
 * WC tested up to: 10.7.
@@ -153,6 +174,9 @@ This plugin can use WPFactory AI (https://ai.wpfactory.com), a service by WPFact
 * Initial release.
 
 == Upgrade Notice ==
+
+= 7.0.0 =
+New import screens with a preview of every change, SKU and ID matching, History, background imports and AI helpers. Existing sites keep their current import behaviour until they choose otherwise.
 
 = 4.4 =
 Update PhpSpreadsheet to 3.4.0, compatibility with WP 6.7, WooCommerce 9.4.

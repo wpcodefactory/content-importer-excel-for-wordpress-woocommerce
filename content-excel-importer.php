@@ -3,11 +3,11 @@
  * Plugin Name: Excel Importer for WooCommerce: Products, Posts & Pages with Preview
  * Plugin URI: https://wpfactory.com/item/content-importer-for-wordpress-woocommerce-with-excel/
  * Description: Update products, posts and pages from an Excel sheet: match by SKU or ID, preview every change before it is saved.
- * Version: 5.0.4
+ * Version: 7.0.0
  * Author: WPFactory
  * Author URI: https://wpfactory.com
  * WC requires at least: 2.2
- * WC tested up to: 10.7
+ * WC tested up to: 11.3
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Created On: 04-06-2018
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '5.0.4' );
+defined( 'WPFACTORY_CEXL_VERSION' ) || define( 'WPFACTORY_CEXL_VERSION', '7.0.0' );
 
 defined( 'WPFACTORY_CEXL_FILE' ) || define( 'WPFACTORY_CEXL_FILE', __FILE__ );
 
