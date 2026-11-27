@@ -227,6 +227,9 @@ class ContentExcelImporterBackground {
 					echo "<p class='error'>" . esc_html( $e->getMessage() ) . '</p>';
 				}
 				$html = (string) ob_get_clean();
+				if ( class_exists( 'WC_Post_Data' ) && method_exists( 'WC_Post_Data', 'do_deferred_product_sync' ) ) {
+					WC_Post_Data::do_deferred_product_sync(); // What the end of a request does after each screen row (variable product prices).
+				}
 				self::after_row();
 				$result = self::row_result( $token, $row, $html );
 				if ( 'failed' === $result['result'] && ! empty( $job['request']['cexl_report'] ) ) {
