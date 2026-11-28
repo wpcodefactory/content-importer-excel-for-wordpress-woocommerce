@@ -349,6 +349,36 @@ class ContentExcelImporterAI {
 	}
 
 	/**
+	 * Language the AI writes an item's texts in, which shoppers read: the item's own language when WPML or Polylang
+	 * gives it one, else the store's language.
+	 *
+	 * @param int $post_id Item, 0 for the store language.
+	 * @return string For example "German (Germany), de_DE".
+	 */
+	public static function text_language( $post_id = 0 ) {
+		$locale = '';
+		if ( $post_id && function_exists( 'pll_get_post_language' ) ) {
+			$locale = (string) pll_get_post_language( $post_id, 'locale' );
+		}
+		if ( $post_id && '' === $locale && has_filter( 'wpml_post_language_details' ) ) {
+			$details = apply_filters( 'wpml_post_language_details', null, $post_id );
+			$locale  = is_array( $details ) && ! empty( $details['locale'] ) ? (string) $details['locale'] : '';
+		}
+		return self::language_label( '' !== $locale ? $locale : get_locale() );
+	}
+
+	/**
+	 * A WordPress locale with its language name when PHP knows it.
+	 *
+	 * @param string $locale For example "en_US".
+	 * @return string For example "English (United States), en_US".
+	 */
+	public static function language_label( $locale ) {
+		$name = class_exists( 'Locale' ) ? (string) \Locale::getDisplayName( $locale, 'en' ) : '';
+		return '' !== $name && $name !== $locale ? $name . ', ' . $locale : $locale;
+	}
+
+	/**
 	 * Request body for writing one item's description from its own data.
 	 *
 	 * @param WP_Post $post Item.
@@ -375,7 +405,7 @@ class ContentExcelImporterAI {
 		return array(
 			'model'       => 'claude-haiku-5-5',
 			'max_tokens'  => 700,
-			'system'      => 'You write descriptions for items of an online store from the facts given, in the store language. Use only those facts: never invent materials, sizes, ingredients, prices, stock, shipping, guarantees or claims. When the facts are thin, write less. The description: one to three short HTML paragraphs (<p>), at most 120 words. The short description: one plain sentence, at most 25 words.',
+			'system'      => 'You write descriptions for items of an online store from the facts given. Write every text in the language given as "language", even when the facts are in another language; keep the names of products and brands, and codes such as SKUs, as they are. Use only those facts: never invent materials, sizes, ingredients, prices, stock, shipping, guarantees or claims. When the facts are thin, write less. The description: one to three short HTML paragraphs (<p>), at most 120 words. The short description: one plain sentence, at most 25 words.',
 			'tools'       => array(
 				array(
 					'name'         => 'set_text',
@@ -399,9 +429,9 @@ class ContentExcelImporterAI {
 					'role'    => 'user',
 					'content' => (string) wp_json_encode(
 						array(
-							'store'          => get_bloginfo( 'name' ),
-							'store_language' => get_locale(),
-							'facts'          => array_filter( $facts, 'strlen' ),
+							'store'    => get_bloginfo( 'name' ),
+							'language' => self::text_language( $post->ID ),
+							'facts'    => array_filter( $facts, 'strlen' ),
 						)
 					),
 				),
@@ -513,7 +543,7 @@ class ContentExcelImporterAI {
 		return array(
 			'model'       => 'claude-haiku-5-5',
 			'max_tokens'  => 1500,
-			'system'      => 'You check the planned changes of a store import before they are saved. Flag only real problems a merchant would want to see: a price that changes by more than half, a price or stock value that looks like a typo or uses the wrong unit or decimal sign, a weight or size that looks like the wrong unit, a category name that almost matches an existing one (for example a different spelling or plural), an empty or placeholder title, text that looks cut off or in the wrong column. Do not flag normal changes. Each flag: the row number and one short plain sentence, in the store language.',
+			'system'      => 'You check the planned changes of a store import before they are saved. Flag only real problems a merchant would want to see: a price that changes by more than half, a price or stock value that looks like a typo or uses the wrong unit or decimal sign, a weight or size that looks like the wrong unit, a category name that almost matches an existing one (for example a different spelling or plural), an empty or placeholder title, text that looks cut off or in the wrong column. Do not flag normal changes. Each flag: the row number and one short plain sentence in the language given as "language" (the merchant reads it), even when the sheet is in another language.',
 			'tools'       => array(
 				array(
 					'name'         => 'set_flags',
@@ -546,7 +576,7 @@ class ContentExcelImporterAI {
 					'role'    => 'user',
 					'content' => (string) wp_json_encode(
 						array(
-							'store_language'      => get_locale(),
+							'language'            => self::language_label( get_user_locale() ),
 							'currency'            => function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : '',
 							'weight_unit'         => get_option( 'woocommerce_weight_unit', '' ),
 							'existing_categories' => is_array( $categories ) ? array_values( $categories ) : array(),
