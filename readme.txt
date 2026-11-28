@@ -4,7 +4,7 @@ Tags: excel import, woocommerce import, product import, csv import, bulk edit
 Requires at least: 5.3
 Requires PHP: 8.1
 Tested up to: 7.1
-Stable tag: 7.0.0
+Stable tag: 7.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,10 @@ This plugin can use WPFactory AI (https://ai.wpfactory.com), a service by WPFact
 4. Result and History: what was created, updated and skipped, with a downloadable report.
 
 == Changelog ==
+
+= 7.0.1 - 28/11/2026 =
+* Fix - Write with AI writes every text in the store's language (or in the item's own WPML or Polylang language), and keeps product names and SKUs as they are.
+* Fix - Check with AI writes its notes in the language of your admin screens.
 
 = 7.0.0 - 27/11/2026 =
 * New - Plugin name: Excel Importer for WooCommerce: Products, Posts & Pages with Preview.
@@ -174,6 +178,9 @@ This plugin can use WPFactory AI (https://ai.wpfactory.com), a service by WPFact
 * Initial release.
 
 == Upgrade Notice ==
+
+= 7.0.1 =
+Write with AI and Check with AI answer in one language.
 
 = 7.0.0 =
 New import screens with a preview of every change, SKU and ID matching, History, background imports and AI helpers. Existing sites keep their current import behaviour until they choose otherwise.

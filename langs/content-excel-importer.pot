@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-26T22:13:27+00:00\n"
+"POT-Creation-Date: 2026-11-28T12:42:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: content-excel-importer\n"
@@ -22,31 +22,31 @@ msgid "The AI library is missing from this copy of the plugin."
 msgstr ""
 
 #: class-contentexcelimporterai.php:296
-#: class-contentexcelimporterai.php:566
+#: class-contentexcelimporterai.php:596
 #: class-contentexcelimporterapp.php:353
-#: class-contentexcelimporterbackground.php:309
-#: class-contentexcelimporterbackground.php:345
+#: class-contentexcelimporterbackground.php:326
+#: class-contentexcelimporterbackground.php:362
 #: class-contentexcelimportermappings.php:155
 #: class-contentexcelimporterpreview.php:31
 msgid "Sorry, you are not allowed to import."
 msgstr ""
 
 #: class-contentexcelimporterai.php:303
-#: class-contentexcelimporterai.php:572
-#: class-contentexcelimporterbackground.php:317
+#: class-contentexcelimporterai.php:602
+#: class-contentexcelimporterbackground.php:334
 #: class-contentexcelimportermappings.php:163
 #: class-contentexcelimporterpreview.php:37
-#: class-contentexcelimporterproducts.php:272
+#: class-contentexcelimporterproducts.php:307
 msgid "The uploaded file was not found. Please upload it again."
 msgstr ""
 
-#: class-contentexcelimporterai.php:420
-#: class-contentexcelimporterai.php:461
+#: class-contentexcelimporterai.php:450
+#: class-contentexcelimporterai.php:491
 #: class-contentexcelimporterreport.php:134
 msgid "Sorry, you are not allowed to do that."
 msgstr ""
 
-#: class-contentexcelimporterai.php:439
+#: class-contentexcelimporterai.php:469
 msgid "The AI did not return a description. Nothing was saved."
 msgstr ""
 
@@ -738,7 +738,7 @@ msgid "updated"
 msgstr ""
 
 #: class-contentexcelimporterapp.php:744
-#: class-contentexcelimporterproducts.php:380
+#: class-contentexcelimporterproducts.php:415
 msgid "created"
 msgstr ""
 
@@ -762,7 +762,7 @@ msgstr ""
 msgid "The report lists every row with its result and a link to the item. It is also on the History page for 30 days."
 msgstr ""
 
-#: class-contentexcelimporterbackground.php:350
+#: class-contentexcelimporterbackground.php:367
 msgid "This import was not found."
 msgstr ""
 
@@ -814,116 +814,116 @@ msgstr ""
 msgid "Stock status"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:132
+#: class-contentexcelimporterproducts.php:167
 msgid "IMPORT / UPDATE CONTENT"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:136
+#: class-contentexcelimporterproducts.php:171
 msgid "Download the sample excel file, save it and add your products. You can add your Custom Columns. Upload it using the form below."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:136
+#: class-contentexcelimporterproducts.php:171
 msgid "SAMPLE EXCEL FILE"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:140
+#: class-contentexcelimporterproducts.php:175
 msgid "Download the sample excel file, save it and add your content. You can add your Custom Columns. Upload it using the form below."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:140
+#: class-contentexcelimporterproducts.php:175
 msgid "CONTENT SAMPLE FILE"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:204
+#: class-contentexcelimporterproducts.php:239
 msgid "DATA MAPPING: Drag and drop excel columns on the right to product properties on the left."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:206
+#: class-contentexcelimporterproducts.php:241
 msgid "Auto Match Columns"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:209
+#: class-contentexcelimporterproducts.php:244
 msgid "Always add new content even if title is the same"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:212
+#: class-contentexcelimporterproducts.php:247
 msgid "EXCEL COLUMNS"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:219
+#: class-contentexcelimporterproducts.php:254
 msgid "FIELDS"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:247
+#: class-contentexcelimporterproducts.php:282
 msgid "Invalid File:Please Upload Excel File"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:351
+#: class-contentexcelimporterproducts.php:386
 msgid "was not found, row skipped"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:429
+#: class-contentexcelimporterproducts.php:466
 msgid "already exists. Updated"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:443
+#: class-contentexcelimporterproducts.php:480
 msgid "For sale price of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:443
-#: class-contentexcelimporterproducts.php:450
-#: class-contentexcelimporterproducts.php:461
-#: class-contentexcelimporterproducts.php:468
-#: class-contentexcelimporterproducts.php:479
-#: class-contentexcelimporterproducts.php:486
+#: class-contentexcelimporterproducts.php:480
+#: class-contentexcelimporterproducts.php:487
+#: class-contentexcelimporterproducts.php:498
+#: class-contentexcelimporterproducts.php:505
+#: class-contentexcelimporterproducts.php:516
+#: class-contentexcelimporterproducts.php:523
 msgid "you need numbers entered."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:450
+#: class-contentexcelimporterproducts.php:487
 msgid "For regular price of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:461
+#: class-contentexcelimporterproducts.php:498
 msgid "For weight of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:468
+#: class-contentexcelimporterproducts.php:505
 msgid "For stock of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:479
+#: class-contentexcelimporterproducts.php:516
 msgid "For length of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:486
+#: class-contentexcelimporterproducts.php:523
 msgid "For width of"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:663
+#: class-contentexcelimporterproducts.php:700
 msgid " - Job Done! "
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:663
+#: class-contentexcelimporterproducts.php:700
 msgid "GO VIEW YOUR "
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:670
+#: class-contentexcelimporterproducts.php:707
 msgid "Please dont close this page. Your "
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:670
+#: class-contentexcelimporterproducts.php:707
 msgid "are imported..."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:681
+#: class-contentexcelimporterproducts.php:718
 msgid "No title selected for your content."
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:688
+#: class-contentexcelimporterproducts.php:725
 msgid "Total Execution Time:"
 msgstr ""
 
-#: class-contentexcelimporterproducts.php:688
+#: class-contentexcelimporterproducts.php:725
 msgid "Mins"
 msgstr ""
 
